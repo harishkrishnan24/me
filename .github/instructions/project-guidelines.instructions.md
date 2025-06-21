@@ -1,0 +1,11 @@
+---
+applyTo: '**/*'
+---
+- Only html should be used.
+- Use css only for basic styling and layout and to make it responsive.
+- Use no frameworks or libraries.
+- Use semantic HTML elements.
+- Make it accessible.
+- Use alt attributes for images.
+- follow mobile first design principles.
+- Make the site nostalgic to make it feel like the 1990s.
