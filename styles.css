@@ -628,6 +628,15 @@ footer {
     }
 }
 
+/* Certifications grid */
+.certifications-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    align-items: flex-start;
+}
+
 /* Mobile responsiveness for learning indicators */
 @media (max-width: 768px) {
     .learning {
