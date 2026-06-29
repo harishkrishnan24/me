@@ -8,42 +8,55 @@ interface ProjectLink {
 }
 interface Project {
   title: string;
+  summary: string;
   description: string;
+  highlights: string[];
   tech: string[];
-  status: string;
   accent: "violet" | "orange" | "teal";
   links: ProjectLink[];
 }
 
 const projects: Project[] = [
   {
-    title: "Developing an Interpreter",
+    title: "Monkey Language Interpreter",
+    summary: "A programming language interpreter built from first principles — twice.",
     description:
-      'Developing an interpreter for a fictional Monkey programming language. This project involves parsing, interpreting, and executing code written in Monkey, with a focus on understanding how interpreters work under the hood. Inspired by the book "Writing an Interpreter in Go" by Thorsten Ball.',
+      "A full interpreter for the Monkey language, built from scratch following Thorsten Ball's Writing an Interpreter in Go — then re-implemented in Rust to contrast the two languages' approaches to ownership and pattern matching.",
+    highlights: [
+      "Hand-written lexer and Pratt parser",
+      "Tree-walking evaluator with closures and higher-order functions",
+      "Interactive REPL",
+      "Implemented in both Go and Rust",
+    ],
     tech: ["Go", "Rust"],
-    status: "Completed",
     accent: "violet",
     links: [
       {
-        label: "github.com/harishkrishnan24/interpreter",
+        label: "interpreter (Go)",
         url: "https://github.com/harishkrishnan24/interpreter",
       },
       {
-        label: "github.com/Code-With-HK/monkey-interpreter-rust",
+        label: "monkey-interpreter (Rust)",
         url: "https://github.com/Code-With-HK/monkey-interpreter-rust",
       },
     ],
   },
   {
-    title: "Build Core Redux from Scratch",
+    title: "Redux, From Scratch",
+    summary: "Reverse-engineering Redux's core to learn how predictable state really works.",
     description:
-      "Re-building the core concepts of Redux by reverse engineering the library. This project focuses on understanding the inner workings of Redux, including state management, actions, reducers, and middleware.",
+      "A from-scratch reimplementation of Redux's core, reverse-engineered from the library to understand exactly how its predictable state container is wired together.",
+    highlights: [
+      "createStore with dispatch / subscribe / getState",
+      "Reducer composition",
+      "Middleware via applyMiddleware",
+      "Action dispatch and listener flow",
+    ],
     tech: ["JavaScript"],
-    status: "Completed",
     accent: "teal",
     links: [
       {
-        label: "github.com/elclassicoder/redux-from-scratch",
+        label: "redux-from-scratch",
         url: "https://github.com/elclassicoder/redux-from-scratch",
       },
     ],
@@ -78,13 +91,19 @@ const projects: Project[] = [
         projects.map((project) => (
           <article class:list={["card", project.accent, "reveal", "project-card"]}>
             <h3 class="project-title">{project.title}</h3>
+            <p class="project-summary">{project.summary}</p>
             <p class="project-desc">{project.description}</p>
+
+            <ul class="project-highlights">
+              {project.highlights.map((h) => (
+                <li>{h}</li>
+              ))}
+            </ul>
 
             <div class="tag-row project-tags">
               {project.tech.map((t) => (
                 <span class="tag">{t}</span>
               ))}
-              <span class="tag status">{project.status}</span>
             </div>
 
             <div class="project-links">
@@ -152,8 +171,15 @@ const projects: Project[] = [
   }
   .project-title {
     font-size: var(--step-1);
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     color: var(--text);
+  }
+  .project-summary {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.4;
+    margin-bottom: 12px;
   }
   .project-desc {
     font-family: var(--font-serif);
@@ -161,13 +187,28 @@ const projects: Project[] = [
     line-height: 1.6;
     margin-bottom: 18px;
   }
+  .project-highlights {
+    list-style: none;
+    display: grid;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .project-highlights li {
+    position: relative;
+    padding-left: 20px;
+    font-size: var(--step--1);
+    color: var(--text-muted);
+    line-height: 1.45;
+  }
+  .project-highlights li::before {
+    content: "▹";
+    position: absolute;
+    left: 0;
+    color: var(--teal);
+    font-family: var(--font-mono);
+  }
   .project-tags {
     margin-bottom: 18px;
-  }
-  .tag.status {
-    background: var(--teal-tint);
-    color: var(--teal);
-    border-color: var(--teal-line);
   }
   .project-links {
     display: grid;
