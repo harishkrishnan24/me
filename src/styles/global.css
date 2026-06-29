@@ -347,3 +347,13 @@ tr:last-child td {
   outline-offset: 3px;
   border-radius: 2px;
 }
+
+/* ── Gradient text ── used by hero titles across pages. Global (not scoped)
+   so it reaches titles passed into PageHero's slot, which carry the page's
+   own scope rather than the component's. */
+.grad {
+  background: linear-gradient(100deg, var(--violet), var(--teal));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
