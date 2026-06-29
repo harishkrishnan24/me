@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Eyebrow from "../components/Eyebrow.astro";
+import PageHero from "../components/PageHero.astro";
 import { href } from "../lib/links";
 
 const languages = ["JavaScript / TypeScript", "Python", "Go", "Rust"];
@@ -253,24 +254,26 @@ const interests = [
   description="Harish Krishnan — software engineer based in Stockholm. Background, skills, work experience, and the craft."
 >
   <!-- HERO -->
-  <section class="wrap hero">
+  <PageHero
+    eyebrow="About · Software Engineer · Stockholm"
+    accent="violet"
+    motif="constellation"
+  >
     <img
       class="avatar"
+      slot="lead"
       src={href("images/profile.jpg")}
       alt="Harish Krishnan"
       width="120"
       height="120"
     />
-    <div class="hero-body">
-      <Eyebrow accent="violet">About · Software Engineer · Stockholm</Eyebrow>
-      <h1 class="hero-title">A perpetual student of the craft.</h1>
-      <p class="hero-deck">
-        Software engineer based in Stockholm with experience across startups and
-        enterprise. I build applications, teach, and write — and I'm always
-        learning what comes next.
-      </p>
-    </div>
-  </section>
+    A perpetual student of the craft.
+    <Fragment slot="deck">
+      Software engineer based in Stockholm with experience across startups and
+      enterprise. I build applications, teach, and write — and I'm always
+      learning what comes next.
+    </Fragment>
+  </PageHero>
 
   <div class="wrap"><div class="divider"></div></div>
 
@@ -464,13 +467,8 @@ const interests = [
 </BaseLayout>
 
 <style>
-  /* HERO */
-  .hero {
-    padding-block: clamp(40px, 8vw, 80px) 20px;
-    display: flex;
-    gap: clamp(20px, 4vw, 36px);
-    align-items: center;
-  }
+  /* HERO — title/deck/layout now live in PageHero; the avatar is passed into
+     PageHero's `lead` slot and keeps its styling here. */
   .avatar {
     width: clamp(88px, 14vw, 120px);
     height: clamp(88px, 14vw, 120px);
@@ -479,23 +477,6 @@ const interests = [
     object-fit: cover;
     flex-shrink: 0;
     box-shadow: 0 0 0 4px var(--violet-glow);
-  }
-  .hero-body {
-    max-width: var(--measure);
-  }
-  .hero-title {
-    font-size: var(--step-3);
-    font-weight: 800;
-    line-height: 1.05;
-    letter-spacing: -0.035em;
-    margin-block: 14px 18px;
-  }
-  .hero-deck {
-    font-size: var(--step-1);
-    font-style: italic;
-    color: var(--text-muted);
-    line-height: 1.6;
-    max-width: 38em;
   }
 
   /* Section scaffolding */
@@ -653,13 +634,5 @@ const interests = [
   /* Connect */
   .connect .cta-row {
     margin-top: 26px;
-  }
-
-  @media (max-width: 720px) {
-    .hero {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 18px;
-    }
   }
 </style>
