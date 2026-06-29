@@ -1,9 +1,9 @@
 ---
-// Decorative 3D hero visual — an "agent constellation": a wireframe
-// icosahedron with glowing vertex nodes, slowly rotating with subtle
-// mouse parallax. Purely decorative + progressively enhanced: the page
-// is fully usable with JS off (a CSS glow shows behind). three.js loads
-// only on this page. Honors prefers-reduced-motion and pauses offscreen.
+// Decorative 3D hero: a stylized desktop computer whose screen renders a
+// live terminal (drawn to a canvas texture, with a blinking cursor). Purely
+// decorative + progressively enhanced — the page is fully usable with JS off
+// (a CSS glow shows behind). three.js loads only on this page. Honors
+// prefers-reduced-motion and pauses when offscreen.
 ---
 
 <div class="hero-visual" aria-hidden="true">
@@ -21,15 +21,15 @@
   }
   .visual-glow {
     position: absolute;
-    inset: 8%;
+    inset: 12%;
     border-radius: 50%;
     background: radial-gradient(
-      circle at 50% 45%,
-      rgba(123, 106, 240, 0.28) 0%,
-      rgba(72, 190, 166, 0.1) 38%,
-      transparent 68%
+      circle at 50% 50%,
+      rgba(123, 106, 240, 0.26) 0%,
+      rgba(72, 190, 166, 0.1) 42%,
+      transparent 70%
     );
-    filter: blur(6px);
+    filter: blur(8px);
   }
   .visual-canvas {
     position: absolute;
@@ -56,7 +56,7 @@
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
-    camera.position.z = 3.7;
+    camera.position.set(0, 0.15, 4.4);
 
     const renderer = new THREE.WebGLRenderer({
       canvas,
@@ -65,64 +65,122 @@
     });
     renderer.setClearColor(0x000000, 0);
 
-    const violet = new THREE.Color(0x7b6af0);
-    const teal = new THREE.Color(0x48bea6);
+    // Lights give the chassis real shading.
+    scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+    const key = new THREE.DirectionalLight(0xb9b2ff, 1.1);
+    key.position.set(-3, 4, 5);
+    scene.add(key);
+    const rim = new THREE.DirectionalLight(0x48bea6, 0.5);
+    rim.position.set(4, -2, 2);
+    scene.add(rim);
 
-    const group = new THREE.Group();
-    scene.add(group);
+    const pc = new THREE.Group();
+    scene.add(pc);
 
-    // Outer wireframe icosahedron.
-    const baseGeo = new THREE.IcosahedronGeometry(1.3, 1);
-    const outer = new THREE.LineSegments(
-      new THREE.WireframeGeometry(baseGeo),
-      new THREE.LineBasicMaterial({
-        color: violet,
-        transparent: true,
-        opacity: 0.5,
-      }),
-    );
-    group.add(outer);
-
-    // Glowing nodes at each unique vertex: a solid core sphere plus a
-    // larger additive halo sphere for the glow.
-    const coreGeo = new THREE.SphereGeometry(0.045, 14, 14);
-    const coreMat = new THREE.MeshBasicMaterial({ color: 0xd8d2ff });
-    const haloGeo = new THREE.SphereGeometry(0.1, 14, 14);
-    const haloMat = new THREE.MeshBasicMaterial({
-      color: teal,
-      transparent: true,
-      opacity: 0.4,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
+    const chassisMat = new THREE.MeshStandardMaterial({
+      color: 0x1a1a26,
+      metalness: 0.35,
+      roughness: 0.55,
     });
 
-    const pos = baseGeo.attributes.position;
-    const seen = new Set<string>();
-    for (let i = 0; i < pos.count; i++) {
-      const x = pos.getX(i);
-      const y = pos.getY(i);
-      const z = pos.getZ(i);
-      const key = `${x.toFixed(3)},${y.toFixed(3)},${z.toFixed(3)}`;
-      if (seen.has(key)) continue;
-      seen.add(key);
-      const core = new THREE.Mesh(coreGeo, coreMat);
-      core.position.set(x, y, z);
-      group.add(core);
-      const halo = new THREE.Mesh(haloGeo, haloMat);
-      halo.position.set(x, y, z);
-      group.add(halo);
-    }
-
-    // Inner counter-rotating frame for depth.
-    const inner = new THREE.LineSegments(
-      new THREE.WireframeGeometry(new THREE.IcosahedronGeometry(0.72, 0)),
-      new THREE.LineBasicMaterial({
-        color: teal,
-        transparent: true,
-        opacity: 0.28,
-      }),
+    // Monitor bezel.
+    const bezel = new THREE.Mesh(
+      new THREE.BoxGeometry(2.5, 1.7, 0.18),
+      chassisMat,
     );
-    group.add(inner);
+    bezel.position.y = 0.35;
+    pc.add(bezel);
+
+    // ── Terminal screen drawn to a canvas texture ──
+    const sc = document.createElement("canvas");
+    sc.width = 1024;
+    sc.height = 700;
+    const sctx = sc.getContext("2d")!;
+    const TEAL = "#48bea6";
+    const WHITE = "#e8e8f2";
+    const MUTED = "#8f8fae";
+    const VIOLET = "#9d8cf5";
+
+    type Seg = { t: string; c: string };
+    const lines: Seg[][] = [
+      [
+        { t: "harish@dev:~$ ", c: TEAL },
+        { t: "whoami", c: WHITE },
+      ],
+      [{ t: "curious engineer,", c: MUTED }],
+      [{ t: "perpetual student of the craft", c: MUTED }],
+      [],
+      [
+        { t: "harish@dev:~$ ", c: TEAL },
+        { t: "ls focus/", c: WHITE },
+      ],
+      [{ t: "agent-native   go   rust   ts", c: VIOLET }],
+      [],
+      [{ t: "harish@dev:~$ ", c: TEAL }],
+    ];
+
+    function drawScreen(cursorOn: boolean) {
+      sctx.fillStyle = "#08080e";
+      sctx.fillRect(0, 0, sc.width, sc.height);
+      // faint CRT scanlines
+      sctx.fillStyle = "rgba(255,255,255,0.025)";
+      for (let y = 0; y < sc.height; y += 5) sctx.fillRect(0, y, sc.width, 1);
+
+      sctx.textBaseline = "top";
+      sctx.font = '40px "JetBrains Mono", ui-monospace, monospace';
+      const padX = 70;
+      let y = 70;
+      const lh = 64;
+      for (const line of lines) {
+        let x = padX;
+        for (const seg of line) {
+          sctx.fillStyle = seg.c;
+          sctx.fillText(seg.t, x, y);
+          x += sctx.measureText(seg.t).width;
+        }
+        // blinking cursor on the last prompt line
+        if (line === lines[lines.length - 1] && cursorOn) {
+          sctx.fillStyle = WHITE;
+          sctx.fillRect(x + 4, y, 22, 42);
+        }
+        y += lh;
+      }
+    }
+    drawScreen(true);
+
+    const screenTex = new THREE.CanvasTexture(sc);
+    screenTex.colorSpace = THREE.SRGBColorSpace;
+    const screen = new THREE.Mesh(
+      new THREE.PlaneGeometry(2.16, 1.36),
+      new THREE.MeshBasicMaterial({ map: screenTex }),
+    );
+    screen.position.set(0, 0.35, 0.1);
+    pc.add(screen);
+
+    // Stand + base.
+    const neck = new THREE.Mesh(
+      new THREE.BoxGeometry(0.22, 0.42, 0.22),
+      chassisMat,
+    );
+    neck.position.y = -0.72;
+    pc.add(neck);
+    const base = new THREE.Mesh(
+      new THREE.BoxGeometry(1.0, 0.08, 0.55),
+      chassisMat,
+    );
+    base.position.y = -0.96;
+    pc.add(base);
+
+    // Keyboard slab.
+    const keyboard = new THREE.Mesh(
+      new THREE.BoxGeometry(1.9, 0.1, 0.62),
+      chassisMat,
+    );
+    keyboard.position.set(0, -1.0, 1.0);
+    keyboard.rotation.x = -0.12;
+    pc.add(keyboard);
+
+    pc.scale.setScalar(0.92);
 
     function resize() {
       const w = container!.clientWidth;
@@ -146,14 +204,22 @@
     });
 
     let raf = 0;
+    let f = 0;
+    let cursorOn = true;
     function frame() {
+      f++;
       curX += (targetX - curX) * 0.05;
       curY += (targetY - curY) * 0.05;
-      group.rotation.y += 0.0026;
-      group.rotation.x = curY * 0.5;
-      group.rotation.z = curX * 0.18;
-      inner.rotation.y -= 0.0045;
-      inner.rotation.x += 0.0025;
+      // gentle oscillation so the screen stays readable, plus mouse parallax
+      pc.rotation.y = Math.sin(f * 0.01) * 0.22 + curX * 0.4;
+      pc.rotation.x = -0.04 + curY * 0.28;
+      pc.position.y = Math.sin(f * 0.02) * 0.05;
+      // blink the cursor ~ every 36 frames
+      if (f % 36 === 0) {
+        cursorOn = !cursorOn;
+        drawScreen(cursorOn);
+        screenTex.needsUpdate = true;
+      }
       renderer.render(scene, camera);
     }
 
@@ -163,7 +229,7 @@
     }
 
     if (reduce) {
-      frame(); // single static render
+      renderer.render(scene, camera); // static single frame
     } else {
       const io = new IntersectionObserver((entries) => {
         const visible = entries[0]?.isIntersecting;
