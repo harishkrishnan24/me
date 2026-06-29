@@ -1,0 +1,316 @@
+---
+// Decorative 3D hero object, themed per page via the `motif` prop. Shares all
+// renderer/lighting/motion scaffolding with HeroVisual; only the geometry
+// differs. Purely decorative + progressively enhanced — with JS off (or
+// reduced-motion) a CSS glow shows behind. three.js loads only where used.
+interface Props {
+  motif: "constellation" | "blocks" | "books" | "graph";
+}
+const { motif } = Astro.props;
+---
+
+<div class="hero-visual" aria-hidden="true">
+  <div class="visual-glow"></div>
+  <canvas class="visual-canvas" data-motif={motif}></canvas>
+</div>
+
+<style>
+  .hero-visual {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    aspect-ratio: 1 / 1;
+    margin-inline: auto;
+  }
+  .visual-glow {
+    position: absolute;
+    inset: 12%;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle at 50% 50%,
+      rgba(123, 106, 240, 0.26) 0%,
+      rgba(72, 190, 166, 0.1) 42%,
+      transparent 70%
+    );
+    filter: blur(8px);
+  }
+  .visual-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  @media (max-width: 860px) {
+    .hero-visual {
+      max-width: 300px;
+    }
+  }
+</style>
+
+<script>
+  import * as THREE from "three";
+
+  const canvas = document.querySelector<HTMLCanvasElement>("canvas[data-motif]");
+  const container = canvas?.parentElement;
+
+  // Palette — hex literals matching tokens.css (three.js can't read CSS vars).
+  const VIOLET = 0x7b6af0;
+  const TEAL = 0x48bea6;
+  const ORANGE = 0xe06b50;
+  const CHASSIS = 0x1a1a26;
+
+  function buildConstellation(): THREE.Group {
+    const g = new THREE.Group();
+    const core = new THREE.Mesh(
+      new THREE.IcosahedronGeometry(0.55, 0),
+      new THREE.MeshStandardMaterial({
+        color: VIOLET,
+        emissive: VIOLET,
+        emissiveIntensity: 0.18,
+        metalness: 0.3,
+        roughness: 0.4,
+      }),
+    );
+    g.add(core);
+    const nodeMat = new THREE.MeshStandardMaterial({
+      color: TEAL,
+      emissive: TEAL,
+      emissiveIntensity: 0.2,
+      metalness: 0.2,
+      roughness: 0.5,
+    });
+    const lineMat = new THREE.LineBasicMaterial({
+      color: VIOLET,
+      transparent: true,
+      opacity: 0.25,
+    });
+    const rings = 3;
+    const perRing = 4;
+    for (let r = 0; r < rings; r++) {
+      const ring = new THREE.Group();
+      ring.rotation.x = r * 0.7;
+      ring.rotation.y = r * 0.9;
+      const radius = 1.1 + r * 0.32;
+      for (let i = 0; i < perRing; i++) {
+        const a = (i / perRing) * Math.PI * 2;
+        const x = Math.cos(a) * radius;
+        const z = Math.sin(a) * radius;
+        const node = new THREE.Mesh(
+          new THREE.SphereGeometry(0.12, 16, 16),
+          nodeMat,
+        );
+        node.position.set(x, 0, z);
+        ring.add(node);
+        const geo = new THREE.BufferGeometry().setFromPoints([
+          new THREE.Vector3(0, 0, 0),
+          new THREE.Vector3(x, 0, z),
+        ]);
+        ring.add(new THREE.Line(geo, lineMat));
+      }
+      g.add(ring);
+    }
+    return g;
+  }
+
+  function buildBlocks(): THREE.Group {
+    const g = new THREE.Group();
+    const faceMat = new THREE.MeshStandardMaterial({
+      color: CHASSIS,
+      metalness: 0.35,
+      roughness: 0.55,
+      transparent: true,
+      opacity: 0.92,
+    });
+    const edgeMat = new THREE.LineBasicMaterial({ color: VIOLET });
+    const cubes: { s: number; p: [number, number, number] }[] = [
+      { s: 1.1, p: [0, -0.55, 0] },
+      { s: 0.8, p: [0.4, 0.35, 0.2] },
+      { s: 0.55, p: [-0.45, 0.6, -0.1] },
+    ];
+    for (const c of cubes) {
+      const geo = new THREE.BoxGeometry(c.s, c.s, c.s);
+      const mesh = new THREE.Mesh(geo, faceMat);
+      mesh.position.set(...c.p);
+      mesh.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo), edgeMat));
+      g.add(mesh);
+    }
+    return g;
+  }
+
+  function buildBooks(): THREE.Group {
+    const g = new THREE.Group();
+    const books: { w: number; h: number; d: number; c: number; rot: number }[] =
+      [
+        { w: 2.0, h: 0.3, d: 1.3, c: VIOLET, rot: 0.05 },
+        { w: 1.8, h: 0.28, d: 1.2, c: TEAL, rot: -0.06 },
+        { w: 1.9, h: 0.32, d: 1.25, c: ORANGE, rot: 0.03 },
+      ];
+    let y = -0.7;
+    for (const b of books) {
+      const mesh = new THREE.Mesh(
+        new THREE.BoxGeometry(b.w, b.h, b.d),
+        new THREE.MeshStandardMaterial({
+          color: b.c,
+          metalness: 0.2,
+          roughness: 0.6,
+        }),
+      );
+      mesh.position.y = y;
+      mesh.rotation.y = b.rot;
+      g.add(mesh);
+      y += b.h + 0.07;
+    }
+    return g;
+  }
+
+  function buildGraph(): THREE.Group {
+    const g = new THREE.Group();
+    const nodes: [number, number, number][] = [
+      [0, -1.2, 0],
+      [-0.9, -0.3, 0.2],
+      [0.9, -0.4, -0.2],
+      [-1.3, 0.7, 0],
+      [-0.3, 0.7, 0.3],
+      [1.0, 0.6, 0.2],
+      [0.4, 1.3, -0.1],
+    ];
+    const edges: [number, number][] = [
+      [0, 1],
+      [0, 2],
+      [1, 3],
+      [1, 4],
+      [2, 5],
+      [5, 6],
+      [4, 6],
+    ];
+    const rootMat = new THREE.MeshStandardMaterial({
+      color: VIOLET,
+      emissive: VIOLET,
+      emissiveIntensity: 0.25,
+      metalness: 0.3,
+      roughness: 0.4,
+    });
+    const nodeMat = new THREE.MeshStandardMaterial({
+      color: TEAL,
+      emissive: TEAL,
+      emissiveIntensity: 0.2,
+      metalness: 0.2,
+      roughness: 0.5,
+    });
+    const lineMat = new THREE.LineBasicMaterial({
+      color: VIOLET,
+      transparent: true,
+      opacity: 0.35,
+    });
+    nodes.forEach((p, i) => {
+      const node = new THREE.Mesh(
+        new THREE.SphereGeometry(i === 0 ? 0.18 : 0.13, 16, 16),
+        i === 0 ? rootMat : nodeMat,
+      );
+      node.position.set(...p);
+      g.add(node);
+    });
+    for (const [a, b] of edges) {
+      const geo = new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(...nodes[a]),
+        new THREE.Vector3(...nodes[b]),
+      ]);
+      g.add(new THREE.Line(geo, lineMat));
+    }
+    return g;
+  }
+
+  if (canvas && container instanceof HTMLElement) {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+    camera.position.set(0, 0.1, 4.8);
+
+    const renderer = new THREE.WebGLRenderer({
+      canvas,
+      alpha: true,
+      antialias: true,
+    });
+    renderer.setClearColor(0x000000, 0);
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+    const key = new THREE.DirectionalLight(0xb9b2ff, 1.1);
+    key.position.set(-3, 4, 5);
+    scene.add(key);
+    const rim = new THREE.DirectionalLight(0x48bea6, 0.5);
+    rim.position.set(4, -2, 2);
+    scene.add(rim);
+
+    let group: THREE.Group;
+    switch (canvas.dataset.motif) {
+      case "blocks":
+        group = buildBlocks();
+        break;
+      case "books":
+        group = buildBooks();
+        break;
+      case "graph":
+        group = buildGraph();
+        break;
+      default:
+        group = buildConstellation();
+    }
+    group.scale.setScalar(0.92);
+    scene.add(group);
+
+    function resize() {
+      const w = container!.clientWidth;
+      const h = container!.clientHeight;
+      if (!w || !h) return;
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+    resize();
+    new ResizeObserver(resize).observe(container);
+
+    let targetX = 0;
+    let targetY = 0;
+    let curX = 0;
+    let curY = 0;
+    window.addEventListener("pointermove", (e) => {
+      targetX = e.clientX / window.innerWidth - 0.5;
+      targetY = e.clientY / window.innerHeight - 0.5;
+    });
+
+    let raf = 0;
+    let f = 0;
+    function frame() {
+      f++;
+      curX += (targetX - curX) * 0.05;
+      curY += (targetY - curY) * 0.05;
+      // Same motion language as HeroVisual: gentle oscillation + parallax + float.
+      group.rotation.y = Math.sin(f * 0.01) * 0.3 + curX * 0.5;
+      group.rotation.x = -0.05 + curY * 0.28;
+      group.position.y = Math.sin(f * 0.02) * 0.06;
+      renderer.render(scene, camera);
+    }
+
+    function loop() {
+      frame();
+      raf = requestAnimationFrame(loop);
+    }
+
+    if (reduce) {
+      renderer.render(scene, camera); // static single frame
+    } else {
+      const io = new IntersectionObserver((entries) => {
+        const visible = entries[0]?.isIntersecting;
+        if (visible && !raf) loop();
+        else if (!visible && raf) {
+          cancelAnimationFrame(raf);
+          raf = 0;
+        }
+      });
+      io.observe(container);
+    }
+  }
+</script>
