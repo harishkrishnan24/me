@@ -31,7 +31,10 @@ const year = 2026;
   </div>
   <div class="wrap footer-base">
     <span>© {year} Harish Krishnan</span>
-    <a href={href("blog")}>Writing</a>
+    <div class="footer-base-links">
+      <a href={href("blog")}>Writing</a>
+      <a href={href("bookshelf")}>Bookshelf</a>
+    </div>
   </div>
 </footer>
 
@@ -92,6 +95,10 @@ const year = 2026;
     font-family: var(--font-mono);
     font-size: 11px;
     color: var(--text-dim);
+  }
+  .footer-base-links {
+    display: flex;
+    gap: 18px;
   }
   .footer-base a {
     color: var(--text-dim);

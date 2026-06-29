@@ -23,12 +23,13 @@ export interface NavLink {
   external?: boolean;
 }
 
+// Bookshelf is intentionally not in the primary nav — it's reachable from
+// the footer. The primary nav foregrounds Projects, Writing, and Open Source.
 export const navLinks: NavLink[] = [
   { label: "Home", path: "" },
   { label: "About", path: "about" },
   { label: "Projects", path: "projects" },
   { label: "Writing", path: "blog" },
-  { label: "Bookshelf", path: "bookshelf" },
   { label: "Open Source", path: "opensource" },
   {
     label: "Udemy",
