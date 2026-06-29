@@ -1,0 +1,80 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Eyebrow from "../../components/Eyebrow.astro";
+import PostCard from "../../components/PostCard.astro";
+import { sortByDateDesc, visiblePosts } from "../../lib/posts";
+
+// Drafts are visible in `astro dev`, hidden in the production build.
+const all = await getCollection("blog");
+const posts = sortByDateDesc(visiblePosts(all, import.meta.env.DEV));
+---
+
+<BaseLayout
+  title="Writing"
+  description="Essays on software engineering, AI systems, and the craft — by Harish Krishnan."
+>
+  <div class="wrap blog-index">
+    <header class="blog-head reveal">
+      <Eyebrow accent="violet">The Writing</Eyebrow>
+      <h1>Notes on building software.</h1>
+      <p class="lede">
+        Essays on architecture, AI systems, and the craft. Self-hosted, no
+        tracking, no paywall.
+      </p>
+      <div class="rule"></div>
+    </header>
+
+    {
+      posts.length === 0 ? (
+        <p class="empty">No posts yet — first one is coming.</p>
+      ) : (
+        <div class="post-list">
+          {posts.map((p) => (
+            <PostCard
+              id={p.id}
+              title={p.data.title}
+              description={p.data.description}
+              date={p.data.date}
+              tags={p.data.tags}
+              draft={p.data.draft}
+            />
+          ))}
+        </div>
+      )
+    }
+  </div>
+</BaseLayout>
+
+<style>
+  .blog-index {
+    max-width: var(--measure-wide);
+  }
+  .blog-head {
+    max-width: var(--measure);
+    margin-bottom: 48px;
+  }
+  .blog-head h1 {
+    font-size: var(--step-3);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-block: 18px 16px;
+  }
+  .lede {
+    font-size: var(--step-1);
+    font-style: italic;
+    color: var(--text-muted);
+    line-height: 1.55;
+    max-width: 36em;
+    margin-bottom: 26px;
+  }
+  .post-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 22px;
+  }
+  .empty {
+    color: var(--text-muted);
+    font-style: italic;
+  }
+</style>

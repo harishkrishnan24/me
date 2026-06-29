@@ -1,0 +1,10 @@
+---
+// A small mono uppercase label — the reference theme's signature
+// section marker. Accent color picks one of the three palette accents.
+interface Props {
+  accent?: "violet" | "orange" | "teal";
+}
+const { accent = "violet" } = Astro.props;
+---
+
+<span class:list={["eyebrow", accent]}><slot /></span>

@@ -1,0 +1,665 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Eyebrow from "../components/Eyebrow.astro";
+import { href } from "../lib/links";
+
+const languages = ["JavaScript / TypeScript", "Python", "Go", "Rust"];
+
+interface Tech {
+  label: string;
+  learning?: boolean;
+}
+const tech: Tech[] = [
+  { label: "React" },
+  { label: "Angular" },
+  { label: "Vue.js" },
+  { label: "Svelte", learning: true },
+  { label: "Node.js" },
+  { label: "Express" },
+  { label: "NestJS" },
+  { label: "React Native", learning: true },
+  { label: "Docker" },
+  { label: "Kubernetes" },
+  { label: "AWS" },
+  { label: "MongoDB" },
+  { label: "PostgreSQL" },
+  { label: "GraphQL", learning: true },
+  { label: "gRPC", learning: true },
+  { label: "Cypress" },
+  { label: "Protractor" },
+  { label: "Jest" },
+  { label: "Vitest" },
+  { label: "React Testing Library" },
+  { label: "Redux" },
+  { label: "NgRx" },
+  { label: "VueX" },
+  { label: "AWS SageMaker", learning: true },
+  { label: "Crew AI", learning: true },
+  { label: "LangGraph", learning: true },
+  { label: "LangChain", learning: true },
+  { label: "MCP", learning: true },
+];
+
+interface Job {
+  accent: "violet" | "orange" | "teal";
+  title: string;
+  company: string;
+  duration: string;
+  location: string;
+  description: string;
+  technologies: string[];
+  bullets: string[];
+}
+
+const jobs: Job[] = [
+  {
+    accent: "violet",
+    title: "Software Engineer",
+    company: "DigitalRoute",
+    duration: "Current Position",
+    location: "Stockholm, Sweden",
+    description: "Currently working on building robust Usage Data solutions.",
+    technologies: [
+      "React",
+      "Node.js",
+      "Express.js",
+      "JavaScript",
+      "TypeScript",
+      "HTML",
+      "CSS",
+      "StoryBook",
+      "Redux",
+      "AWS Services",
+      "AWS SageMaker",
+      "Jest",
+      "Vitest",
+      "React Testing Library",
+      "Playwright",
+    ],
+    bullets: [
+      "Building scalable web applications using modern technologies such as React and Node.js",
+      "Integrating AI/ML and LLM solutions",
+    ],
+  },
+  {
+    accent: "teal",
+    title: "Course Instructor (during my free time)",
+    company: "Udemy",
+    duration: "June 2023 — Present",
+    location: "Remote",
+    description:
+      "Creating courses on the Udemy platform, focusing on software development, programming languages, and modern web technologies.",
+    technologies: ["JavaScript", "TypeScript", "React", "Node.js", "Go", "Rust"],
+    bullets: [
+      "Created six courses with over a thousand students enrolled",
+      "Maintain a rating of 4+ out of five across more than 50 reviews",
+    ],
+  },
+  {
+    accent: "orange",
+    title: "Software Engineer",
+    company: "SAP Labs",
+    duration: "Nov 2020 — Jan 2024",
+    location: "Bengaluru, India",
+    description:
+      "Worked on enterprise software solutions, contributing to large-scale applications used by businesses worldwide using Angular, React, Node.js, Spring Boot, and more.",
+    technologies: [
+      "Angular",
+      "React",
+      "Node.js",
+      "Spring Boot",
+      "Java",
+      "TypeScript",
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "SAPUI5",
+      "SAP CAP",
+      "SAP BTP",
+      "Jenkins",
+      "Go",
+      "Protractor",
+      "DevOps",
+      "Security",
+    ],
+    bullets: [
+      "Developed enterprise-grade software applications for Real Estate and Human Resource",
+      "Awarded three times for effective contribution to the team",
+    ],
+  },
+  {
+    accent: "violet",
+    title: "Front-end Developer",
+    company: "Fragma Data Systems",
+    duration: "Jul 2020 — Nov 2020",
+    location: "Remote",
+    description:
+      "Contributed to UI development of multiple projects, for a bank called Mashreq in the UAE and a state government project.",
+    technologies: [
+      "React",
+      "JavaScript",
+      "TypeScript",
+      "CSS",
+      "HTML",
+      "Redux",
+      "Jest",
+      "React Testing Library",
+    ],
+    bullets: ["Developed UI solutions using React and its ecosystem"],
+  },
+  {
+    accent: "teal",
+    title: "Full Stack Developer",
+    company: "FoodDocs (Contractor)",
+    duration: "May 2017 — Mar 2020",
+    location: "Remote",
+    description: "Worked on building a food safety management system.",
+    technologies: [
+      "Angular",
+      "Vue.js",
+      "Laravel",
+      "MySQL",
+      "Cypress",
+      "Flutter",
+      "HTML",
+      "CSS",
+      "Bootstrap",
+    ],
+    bullets: [
+      "Used Angular, Vue.js, Laravel, MySQL, Cypress, and Flutter to develop applications",
+    ],
+  },
+  {
+    accent: "orange",
+    title: "Software Engineer",
+    company: "Boeing",
+    duration: "Dec 2018 — May 2019",
+    location: "Bengaluru, India",
+    description:
+      "Worked on developing software solutions for aerospace applications.",
+    technologies: [
+      "Angular",
+      "Java",
+      "Spring Boot",
+      "TypeScript",
+      "HTML",
+      "CSS",
+      "NgRx Store",
+    ],
+    bullets: [
+      "Used Angular to develop a dashboard creation application",
+      "Used Java / Spring Boot to develop backend services",
+    ],
+  },
+  {
+    accent: "violet",
+    title: "Freelance Developer",
+    company: "Upwork",
+    duration: "May 2017 — Dec 2018",
+    location: "Remote",
+    description:
+      "Worked as a freelance developer on a real estate project, focusing on UI development and client collaboration to deliver high-quality web applications.",
+    technologies: [
+      "Angular",
+      "TypeScript",
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "NgRx Store",
+    ],
+    bullets: [
+      "Actively contributed to UI development using Angular — building reusable components, setting up projects from scratch, and more",
+      "Worked hand-in-hand with the owner of the idea to improve the product UI flow",
+      "Involved in the recruitment of new people",
+      "Communicated with the back-end developer, providing suggestions and integrating the UI with the back-end",
+    ],
+  },
+  {
+    accent: "teal",
+    title: "Software Engineer",
+    company: "Squash Apps",
+    duration: "Sep 2016 — May 2017",
+    location: "Coimbatore, India",
+    description:
+      "Started as an entry-level software engineer and quickly developed full-stack development skills, contributing to in-house products and client projects.",
+    technologies: [
+      "MongoDB",
+      "Express.js",
+      "React",
+      "Node.js (MERN Stack)",
+      "Ionic",
+    ],
+    bullets: [
+      "Joined as an entry-level software engineer",
+      "Quickly ramped up with MERN stack skills within a month",
+      "Actively contributed to in-house products, leading to an opportunity to work with US-based clients",
+    ],
+  },
+];
+
+const interests = [
+  "Reading technical books and research papers across a range of topics",
+  "Rust & Go programming languages",
+  "Experimenting with new technologies",
+  "Technical writing and blogging",
+  "Building side projects and prototypes",
+  "Contributing to open-source projects",
+  "Formula One",
+];
+---
+
+<BaseLayout
+  title="About"
+  description="Harish Krishnan — software engineer based in Stockholm. Background, skills, work experience, and the craft."
+>
+  <!-- HERO -->
+  <section class="wrap hero">
+    <img
+      class="avatar"
+      src={href("images/profile.jpg")}
+      alt="Harish Krishnan"
+      width="120"
+      height="120"
+    />
+    <div class="hero-body">
+      <Eyebrow accent="violet">About · Software Engineer · Stockholm</Eyebrow>
+      <h1 class="hero-title">A perpetual student of the craft.</h1>
+      <p class="hero-deck">
+        Software engineer based in Stockholm with experience across startups and
+        enterprise. I build applications, teach, and write — and I'm always
+        learning what comes next.
+      </p>
+    </div>
+  </section>
+
+  <div class="wrap"><div class="divider"></div></div>
+
+  <!-- BACKGROUND -->
+  <section class="wrap reveal">
+    <Eyebrow accent="teal">Background</Eyebrow>
+    <div class="prose section-prose">
+      <p>
+        I'm Harish Krishnan, a software engineer based in Stockholm with
+        experience in both startups and enterprise environments. I've built
+        software applications using a wide range of technologies, and I actively
+        share my knowledge through Udemy courses and technical writing.
+        Previously, I've worked with companies like SAP, Boeing, and Siemens, and
+        also as a contractor at companies like FoodDocs in Tallinn.
+      </p>
+      <p>
+        Currently, I'm focused on deepening my expertise in Generative AI,
+        Machine Learning, and distributed systems, while strengthening my
+        fundamentals in software engineering. I'm also actively learning Go and
+        Rust to build efficient, scalable systems. I'm passionate about
+        continuous learning, with a strong interest in applying emerging
+        technologies to solve real-world problems.
+      </p>
+    </div>
+  </section>
+
+  <div class="wrap"><div class="divider"></div></div>
+
+  <!-- TECHNICAL SKILLS -->
+  <section class="wrap reveal">
+    <Eyebrow accent="violet">Technical skills</Eyebrow>
+    <h2 class="section-title">What I work with</h2>
+
+    <div class="skills-grid">
+      <div class="card violet">
+        <h3 class="skill-head">Languages</h3>
+        <div class="tag-row">
+          {languages.map((l) => <span class="tag">{l}</span>)}
+        </div>
+      </div>
+
+      <div class="card teal">
+        <div class="skill-head-row">
+          <h3 class="skill-head">Technologies & frameworks</h3>
+          <span class="learning-legend">
+            <span class="learning-dot" aria-hidden="true"></span> currently learning
+          </span>
+        </div>
+        <div class="tag-row">
+          {
+            tech.map((t) => (
+              <span class:list={["tag", { "tag-learning": t.learning }]}>
+                {t.label}
+              </span>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap"><div class="divider"></div></div>
+
+  <!-- CERTIFICATIONS -->
+  <section class="wrap reveal">
+    <Eyebrow accent="orange">Certifications</Eyebrow>
+    <h2 class="section-title">Verified credentials</h2>
+    <div class="card orange cert-card">
+      <p class="muted">
+        My professional certifications are issued and verified on Credly.
+      </p>
+      <a
+        class="btn"
+        href="https://www.credly.com/users/harish-krishnan.623b2d03"
+        target="_blank"
+        rel="noopener noreferrer">View my badges on Credly →</a
+      >
+    </div>
+  </section>
+
+  <div class="wrap"><div class="divider"></div></div>
+
+  <!-- WORK EXPERIENCE -->
+  <section class="wrap reveal">
+    <Eyebrow accent="violet">Work experience</Eyebrow>
+    <h2 class="section-title">Where I've worked</h2>
+    <div class="work-list">
+      {
+        jobs.map((job) => (
+          <article class:list={["card", job.accent, "job"]}>
+            <header class="job-head">
+              <h3 class="job-title">{job.title}</h3>
+              <p class="job-meta">
+                {job.company} · {job.duration} · {job.location}
+              </p>
+            </header>
+            <p class="job-desc">{job.description}</p>
+            <ul class="job-bullets">
+              {job.bullets.map((b) => (
+                <li>{b}</li>
+              ))}
+            </ul>
+            <div class="tag-row job-tags">
+              {job.technologies.map((t) => (
+                <span class="tag">{t}</span>
+              ))}
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <div class="wrap"><div class="divider"></div></div>
+
+  <!-- INTERESTS -->
+  <section class="wrap reveal">
+    <Eyebrow accent="teal">Interests & hobbies</Eyebrow>
+    <h2 class="section-title">Away from the keyboard (mostly)</h2>
+    <ul class="interest-list">
+      {interests.map((i) => <li>{i}</li>)}
+    </ul>
+  </section>
+
+  <div class="wrap"><div class="divider"></div></div>
+
+  <!-- EDUCATION -->
+  <section class="wrap reveal">
+    <Eyebrow accent="orange">Education & learning</Eyebrow>
+    <h2 class="section-title">A learning-first mindset</h2>
+    <div class="prose section-prose">
+      <p>
+        I believe in continuous learning and staying current with the latest
+        trends in technology. My educational journey includes a formal Bachelor
+        of Engineering in Automobile Engineering, complemented by self-directed
+        learning through online platforms, books, and hands-on projects in
+        software development and engineering principles.
+      </p>
+      <p>
+        I'm also passionate about sharing knowledge, which is why I create
+        content on
+        <a
+          href="https://harishkrishnan1993.medium.com/"
+          target="_blank"
+          rel="noopener noreferrer">Medium</a
+        >
+        and develop courses on
+        <a
+          href="https://www.udemy.com/user/harish-krishnan-5/"
+          target="_blank"
+          rel="noopener noreferrer">Udemy</a
+        >.
+      </p>
+    </div>
+  </section>
+
+  <div class="wrap"><div class="divider"></div></div>
+
+  <!-- PHILOSOPHY -->
+  <section class="wrap reveal philosophy">
+    <Eyebrow accent="violet">Philosophy</Eyebrow>
+    <blockquote class="quote">
+      With enough time, effort, and curiosity, any skill can be mastered and
+      applied effectively.
+    </blockquote>
+  </section>
+
+  <div class="wrap"><div class="divider"></div></div>
+
+  <!-- CONNECT -->
+  <section class="wrap reveal connect">
+    <Eyebrow accent="orange">Let's connect</Eyebrow>
+    <h2 class="section-title">Always up for a good conversation</h2>
+    <div class="prose section-prose">
+      <p>
+        I'm always open to interesting conversations about technology,
+        collaboration opportunities, or simply connecting with fellow
+        developers. Feel free to reach out through any of the platforms linked on
+        the home page.
+      </p>
+      <p>
+        Whether you're looking for technical insights, want to discuss a project,
+        or just want to chat about the latest in software development, I'd love
+        to hear from you.
+      </p>
+    </div>
+    <div class="cta-row">
+      <a class="btn" href={href("")}>Get in touch →</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* HERO */
+  .hero {
+    padding-block: clamp(40px, 8vw, 80px) 20px;
+    display: flex;
+    gap: clamp(20px, 4vw, 36px);
+    align-items: center;
+  }
+  .avatar {
+    width: clamp(88px, 14vw, 120px);
+    height: clamp(88px, 14vw, 120px);
+    border-radius: 50%;
+    border: 1px solid var(--border-bright);
+    object-fit: cover;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 4px var(--violet-glow);
+  }
+  .hero-body {
+    max-width: var(--measure);
+  }
+  .hero-title {
+    font-size: var(--step-3);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+    margin-block: 14px 18px;
+  }
+  .hero-deck {
+    font-size: var(--step-1);
+    font-style: italic;
+    color: var(--text-muted);
+    line-height: 1.6;
+    max-width: 38em;
+  }
+
+  /* Section scaffolding */
+  .section-title {
+    font-size: var(--step-2);
+    margin-block: 10px 24px;
+  }
+  .section-prose {
+    margin-top: 14px;
+  }
+  .muted {
+    color: var(--text-muted);
+    line-height: 1.6;
+    max-width: 34em;
+  }
+
+  /* Skills */
+  .skills-grid {
+    display: grid;
+    gap: 20px;
+  }
+  .skill-head {
+    font-size: var(--step-0);
+    margin-bottom: 16px;
+  }
+  .skill-head-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .skill-head-row .skill-head {
+    margin-bottom: 0;
+  }
+  .learning-legend {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .learning-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--teal);
+    box-shadow: 0 0 0 3px var(--teal-tint);
+  }
+  /* "Currently learning" tags — teal accent + leading dot */
+  .tag-learning {
+    background: var(--teal-tint);
+    color: var(--teal);
+    border-color: var(--teal-line);
+  }
+  .tag-learning::before {
+    content: "";
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+
+  /* Certifications */
+  .cert-card {
+    display: grid;
+    gap: 18px;
+    justify-items: start;
+  }
+
+  /* Work experience */
+  .work-list {
+    display: grid;
+    gap: 18px;
+  }
+  .job-title {
+    font-size: var(--step-1);
+  }
+  .job-meta {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+  .job-desc {
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-block: 16px 12px;
+  }
+  .job-bullets {
+    list-style: none;
+    display: grid;
+    gap: 9px;
+    margin-bottom: 18px;
+  }
+  .job-bullets li {
+    position: relative;
+    padding-left: 22px;
+    line-height: 1.55;
+  }
+  .job-bullets li::before {
+    content: "▹";
+    position: absolute;
+    left: 0;
+    color: var(--teal);
+    font-family: var(--font-mono);
+  }
+
+  /* Interests */
+  .interest-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px 24px;
+  }
+  .interest-list li {
+    position: relative;
+    padding-left: 26px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .interest-list li::before {
+    content: "▹";
+    position: absolute;
+    left: 0;
+    color: var(--violet);
+    font-family: var(--font-mono);
+  }
+
+  /* Philosophy */
+  .philosophy {
+    max-width: var(--measure-wide);
+  }
+  .quote {
+    font-family: var(--font-sans);
+    font-size: var(--step-2);
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--text);
+    border-left: 3px solid var(--violet);
+    padding: 8px 0 8px 26px;
+    margin-top: 18px;
+    max-width: 24em;
+    text-wrap: balance;
+  }
+
+  /* Connect */
+  .connect .cta-row {
+    margin-top: 26px;
+  }
+
+  @media (max-width: 720px) {
+    .hero {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 18px;
+    }
+  }
+</style>

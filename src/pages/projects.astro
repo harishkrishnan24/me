@@ -1,0 +1,188 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Eyebrow from "../components/Eyebrow.astro";
+
+interface ProjectLink {
+  label: string;
+  url: string;
+}
+interface Project {
+  title: string;
+  description: string;
+  tech: string[];
+  status: string;
+  accent: "violet" | "orange" | "teal";
+  links: ProjectLink[];
+}
+
+const projects: Project[] = [
+  {
+    title: "Developing an Interpreter",
+    description:
+      'Developing an interpreter for a fictional Monkey programming language. This project involves parsing, interpreting, and executing code written in Monkey, with a focus on understanding how interpreters work under the hood. Inspired by the book "Writing an Interpreter in Go" by Thorsten Ball.',
+    tech: ["Go", "Rust"],
+    status: "Completed",
+    accent: "violet",
+    links: [
+      {
+        label: "github.com/harishkrishnan24/interpreter",
+        url: "https://github.com/harishkrishnan24/interpreter",
+      },
+      {
+        label: "github.com/Code-With-HK/monkey-interpreter-rust",
+        url: "https://github.com/Code-With-HK/monkey-interpreter-rust",
+      },
+    ],
+  },
+  {
+    title: "Build Core Redux from Scratch",
+    description:
+      "Re-building the core concepts of Redux by reverse engineering the library. This project focuses on understanding the inner workings of Redux, including state management, actions, reducers, and middleware.",
+    tech: ["JavaScript"],
+    status: "Completed",
+    accent: "teal",
+    links: [
+      {
+        label: "github.com/elclassicoder/redux-from-scratch",
+        url: "https://github.com/elclassicoder/redux-from-scratch",
+      },
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title="Projects"
+  description="Projects by Harish Krishnan — building interpreters, reverse-engineering libraries, and exploring how systems work under the hood."
+>
+  <!-- HERO -->
+  <section class="wrap hero">
+    <Eyebrow accent="violet">Projects · Things I've built</Eyebrow>
+    <h1 class="hero-title">Things I build to<br /><span class="grad">understand them</span>.</h1>
+    <p class="hero-deck">
+      A small collection of projects where I reverse-engineer the tools I rely
+      on — interpreters, state libraries, the machinery underneath. Building
+      them is how I learn how they really work.
+    </p>
+  </section>
+
+  <div class="wrap"><div class="divider"></div></div>
+
+  <!-- PROJECTS -->
+  <section class="wrap projects">
+    <div class="projects-head reveal">
+      <Eyebrow accent="teal">Selected work</Eyebrow>
+    </div>
+    <div class="projects-grid">
+      {
+        projects.map((project) => (
+          <article class:list={["card", project.accent, "reveal", "project-card"]}>
+            <h3 class="project-title">{project.title}</h3>
+            <p class="project-desc">{project.description}</p>
+
+            <div class="tag-row project-tags">
+              {project.tech.map((t) => (
+                <span class="tag">{t}</span>
+              ))}
+              <span class="tag status">{project.status}</span>
+            </div>
+
+            <div class="project-links">
+              {project.links.map((link) => (
+                <a
+                  class="project-link"
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {link.label} →
+                </a>
+              ))}
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* HERO */
+  .hero {
+    padding-block: clamp(40px, 8vw, 80px) 20px;
+    max-width: var(--measure);
+  }
+  .hero-title {
+    font-size: var(--step-4);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+    margin-block: 22px 22px;
+  }
+  .grad {
+    background: linear-gradient(100deg, var(--violet), var(--teal));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .hero-deck {
+    font-size: var(--step-1);
+    font-style: italic;
+    color: var(--text-muted);
+    line-height: 1.6;
+    max-width: 38em;
+    margin-bottom: 0;
+  }
+
+  /* PROJECTS */
+  .projects {
+    display: block;
+  }
+  .projects-head {
+    margin-bottom: 22px;
+  }
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 22px;
+  }
+  .project-card {
+    display: flex;
+    flex-direction: column;
+  }
+  .project-title {
+    font-size: var(--step-1);
+    margin-bottom: 10px;
+    color: var(--text);
+  }
+  .project-desc {
+    font-family: var(--font-serif);
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 18px;
+  }
+  .project-tags {
+    margin-bottom: 18px;
+  }
+  .tag.status {
+    background: var(--teal-tint);
+    color: var(--teal);
+    border-color: var(--teal-line);
+  }
+  .project-links {
+    display: grid;
+    gap: 8px;
+    margin-top: auto;
+  }
+  .project-link {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--teal);
+    border-bottom: 1px solid transparent;
+    width: fit-content;
+    transition: border-color 0.15s var(--ease);
+  }
+  .project-link:hover {
+    border-bottom-color: var(--teal-line);
+  }
+</style>

@@ -1,0 +1,242 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Eyebrow from "../components/Eyebrow.astro";
+import { href } from "../lib/links";
+
+interface Book {
+  title: string;
+  author: string;
+  cover: string;
+}
+
+const reading: Book[] = [
+  { title: "The Power of Now", author: "Eckhart Tolle", cover: "power-of-now.png" },
+  { title: "Introduction to Algorithms", author: "Thomas H. Cormen, Charles E. Leiserson", cover: "intro-to-algorithms.png" },
+  { title: "Python3 The Comprehensive Guide", author: "Johannes Ernesti", cover: "python3-comprehensive.png" },
+  { title: "Building Micro-Frontends", author: "Luca Mezzalira", cover: "building-micro-frontends.png" },
+  { title: "Mastering Blockchain", author: "Imran Bashir", cover: "mastering-blockchain.png" },
+  { title: "Start With Why", author: "Simon Sinek", cover: "start-with-why.png" },
+  { title: "Domain Driven Design", author: "Eric Evans", cover: "domain-driven-design.png" },
+  { title: "Clever Girl Finance", author: "Bola Sokunbi", cover: "clever-girl-finance.png" },
+  { title: "Patterns of Distributed Systems", author: "Unmesh Joshi", cover: "patterns-distributed-systems.png" },
+  { title: "Head First C", author: "David Griffiths & Dawn Griffiths", cover: "head-first-c.png" },
+  { title: "UML Distilled", author: "Martin Fowler", cover: "uml-distilled.png" },
+];
+
+const read: Book[] = [
+  { title: "Designing Data-Intensive Applications", author: "Martin Kleppmann", cover: "ddia.png" },
+  { title: "Lets Go", author: "A. Edwards", cover: "letsgo.png" },
+  { title: "Clean Architecture", author: "Robert C. Martin", cover: "clean-architecture.png" },
+  { title: "Head First Design Patterns", author: "Eric Freeman & Bert Bates", cover: "head-first-design-patterns.png" },
+  { title: "Grokking Streaming Systems", author: "Josh Fischer & Ning Wang", cover: "grokking-streaming.png" },
+  { title: "Clean Code", author: "Robert C. Martin", cover: "clean-code.png" },
+  { title: "Mastering Go", author: "Mihalis Tsoukalos", cover: "mastering-go.png" },
+  { title: "Programming Rust", author: "Jim Blandy & Jason Orendorff", cover: "programming-rust.png" },
+  { title: "You Don't Know JS (Series)", author: "Kyle Simpson", cover: "ydkjs.png" },
+  { title: "Advanced React", author: "Nadia Makarevich", cover: "advanced-react.png" },
+  { title: "Microservices Patterns", author: "Chris Richardson", cover: "microservices-patterns.png" },
+  { title: "The Definitive Guide for Node.js in Enterprise", author: "Platformatic", cover: "nodejs-enterprise.png" },
+  { title: "Get It Done Now", author: "Brian Tracy", cover: "get-it-done-now.png" },
+];
+---
+
+<BaseLayout
+  title="Bookshelf"
+  description="A curated library of books and papers that have shaped how I think about software, systems, and the craft."
+>
+  <!-- HERO -->
+  <section class="wrap hero">
+    <Eyebrow accent="violet">Bookshelf · Papers</Eyebrow>
+    <h1 class="hero-title">My digital library.</h1>
+    <p class="hero-deck">
+      Knowledge is the foundation of innovation. A curated collection of books
+      and papers that have shaped my understanding of technology and software —
+      and continue to guide the work.
+    </p>
+  </section>
+
+  <div class="wrap"><div class="divider"></div></div>
+
+  <!-- CURRENTLY READING -->
+  <section class="wrap shelf-section">
+    <div class="shelf-head reveal">
+      <Eyebrow accent="teal">Currently reading</Eyebrow>
+      <h2>On the nightstand</h2>
+    </div>
+    <ul class="book-grid reveal">
+      {
+        reading.map((book) => (
+          <li class="book">
+            <img
+              class="book-cover"
+              src={href(`images/books/${book.cover}`)}
+              alt={`Cover of ${book.title}`}
+              loading="lazy"
+              decoding="async"
+            />
+            <h3 class="book-title">{book.title}</h3>
+            <p class="book-author">{book.author}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <div class="wrap"><div class="divider"></div></div>
+
+  <!-- READ -->
+  <section class="wrap shelf-section">
+    <div class="shelf-head reveal">
+      <Eyebrow accent="violet">Read</Eyebrow>
+      <h2>Finished, and worth it</h2>
+    </div>
+    <ul class="book-grid reveal">
+      {
+        read.map((book) => (
+          <li class="book">
+            <img
+              class="book-cover"
+              src={href(`images/books/${book.cover}`)}
+              alt={`Cover of ${book.title}`}
+              loading="lazy"
+              decoding="async"
+            />
+            <h3 class="book-title">{book.title}</h3>
+            <p class="book-author">{book.author}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <div class="wrap"><div class="divider"></div></div>
+
+  <!-- PAPERS -->
+  <section class="wrap shelf-section">
+    <div class="shelf-head reveal">
+      <Eyebrow accent="orange">Papers</Eyebrow>
+      <h2>Research & whitepapers</h2>
+    </div>
+    <ul class="paper-list reveal">
+      <li>
+        <a
+          href="https://web.stanford.edu/class/cs114/reading-keshav.pdf"
+          target="_blank"
+          rel="noopener noreferrer">How to Read a Paper</a
+        >
+        <span class="paper-author">S. Keshav</span>
+      </li>
+    </ul>
+  </section>
+</BaseLayout>
+
+<style>
+  /* HERO */
+  .hero {
+    padding-block: clamp(40px, 8vw, 80px) 20px;
+    max-width: var(--measure);
+  }
+  .hero-title {
+    font-size: var(--step-4);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+    margin-block: 22px 22px;
+  }
+  .hero-deck {
+    font-size: var(--step-1);
+    font-style: italic;
+    color: var(--text-muted);
+    line-height: 1.6;
+    max-width: 38em;
+  }
+
+  /* Section heads */
+  .shelf-head {
+    margin-bottom: 28px;
+  }
+  .shelf-head h2 {
+    font-size: var(--step-2);
+    margin-top: 10px;
+  }
+
+  /* Book grid */
+  .book-grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: clamp(20px, 3vw, 32px);
+  }
+  .book {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .book-cover {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+    background: var(--surface);
+    transition:
+      transform 0.25s var(--ease),
+      border-color 0.25s var(--ease),
+      box-shadow 0.25s var(--ease);
+  }
+  .book:hover .book-cover {
+    transform: translateY(-4px);
+    border-color: var(--border-bright);
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.45);
+  }
+  .book-title {
+    font-size: var(--step-0);
+    font-weight: 700;
+    line-height: 1.3;
+  }
+  .book-author {
+    font-size: var(--step--1);
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  /* Papers */
+  .paper-list {
+    list-style: none;
+    display: grid;
+    gap: 14px;
+    max-width: var(--measure);
+  }
+  .paper-list li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px 12px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .paper-list li:last-child {
+    border-bottom: none;
+  }
+  .paper-list a {
+    color: var(--text);
+    font-weight: 600;
+    border-bottom: 1px solid var(--teal-line);
+    transition: border-color 0.15s var(--ease);
+  }
+  .paper-list a:hover {
+    border-bottom-color: var(--teal);
+  }
+  .paper-author {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--text-dim);
+  }
+
+  @media (max-width: 480px) {
+    .book-grid {
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+  }
+</style>

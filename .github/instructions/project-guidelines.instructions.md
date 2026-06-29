@@ -1,11 +1,13 @@
 ---
 applyTo: '**/*'
 ---
-- Only html should be used.
-- Use css only for basic styling and layout and to make it responsive.
-- Use no frameworks or libraries.
-- Use semantic HTML elements.
-- Make it accessible.
-- Use alt attributes for images.
-- follow mobile first design principles.
-- Make the site nostalgic to make it feel like the 1990s.
+- This is an Astro site (static output) deployed to GitHub Pages under base `/me`.
+- Use Astro components (`.astro`), TypeScript, and Markdown content collections.
+- Author blog posts as Markdown in `src/content/blog/`; run `npm run new:post "Title"` to scaffold.
+- Style with the dark editorial theme: reference CSS custom properties in `src/styles/tokens.css`. Never hardcode hex colors.
+- Three type roles: `--font-sans` (Inter) for headings/UI, `--font-serif` (Source Serif 4) for body prose, `--font-mono` (JetBrains Mono) for labels/code.
+- Keep the site fast and JS-optional: prefer CSS-only solutions; content must render with JavaScript disabled.
+- All internal links must be base-aware — use `href()` from `src/lib/links.ts` (or `import.meta.env.BASE_URL`), never a hardcoded leading `/`.
+- Self-host all assets (fonts via `@fontsource`). No third-party CDN requests at runtime.
+- Use semantic HTML, descriptive `alt` on images, and follow mobile-first responsive design.
+- Run `npm run build` (which runs `astro check`) before committing.

@@ -1,0 +1,29 @@
+---
+import { getCollection, render } from "astro:content";
+import PostLayout from "../../layouts/PostLayout.astro";
+import { visiblePosts } from "../../lib/posts";
+
+// One static page per visible post. Drafts are excluded from the
+// production build but available in `astro dev`.
+export async function getStaticPaths() {
+  const all = await getCollection("blog");
+  const posts = visiblePosts(all, import.meta.env.DEV);
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<PostLayout
+  title={post.data.title}
+  description={post.data.description}
+  date={post.data.date}
+  tags={post.data.tags}
+  draft={post.data.draft}
+>
+  <Content />
+</PostLayout>

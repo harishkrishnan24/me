@@ -1,0 +1,58 @@
+/* ─────────────────────────────────────────────────────────────
+   Design tokens — the single source of truth for the palette,
+   type system, and scale. Components reference these vars; they
+   never hardcode hex. Derived from the reference editorial theme.
+   ───────────────────────────────────────────────────────────── */
+:root {
+  /* ── Surfaces ── */
+  --bg: #0c0c13;
+  --surface: #13131d;
+  --surface-2: #1a1a26;
+  --surface-3: #21212f;
+  --border: #21212f;
+  --border-bright: #2e2e42;
+
+  /* ── Text ── */
+  --text: #e8e8f2;
+  --text-muted: #7a7a9a;
+  --text-dim: #4a4a66;
+
+  /* ── Accents ── */
+  --violet: #7b6af0;
+  --violet-soft: #beb8f0;
+  --orange: #e06b50;
+  --teal: #48bea6;
+
+  /* Accent tints (low-opacity fills for cards, glows, chips) */
+  --violet-tint: rgba(123, 106, 240, 0.1);
+  --violet-line: rgba(123, 106, 240, 0.22);
+  --violet-glow: rgba(123, 106, 240, 0.07);
+  --orange-tint: rgba(224, 107, 80, 0.06);
+  --orange-line: rgba(224, 107, 80, 0.18);
+  --teal-tint: rgba(72, 190, 166, 0.08);
+  --teal-line: rgba(72, 190, 166, 0.3);
+
+  /* ── Type families (three roles) ── */
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-mono: "JetBrains Mono", "SF Mono", "Cascadia Code", "Roboto Mono",
+    monospace;
+
+  /* ── Fluid type scale ── */
+  --step--1: clamp(0.83rem, 0.78rem + 0.2vw, 0.94rem);
+  --step-0: clamp(1rem, 0.95rem + 0.25vw, 1.13rem);
+  --step-1: clamp(1.2rem, 1.1rem + 0.5vw, 1.5rem);
+  --step-2: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+  --step-3: clamp(1.9rem, 1.5rem + 2vw, 3rem);
+  --step-4: clamp(2.3rem, 1.6rem + 3.4vw, 3.8rem);
+
+  /* ── Spacing / layout ── */
+  --measure: 680px; /* prose line length */
+  --measure-wide: 1080px; /* page content width */
+  --radius: 6px;
+  --radius-sm: 3px;
+
+  /* ── Motion ── */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur: 0.45s;
+}

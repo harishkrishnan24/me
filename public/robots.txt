@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://harishkrishnan24.github.io/me/sitemap-index.xml

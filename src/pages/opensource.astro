@@ -1,0 +1,475 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Eyebrow from "../components/Eyebrow.astro";
+import { href } from "../lib/links";
+
+// Repositories I've contributed to, grouped by kind. Each card links to
+// the project's source. Data lives here so the markup stays a simple map.
+interface Repo {
+  name: string;
+  url: string;
+  description: string;
+  tags: string[];
+}
+interface RepoGroup {
+  label: string;
+  accent: "violet" | "orange" | "teal";
+  repos: Repo[];
+}
+
+const repoGroups: RepoGroup[] = [
+  {
+    label: "Package Libraries",
+    accent: "violet",
+    repos: [
+      {
+        name: "Prisma",
+        url: "https://github.com/prisma/prisma",
+        description: "ORM for Node.js and TypeScript.",
+        tags: ["TypeScript", "ORM"],
+      },
+      {
+        name: "Apollo Client",
+        url: "https://github.com/apollographql/apollo-client",
+        description: "GraphQL client for React and other frameworks.",
+        tags: ["GraphQL", "React"],
+      },
+      {
+        name: "Angular",
+        url: "https://github.com/angular/angular",
+        description:
+          "A platform for building mobile and desktop web applications.",
+        tags: ["TypeScript", "Framework"],
+      },
+      {
+        name: "Qwik",
+        url: "https://github.com/QwikDev/qwik",
+        description:
+          "A new web framework for building fast, optimized applications.",
+        tags: ["TypeScript", "Framework"],
+      },
+    ],
+  },
+  {
+    label: "Open Source Learning Sites",
+    accent: "teal",
+    repos: [
+      {
+        name: "JavaScript.info",
+        url: "https://javascript.info/",
+        description: "Open source JavaScript tutorials and resources.",
+        tags: ["JavaScript", "Docs"],
+      },
+      {
+        name: "Zig Guide",
+        url: "https://github.com/Sobeston/zig.guide",
+        description:
+          "Open source Zig programming language tutorials and resources.",
+        tags: ["Zig", "Docs"],
+      },
+    ],
+  },
+  {
+    label: "Developer Tools",
+    accent: "orange",
+    repos: [
+      {
+        name: "Bulletproof React",
+        url: "https://github.com/alan2207/bulletproof-react",
+        description:
+          "A collection of best practices for building React applications.",
+        tags: ["React", "Best Practices"],
+      },
+    ],
+  },
+];
+
+// Individual merged/closed contributions, preserved verbatim from the
+// source site (project, type, what changed, status + link).
+interface Contribution {
+  project: string;
+  type: string;
+  contribution: string;
+  status: string;
+  url: string;
+}
+
+const contributions: Contribution[] = [
+  {
+    project: "JavaScript.info",
+    type: "Documentation",
+    contribution: "Fixed typo",
+    status: "Merged",
+    url: "https://github.com/javascript-tutorial/en.javascript.info/pull/3598",
+  },
+  {
+    project: "prisma",
+    type: "Bug",
+    contribution: "Raised a bug",
+    status: "Acknowledged",
+    url: "https://github.com/prisma/prisma/issues/26021",
+  },
+  {
+    project: "bulletproof-react",
+    type: "Documentation",
+    contribution: "Fixed typo",
+    status: "Merged",
+    url: "https://github.com/alan2207/bulletproof-react/pull/224",
+  },
+  {
+    project: "apollo-client",
+    type: "Documentation",
+    contribution: "Fixed example error",
+    status: "Merged",
+    url: "https://github.com/apollographql/apollo-client/pull/11998",
+  },
+  {
+    project: "angular",
+    type: "Documentation",
+    contribution: "Fixed typo",
+    status: "Merged",
+    url: "https://github.com/angular/angular/pull/56819",
+  },
+  {
+    project: "angular",
+    type: "Documentation",
+    contribution: "Fixed typo",
+    status: "Merged",
+    url: "https://github.com/angular/angular/pull/56921",
+  },
+  {
+    project: "angular",
+    type: "Documentation",
+    contribution: "Fixed typo",
+    status: "Merged",
+    url: "https://github.com/angular/angular/pull/56753",
+  },
+  {
+    project: "qwik",
+    type: "Documentation",
+    contribution: "Fixed bug in links",
+    status: "Merged",
+    url: "https://github.com/QwikDev/qwik/pull/5445",
+  },
+  {
+    project: "qwik",
+    type: "Documentation",
+    contribution: "Fixed typo",
+    status: "Merged",
+    url: "https://github.com/QwikDev/qwik/pull/5446",
+  },
+  {
+    project: "qwik",
+    type: "Documentation",
+    contribution: "Fixed typo",
+    status: "Merged",
+    url: "https://github.com/QwikDev/qwik/pull/5444",
+  },
+  {
+    project: "qwik",
+    type: "Documentation",
+    contribution: "Fixed typo",
+    status: "Merged",
+    url: "https://github.com/QwikDev/qwik/pull/4862",
+  },
+  {
+    project: "qwik",
+    type: "Documentation",
+    contribution: "Fixed typo",
+    status: "Merged",
+    url: "https://github.com/QwikDev/qwik/pull/4885",
+  },
+  {
+    project: "qwik",
+    type: "Documentation",
+    contribution: "Fixed typo",
+    status: "Merged",
+    url: "https://github.com/QwikDev/qwik/pull/4866",
+  },
+  {
+    project: "qwik",
+    type: "Documentation",
+    contribution: "Fixed typo",
+    status: "Merged",
+    url: "https://github.com/QwikDev/qwik/pull/4861",
+  },
+  {
+    project: "Zig Guide",
+    type: "Documentation",
+    contribution: "Fixed doc tests",
+    status: "Closed",
+    url: "https://github.com/Sobeston/zig.guide/pull/182",
+  },
+];
+---
+
+<BaseLayout
+  title="Open Source"
+  description="Open source contributions by Harish Krishnan — merged pull requests and repositories across Angular, Qwik, Prisma, Apollo Client, and more."
+>
+  <!-- HERO -->
+  <section class="wrap hero">
+    <Eyebrow accent="violet">Open Source</Eyebrow>
+    <h1 class="hero-title">Giving back to the community.</h1>
+    <p class="hero-deck">
+      Open source software has been instrumental in my growth as a developer. I
+      believe in giving back to the community that has given me so much — here
+      are my contributions across the projects I rely on every day.
+    </p>
+  </section>
+
+  <div class="wrap"><div class="divider"></div></div>
+
+  <!-- CONTRIBUTED REPOSITORIES -->
+  <section class="wrap repos">
+    <div class="repos-head reveal">
+      <Eyebrow accent="teal">Repositories</Eyebrow>
+      <h2>Projects I've contributed to</h2>
+    </div>
+
+    {
+      repoGroups.map((group) => (
+        <div class="repo-group reveal">
+          <h3 class="group-label">{group.label}</h3>
+          <div class="repo-grid">
+            {group.repos.map((repo) => (
+              <div class:list={["card", group.accent, "repo-card"]}>
+                <h3 class="repo-name">{repo.name}</h3>
+                <p class="repo-desc">{repo.description}</p>
+                <div class="tag-row">
+                  {repo.tags.map((t) => (
+                    <span class="tag">{t}</span>
+                  ))}
+                </div>
+                <a
+                  class="repo-arrow"
+                  href={repo.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  View on GitHub →
+                </a>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))
+    }
+  </section>
+
+  <div class="wrap"><div class="divider"></div></div>
+
+  <!-- COMMUNITY CONTRIBUTIONS -->
+  <section class="wrap contributions">
+    <div class="contrib-head reveal">
+      <Eyebrow accent="violet">Contributions</Eyebrow>
+      <h2>Merged & accepted work</h2>
+    </div>
+
+    <div class="table-wrap reveal">
+      <table>
+        <thead>
+          <tr>
+            <th>Project</th>
+            <th>Type</th>
+            <th>Contribution</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            contributions.map((c) => (
+              <tr>
+                <td class="td-project">{c.project}</td>
+                <td>{c.type}</td>
+                <td>{c.contribution}</td>
+                <td>
+                  <a
+                    class="status-link"
+                    href={c.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {c.status} →
+                  </a>
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="wrap"><div class="divider"></div></div>
+
+  <!-- COLLABORATE -->
+  <section class="wrap collaborate">
+    <div class="collab-intro reveal">
+      <Eyebrow accent="orange">Collaborate</Eyebrow>
+      <h2>Want to build something?</h2>
+      <p class="muted">
+        I'm always looking for interesting projects to contribute to and
+        passionate developers to collaborate with. Whether you need help with a
+        project, want to pair program, or have an idea for a new open source
+        initiative, let's connect.
+      </p>
+      <div class="cta-row">
+        <a
+          class="btn"
+          href="https://github.com/harishkrishnan24"
+          target="_blank"
+          rel="noopener noreferrer">See my GitHub →</a
+        >
+        <a class="btn ghost" href={href("about")}>Get in touch</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* HERO */
+  .hero {
+    padding-block: clamp(40px, 8vw, 80px) 20px;
+    max-width: var(--measure);
+  }
+  .hero-title {
+    font-size: var(--step-4);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+    margin-block: 22px 22px;
+  }
+  .hero-deck {
+    font-size: var(--step-1);
+    font-style: italic;
+    color: var(--text-muted);
+    line-height: 1.6;
+    max-width: 38em;
+  }
+
+  /* Section heads */
+  .repos-head,
+  .contrib-head {
+    margin-bottom: 28px;
+  }
+  .repos-head h2,
+  .contrib-head h2,
+  .collab-intro h2 {
+    font-size: var(--step-2);
+    margin-top: 10px;
+  }
+
+  /* Repo groups */
+  .repo-group + .repo-group {
+    margin-top: 36px;
+  }
+  .group-label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+  .repo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 22px;
+  }
+  .repo-card {
+    display: flex;
+    flex-direction: column;
+  }
+  .repo-name {
+    font-size: var(--step-1);
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+  .repo-desc {
+    font-family: var(--font-serif);
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 18px;
+    flex: 1;
+  }
+  .repo-card .tag-row {
+    margin-bottom: 18px;
+  }
+  .repo-arrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--teal);
+    display: inline-block;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.15s var(--ease);
+  }
+  .repo-arrow:hover {
+    border-bottom-color: var(--teal-line);
+  }
+
+  /* Contributions table */
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+  .table-wrap table {
+    margin-block: 0;
+    min-width: 560px;
+  }
+  .table-wrap th,
+  .table-wrap td {
+    padding-inline: 18px;
+  }
+  .td-project {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--text);
+  }
+  .status-link {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--teal);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.15s var(--ease);
+    white-space: nowrap;
+  }
+  .status-link:hover {
+    border-bottom-color: var(--teal-line);
+  }
+
+  /* Collaborate */
+  .collab-intro h2 {
+    margin-block: 10px 14px;
+  }
+  .muted {
+    color: var(--text-muted);
+    line-height: 1.6;
+    max-width: 38em;
+    margin-bottom: 28px;
+  }
+  .cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .btn.ghost {
+    background: transparent;
+    border-color: var(--border-bright);
+    color: var(--text-muted);
+  }
+  .btn.ghost:hover {
+    color: var(--text);
+    border-color: var(--text-muted);
+    background: var(--surface-2);
+  }
+
+  @media (max-width: 720px) {
+    .repo-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

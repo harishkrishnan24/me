@@ -1,0 +1,101 @@
+---
+import { href } from "../lib/links";
+
+const socials = [
+  { label: "GitHub", url: "https://github.com/harishkrishnan24" },
+  { label: "LinkedIn", url: "https://www.linkedin.com/in/harishkrishnan1993/" },
+  { label: "X", url: "https://x.com/harishkforu" },
+  { label: "Email", url: "mailto:harishkrishnan1993@gmail.com" },
+];
+const year = 2026;
+---
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div class="footer-brand">
+      <span class="footer-mark">~/</span>harish<span class="footer-dim">.dev</span>
+      <p class="footer-tagline">
+        Built with Astro · zero runtime JS on content · self-hosted everything.
+      </p>
+    </div>
+    <nav class="footer-socials" aria-label="Social links">
+      {
+        socials.map((s) => (
+          <a href={s.url} target="_blank" rel="noopener noreferrer">
+            {s.label}
+          </a>
+        ))
+      }
+    </nav>
+  </div>
+  <div class="wrap footer-base">
+    <span>© {year} Harish Krishnan</span>
+    <a href={href("blog")}>Writing</a>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--border);
+    margin-top: clamp(60px, 10vw, 120px);
+    padding-block: clamp(36px, 6vw, 56px) 28px;
+    background: linear-gradient(to bottom, transparent, var(--surface));
+  }
+  .footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .footer-brand {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--text);
+  }
+  .footer-mark {
+    color: var(--violet);
+  }
+  .footer-dim {
+    color: var(--text-dim);
+  }
+  .footer-tagline {
+    font-family: var(--font-serif);
+    font-size: var(--step--1);
+    color: var(--text-muted);
+    margin-top: 10px;
+    max-width: 40ch;
+    line-height: 1.6;
+  }
+  .footer-socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    align-items: flex-start;
+  }
+  .footer-socials a {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: color 0.15s var(--ease);
+  }
+  .footer-socials a:hover {
+    color: var(--teal);
+  }
+  .footer-base {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+  .footer-base a {
+    color: var(--text-dim);
+  }
+  .footer-base a:hover {
+    color: var(--teal);
+  }
+</style>
