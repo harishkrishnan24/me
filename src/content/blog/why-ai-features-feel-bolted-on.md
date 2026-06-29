@@ -68,18 +68,24 @@ to it, slipping notes under the door.
 
 ## Failure mode 3 — High-maintenance tools: capabilities locked in surfaces
 
-Now scale it up. Your company has six internal admin tools. Each team built its
-own: Team A has a `banUser` button, Team B has a `suspend_account` function,
-Team C has a CSV upload flow.
+Back to that project-management tool. It has one genuinely useful capability:
+*generate a status report for a project* — it pulls together the open tasks,
+owners, and deadlines into a clean summary a user can share with their team.
 
-Leadership asks: *"Can we make these AI-powered?"*
+It starts life as a button in the web app. Then the requests arrive. People on
+mobile want it, so the mobile team rebuilds it natively. A big customer wants it
+in their Slack, so someone wires up a `/report` command that reimplements it
+again. Sales wants it fired from the CRM. Every surface ends up with its own
+copy of "generate report," and they quietly drift out of sync.
 
-That's six integrations — one per tool. LLM tool schema, HTTP endpoint, auth
-wiring, error handling, six times over. Then the platform team asks: *"Can we
-expose these as MCP tools too?"* Six more.
+Now leadership asks: *"Can the AI assistant generate reports too?"* That's yet
+another build — tool schema, endpoint, auth, error handling. Then the platform
+team asks to expose it as an MCP tool so Claude Code can call it. Another one
+still.
 
-Every capability is trapped in the surface that first needed it. Freeing it
-means a fresh project every time a new surface appears.
+The capability is real and genuinely useful. It's just trapped in whichever
+surface first needed it — and setting it free costs a brand-new project every
+time another surface shows up.
 
 > **Root cause:** no shared action primitive — capabilities live in surfaces,
 > not in surface-agnostic definitions.
