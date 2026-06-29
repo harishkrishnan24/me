@@ -6,9 +6,11 @@ tags: ["architecture", "ai-systems", "agent-native", "typescript"]
 draft: false
 ---
 
-You ship an AI feature. The demo looks clean. The product lead is happy.
+You add an AI assistant to your product — say, a project-management tool. You
+wire it up to chat, it answers questions about the user's workspace, and the
+demo looks clean. The product lead is happy.
 
-Then a real user types:
+Then a real user asks it to actually *do* something:
 
 > "Can you archive all my projects from Q1?"
 
