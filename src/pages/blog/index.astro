@@ -69,9 +69,7 @@ const posts = sortByDateDesc(visiblePosts(all, import.meta.env.DEV));
     margin-bottom: 26px;
   }
   .post-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 22px;
+    max-width: var(--measure);
   }
   .empty {
     color: var(--text-muted);

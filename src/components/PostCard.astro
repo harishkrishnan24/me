@@ -18,45 +18,35 @@ const dateLabel = date.toLocaleDateString("en-US", {
 const isoDate = date.toISOString().slice(0, 10);
 ---
 
-<a class="post-card reveal" href={href(`blog/${id}`)}>
-  <div class="post-card-meta">
+<a class="post-entry reveal" href={href(`blog/${id}`)}>
+  <div class="post-meta">
     <time datetime={isoDate}>{dateLabel}</time>
     {draft && <span class="draft">draft</span>}
   </div>
-  <h3 class="post-card-title">{title}</h3>
-  <p class="post-card-desc">{description}</p>
+  <h3 class="post-title">{title}</h3>
+  <p class="post-desc">{description}</p>
   {
     tags.length > 0 && (
-      <div class="tag-row">
+      <div class="post-tags">
         {tags.slice(0, 3).map((t) => (
           <span class="tag">{t}</span>
         ))}
       </div>
     )
   }
-  <span class="post-card-arrow">Read →</span>
 </a>
 
 <style>
-  .post-card {
+  .post-entry {
     display: block;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--border);
-    border-radius: var(--radius);
-    padding: clamp(22px, 3vw, 30px);
-    transition:
-      transform 0.22s var(--ease),
-      border-color 0.22s var(--ease),
-      background 0.22s var(--ease);
+    padding: clamp(22px, 3vw, 30px) 0;
+    border-top: 1px solid var(--border);
+    transition: border-color 0.2s var(--ease);
   }
-  .post-card:hover {
-    transform: translateY(-3px);
-    border-color: var(--border-bright);
-    border-left-color: var(--violet);
-    background: var(--surface-2);
+  .post-entry:hover {
+    border-top-color: var(--border-bright);
   }
-  .post-card-meta {
+  .post-meta {
     font-family: var(--font-mono);
     font-size: 11px;
     letter-spacing: 0.08em;
@@ -69,28 +59,27 @@ const isoDate = date.toISOString().slice(0, 10);
   .draft {
     color: var(--orange);
   }
-  .post-card-title {
-    font-size: var(--step-1);
-    margin-block: 12px 8px;
+  .post-title {
+    font-size: var(--step-2);
+    line-height: 1.15;
+    margin-block: 10px 10px;
     color: var(--text);
+    transition: color 0.18s var(--ease);
   }
-  .post-card:hover .post-card-title {
+  .post-entry:hover .post-title {
     color: var(--violet-soft);
   }
-  .post-card-desc {
+  .post-desc {
     font-family: var(--font-serif);
+    font-size: var(--step-0);
     color: var(--text-muted);
     line-height: 1.6;
-    margin-bottom: 18px;
+    max-width: 60ch;
   }
-  .post-card-arrow {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    color: var(--teal);
-    display: inline-block;
-    margin-top: 4px;
-  }
-  .post-card .tag-row {
-    margin-bottom: 16px;
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
   }
 </style>
