@@ -1,0 +1,66 @@
+---
+// Uniform two-column page hero: copy on the left, a themed 3D MotifHero on the
+// right — the shared frame across About / Projects / Bookshelf / Open Source.
+// Title and deck come in via slots so each page keeps its own markup (e.g. a
+// gradient <span class="grad">). The optional `lead` slot sits above the
+// eyebrow (used by About for its profile photo).
+import Eyebrow from "./Eyebrow.astro";
+import MotifHero from "./MotifHero.astro";
+
+interface Props {
+  eyebrow: string;
+  accent?: "violet" | "orange" | "teal";
+  motif: "constellation" | "blocks" | "books" | "graph";
+}
+const { eyebrow, accent = "violet", motif } = Astro.props;
+---
+
+<section class="page-hero">
+  <div class="wrap page-hero-inner">
+    <div class="page-hero-copy">
+      <slot name="lead" />
+      <Eyebrow accent={accent}>{eyebrow}</Eyebrow>
+      <h1 class="hero-title"><slot /></h1>
+      <p class="hero-deck"><slot name="deck" /></p>
+    </div>
+    <MotifHero motif={motif} />
+  </div>
+</section>
+
+<style>
+  .page-hero-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.82fr);
+    gap: clamp(24px, 5vw, 72px);
+    align-items: center;
+    min-height: min(68vh, 560px);
+    padding-block: clamp(28px, 5vw, 56px);
+  }
+  .page-hero-copy {
+    max-width: 600px;
+  }
+  .hero-title {
+    font-size: clamp(38px, 5vw, 66px);
+    font-weight: 800;
+    line-height: 1.04;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+    margin-block: 22px 22px;
+  }
+  .hero-deck {
+    font-size: var(--step-1);
+    font-style: italic;
+    color: var(--text-muted);
+    line-height: 1.6;
+    max-width: 34em;
+    margin-bottom: 0;
+  }
+  @media (max-width: 860px) {
+    .page-hero-inner {
+      grid-template-columns: 1fr;
+      min-height: 0;
+      gap: 16px;
+      padding-block: 24px 8px;
+    }
+  }
+</style>

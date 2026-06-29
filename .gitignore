@@ -11,3 +11,6 @@ npm-debug.log*
 .env.production
 # os
 .DS_Store
+
+# Brainstorming visual companion scratch
+.superpowers/

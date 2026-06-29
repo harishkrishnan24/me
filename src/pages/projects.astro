@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Eyebrow from "../components/Eyebrow.astro";
+import PageHero from "../components/PageHero.astro";
 
 interface ProjectLink {
   label: string;
@@ -69,15 +70,14 @@ const projects: Project[] = [
   description="Projects by Harish Krishnan — building interpreters, reverse-engineering libraries, and exploring how systems work under the hood."
 >
   <!-- HERO -->
-  <section class="wrap hero">
-    <Eyebrow accent="violet">Projects · Things I've built</Eyebrow>
-    <h1 class="hero-title">Things I build to<br /><span class="grad">understand them</span>.</h1>
-    <p class="hero-deck">
+  <PageHero eyebrow="Projects · Things I've built" accent="violet" motif="blocks">
+    Things I build to<br /><span class="grad">understand them</span>.
+    <Fragment slot="deck">
       A small collection of projects where I reverse-engineer the tools I rely
       on — interpreters, state libraries, the machinery underneath. Building
       them is how I learn how they really work.
-    </p>
-  </section>
+    </Fragment>
+  </PageHero>
 
   <div class="wrap"><div class="divider"></div></div>
 
@@ -126,33 +126,6 @@ const projects: Project[] = [
 </BaseLayout>
 
 <style>
-  /* HERO */
-  .hero {
-    padding-block: clamp(40px, 8vw, 80px) 20px;
-    max-width: var(--measure);
-  }
-  .hero-title {
-    font-size: var(--step-4);
-    font-weight: 800;
-    line-height: 1.05;
-    letter-spacing: -0.035em;
-    margin-block: 22px 22px;
-  }
-  .grad {
-    background: linear-gradient(100deg, var(--violet), var(--teal));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-  .hero-deck {
-    font-size: var(--step-1);
-    font-style: italic;
-    color: var(--text-muted);
-    line-height: 1.6;
-    max-width: 38em;
-    margin-bottom: 0;
-  }
-
   /* PROJECTS */
   .projects {
     display: block;

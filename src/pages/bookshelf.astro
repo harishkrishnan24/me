@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Eyebrow from "../components/Eyebrow.astro";
+import PageHero from "../components/PageHero.astro";
 import { href } from "../lib/links";
 
 interface Book {
@@ -35,15 +36,14 @@ const read: Book[] = [
   description="A curated library of books and papers that have shaped how I think about software, systems, and the craft."
 >
   <!-- HERO -->
-  <section class="wrap hero">
-    <Eyebrow accent="violet">Bookshelf · Papers</Eyebrow>
-    <h1 class="hero-title">My digital library.</h1>
-    <p class="hero-deck">
+  <PageHero eyebrow="Bookshelf · Papers" accent="violet" motif="books">
+    My digital library.
+    <Fragment slot="deck">
       Knowledge is the foundation of innovation. A curated collection of books
       and papers that have shaped my understanding of technology and software —
       and continue to guide the work.
-    </p>
-  </section>
+    </Fragment>
+  </PageHero>
 
   <div class="wrap"><div class="divider"></div></div>
 
@@ -121,26 +121,6 @@ const read: Book[] = [
 </BaseLayout>
 
 <style>
-  /* HERO */
-  .hero {
-    padding-block: clamp(40px, 8vw, 80px) 20px;
-    max-width: var(--measure);
-  }
-  .hero-title {
-    font-size: var(--step-4);
-    font-weight: 800;
-    line-height: 1.05;
-    letter-spacing: -0.035em;
-    margin-block: 22px 22px;
-  }
-  .hero-deck {
-    font-size: var(--step-1);
-    font-style: italic;
-    color: var(--text-muted);
-    line-height: 1.6;
-    max-width: 38em;
-  }
-
   /* Section heads */
   .shelf-head {
     margin-bottom: 28px;
