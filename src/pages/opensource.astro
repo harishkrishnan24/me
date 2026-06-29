@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Eyebrow from "../components/Eyebrow.astro";
+import PageHero from "../components/PageHero.astro";
 import { href } from "../lib/links";
 
 // Repositories I've contributed to, grouped by kind. Each card links to
@@ -208,15 +209,14 @@ const contributions: Contribution[] = [
   description="Open source contributions by Harish Krishnan — merged pull requests and repositories across Angular, Qwik, Prisma, Apollo Client, and more."
 >
   <!-- HERO -->
-  <section class="wrap hero">
-    <Eyebrow accent="violet">Open Source</Eyebrow>
-    <h1 class="hero-title">Giving back to the community.</h1>
-    <p class="hero-deck">
+  <PageHero eyebrow="Open Source" accent="violet" motif="graph">
+    Giving back to the community.
+    <Fragment slot="deck">
       Open source software has been instrumental in my growth as a developer. I
       believe in giving back to the community that has given me so much — here
       are my contributions across the projects I rely on every day.
-    </p>
-  </section>
+    </Fragment>
+  </PageHero>
 
   <div class="wrap"><div class="divider"></div></div>
 
@@ -328,26 +328,6 @@ const contributions: Contribution[] = [
 </BaseLayout>
 
 <style>
-  /* HERO */
-  .hero {
-    padding-block: clamp(40px, 8vw, 80px) 20px;
-    max-width: var(--measure);
-  }
-  .hero-title {
-    font-size: var(--step-4);
-    font-weight: 800;
-    line-height: 1.05;
-    letter-spacing: -0.035em;
-    margin-block: 22px 22px;
-  }
-  .hero-deck {
-    font-size: var(--step-1);
-    font-style: italic;
-    color: var(--text-muted);
-    line-height: 1.6;
-    max-width: 38em;
-  }
-
   /* Section heads */
   .repos-head,
   .contrib-head {
