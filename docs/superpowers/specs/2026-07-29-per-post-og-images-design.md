@@ -48,10 +48,27 @@ Two new files, plus wiring changes to existing ones.
 font I/O and rasterization keeps `titleFontSize` unit-testable and the endpoint thin.*
 
 Exports:
-- `titleFontSize(title: string): number` — 72px for titles up to 40 characters, 64px up
-  to 70, 56px beyond. Measured on `title.length`.
+- `titleLayout(title: string): { text: string; fontSize: number }` — picks the font size
+  and hard-truncates over-long titles. See "Title fitting" below.
 - `ogCard(title: string): object` — returns the Satori element tree (a plain
   `{ type, props }` object; Satori accepts these directly, no JSX runtime needed).
+
+**Title fitting.** Satori 0.29 ignores `lineClamp` — verified against the installed
+package, where `lineClamp`, `WebkitLineClamp`, and `textOverflow` all left a 150-character
+title rendering at 5 lines. Truncation therefore has to happen in our code. Measured
+capacity for Inter 800 at `letter-spacing: -0.03em` in the 1040px content column is
+roughly 25 / 28 / 32 characters per line at 72 / 64 / 56px. The vertical budget between
+eyebrow and footer allows 3 lines. Hence:
+
+| Title length | Font size | Lines |
+|---|---|---|
+| ≤ 50 | 72px | ≤ 2 |
+| ≤ 84 | 64px | ≤ 3 |
+| > 84 | 56px, truncated to 92 chars + `…` | ≤ 3 |
+
+The character budget is a coarse proxy for a proportional font, so it is a guard against
+pathological titles rather than a layout mechanism. Both current posts are 33 and 35
+characters and land in the first row.
 
 No `astro:content` import, matching the discipline in `src/lib/posts.ts`.
 
@@ -61,7 +78,7 @@ No `astro:content` import, matching the discipline in `src/lib/posts.ts`.
 |--------|-----------|
 | Canvas | 1200×630, `--bg` `#0c0c13`, violet radial glow top-left, 80px padding |
 | Eyebrow | `~/harish.dev` in JetBrains Mono — `~/` violet, `harish` in `--text`, `.dev` dim |
-| Title | Inter 800, `letter-spacing: -0.03em`, `line-height: 1.06`, `--text`, `lineClamp: 3` |
+| Title | Inter 800, `letter-spacing: -0.03em`, `line-height: 1.06`, `--text`, size and truncation from `titleLayout` |
 | Rule | Violet→teal linear gradient bar beneath the title |
 | Footer | Bordered violet `WRITING` chip + `Harish Krishnan` in mono |
 
@@ -71,9 +88,9 @@ Two deliberate departures from `og-default.png`:
   gradient onto the second line of one known string. Applying that to an arbitrary line
   count is fragile, so the title stays solid and the gradient becomes a fixed rule below
   it — same visual signature, no per-title tuning.
-- **The dot grid may be dropped.** Satori implements a CSS subset and tiled background
-  patterns are its weak spot. Attempt it as a data-URI background; if it does not render
-  cleanly, ship glow-only rather than a half-rendered pattern.
+- **The dot grid is dropped.** Satori implements a CSS subset and tiled background
+  patterns are its weak spot. The violet radial glow renders correctly (verified in a
+  prototype) and carries the brand on its own; a half-rendered pattern would not.
 
 ### `src/pages/og/[slug].png.ts` — the static endpoint
 *Justification: a static Astro endpoint is the only way to emit generated binary files
@@ -127,10 +144,12 @@ the build plus a visual check.
 
 1. **Native binary on CI.** `@resvg/resvg-js` resolves a per-platform optional
    dependency. The lockfile is generated on darwin-arm64 but `withastro/action@v3`
-   builds on `ubuntu-latest`. *Mitigation:* confirm `package-lock.json` contains the
-   `linux-x64-gnu` entry after install; a green Actions run is the real proof.
-2. **Satori's CSS subset.** The dot-grid background may not render. *Mitigation:* the
-   documented fallback above.
+   builds on `ubuntu-latest`. `@resvg/resvg-js-linux-x64-gnu@2.6.2` is published, so the
+   prebuild exists. *Mitigation:* confirm `package-lock.json` contains that entry after
+   install; a green Actions run is the real proof.
+2. **Satori's CSS subset.** Verified in a prototype against satori 0.29.0: radial and
+   linear gradients, `letter-spacing`, nested flex, and `.woff` fonts all render;
+   `lineClamp` does not (see "Title fitting"). Remaining exposure is low.
 3. **Sitemap pollution.** `@astrojs/sitemap` would otherwise list the PNG routes.
    *Mitigation:* the `filter` in `astro.config.mjs`.
 4. **LinkedIn caches OG data per URL for roughly 7 days.** Links already shared will keep
