@@ -676,15 +676,40 @@ Report a table of results. Any failure is a blocker, not a note.
 npm test && npm run build
 ```
 
-- [ ] **Step 6: Review the whole diff**
+- [ ] **Step 6: Remove the temporary bridge aliases and prove it**
+
+Task 1 added a bridge-alias block to `:root` in `tokens.css` mapping the old token names (`--text`, `--violet`, `--teal`, `--surface`, `--font-sans`, …) to the new vocabulary, so that intermediate commits stayed deployable. By now every consumer has been rewritten. **Delete the whole block**, then run both checks:
+
+```bash
+grep -n "TEMPORARY bridge" src/styles/tokens.css && echo "FAIL: bridge block still present" || echo "OK: bridge removed"
+```
+
+```bash
+node -e "
+const fs=require('fs'),path=require('path');
+const walk=d=>fs.readdirSync(d,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(path.join(d,e.name)):[path.join(d,e.name)]);
+const defined=new Set([...fs.readFileSync('src/styles/tokens.css','utf8').matchAll(/^\s*(--[a-z0-9-]+)\s*:/gmi)].map(m=>m[1]));
+const missing={};
+for(const f of walk('src').filter(f=>/\.(astro|css|ts)\$/.test(f)))
+  fs.readFileSync(f,'utf8').split('\n').forEach((line,i)=>{
+    for(const m of line.matchAll(/var\((--[a-z0-9-]+)\s*(,)?/gi)) if(!defined.has(m[1])&&!m[2]) (missing[m[1]]||=[]).push(f+':'+(i+1));
+  });
+const k=Object.keys(missing);
+console.log(k.length ? 'FAIL — dangling: '+JSON.stringify(missing,null,1) : 'OK: no dangling var() references');
+"
+```
+
+Both must print `OK`. A dangling `var()` is invalid at computed value time and renders body text black on a near-black background — it is invisible to `astro check`, to Vite, and to Vitest, so this scan is the only thing that catches it. Do not skip it and do not satisfy it by re-adding an alias.
+
+- [ ] **Step 7: Review the whole diff**
 
 ```bash
 git diff ebbf1d1..HEAD --stat
 ```
 
-Confirm: no hardcoded leading-slash internal URLs, no hex outside `og-card.ts`, no `oklch()` in `og-card.ts`, no Google Fonts link, no remaining `--violet`/`--teal` references.
+Confirm: no hardcoded leading-slash internal URLs, no hex outside `og-card.ts`, no `oklch()` values in `og-card.ts`, no Google Fonts link, no remaining `--violet`/`--teal`/`--font-sans` references, and no `.grad` class (renamed to `.accent-em` in Task 2).
 
-- [ ] **Step 7: Commit**
+- [ ] **Step 8: Commit**
 
 ```bash
 git add -A && git commit -m "chore(design): remove three.js heroes and unused dependencies"
