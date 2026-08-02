@@ -282,7 +282,8 @@ Apply, in place, keeping the file's existing comment-banner structure:
 - `.btn` — bordered box, no radius, no fill: `border:1px solid var(--line); padding:14px 22px; text-transform:uppercase; letter-spacing:0.14em`.
 - `.tag` — the **chip** pattern.
 - `table` / `th` / `td` — hairline: `border-collapse:collapse`, `1px solid var(--line)`, uppercase mono `th`.
-- `.grad` — the design has no gradient text; make it `color: var(--accent); font-style: italic` and keep the class name so existing call sites keep working.
+- `.grad` — **rename to `.accent-em`.** The design has no gradient text; the new treatment is `color: var(--accent); font-style: italic`. Keeping a class called `grad` that produces no gradient is the same lying-name problem the token rename fixes. There are only 5 references (`global.css`, `index.astro` ×2, `projects.astro`, and a comment in `PageHero.astro`, which Task 7 deletes) — update them all. Note `index.astro:200` *redefines* `.grad` locally, shadowing the global rule; delete that duplicate rather than porting it.
+- `.rule` (`global.css:141`) — currently `linear-gradient(90deg, var(--violet), transparent)`. Retarget to `var(--accent)` → `var(--accent2)`, matching the card rule in `og-card.ts`.
 - `.prose` — `font-family: var(--font-serif)` (this is the one serif-prose surface), `max-width: var(--measure)`.
 - `.prose pre.astro-code` — `background: var(--panel); border:1px solid var(--line)`, no radius.
 - Keep the scroll-reveal block, the `prefers-reduced-motion` block, and `:focus-visible` unchanged.
