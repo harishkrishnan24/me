@@ -6,11 +6,13 @@ import { href } from "../lib/links";
 interface Props {
   title: string;
   description: string;
+  /** Post id — used to locate its generated OG card. */
+  slug: string;
   date: Date;
   tags: string[];
   draft?: boolean;
 }
-const { title, description, date, tags, draft } = Astro.props;
+const { title, description, slug, date, tags, draft } = Astro.props;
 
 const dateLabel = date.toLocaleDateString("en-US", {
   year: "numeric",
@@ -28,6 +30,7 @@ const shareLinkedIn = `https://www.linkedin.com/sharing/share-offsite/?url=${enc
 <BaseLayout
   title={title}
   description={description}
+  image={`og/${slug}.png`}
   ogType="article"
   publishedTime={date}
   tags={tags}

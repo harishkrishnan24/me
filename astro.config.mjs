@@ -9,7 +9,11 @@ import sitemap from "@astrojs/sitemap";
 export default defineConfig({
   site: "https://harishkrishnan24.github.io",
   base: "/me",
-  integrations: [mdx(), sitemap()],
+  integrations: [
+    mdx(),
+    // The /og/*.png routes are share-card assets, not pages.
+    sitemap({ filter: (page) => !page.includes("/og/") }),
+  ],
   markdown: {
     shikiConfig: {
       // Themed to the dark editorial palette; tuned further in global styles.

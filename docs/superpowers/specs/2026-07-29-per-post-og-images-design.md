@@ -92,16 +92,20 @@ Two deliberate departures from `og-default.png`:
   patterns are its weak spot. The violet radial glow renders correctly (verified in a
   prototype) and carries the brand on its own; a half-rendered pattern would not.
 
-### `src/pages/og/[slug].png.ts` — the static endpoint
+### `src/pages/og/[...slug].png.ts` — the static endpoint
 *Justification: a static Astro endpoint is the only way to emit generated binary files
 into the build without adding a server.*
+
+The parameter is a **rest** parameter, mirroring `src/pages/blog/[...slug].astro`. The
+blog collection globs `**/*.{md,mdx}`, so a post may live in a subfolder; a non-rest
+parameter fails such a post's build with `TypeError: Missing parameter: slug`.
 
 - `getStaticPaths()` over `getCollection("blog")` filtered by
   `visiblePosts(all, import.meta.env.DEV)` — the same rule as the post route, so drafts
   never emit a card into a production build.
 - Reads font buffers directly from `node_modules/@fontsource`:
-  `inter-latin-800-normal.woff`, `inter-latin-400-normal.woff`,
-  `jetbrains-mono-latin-500-normal.woff`. These are `.woff`, not `.woff2` — Satori parses
+  `inter-latin-800-normal.woff` and `jetbrains-mono-latin-500-normal.woff` — the only two
+  weights the card actually uses. These are `.woff`, not `.woff2` — Satori parses
   TTF/OTF/WOFF but not Brotli-compressed WOFF2. No new font assets are committed and the
   cards use the same typefaces as the site.
 - `satori(...)` → SVG → `@resvg/resvg-js` → PNG `Response` with `Content-Type: image/png`.
@@ -157,6 +161,10 @@ the build plus a visual check.
    (`https://www.linkedin.com/post-inspector/`). This is operational, not fixable in
    code, and is the expected reason a correct deploy can still look unchanged at first.
 5. **Build time** grows by roughly a second per post. Negligible at the current count.
+
+## Accepted limitations
+
+- **Non-Latin and emoji titles render blank.** Only the Latin font subsets of Inter and JetBrains Mono are loaded into Satori. A post title containing CJK characters, Arabic, or emoji will produce a card with a blank title area and no build error. This is accepted: all posts are written in English.
 
 ## Rollback
 

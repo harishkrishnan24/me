@@ -18,6 +18,7 @@
   --text-dim: #4a4a66;
 
   /* ── Accents ── */
+  /* Mirrored in src/lib/og-card.ts (Satori can't read CSS vars) — update both. */
   --violet: #7b6af0;
   --violet-soft: #beb8f0;
   --orange: #e06b50;

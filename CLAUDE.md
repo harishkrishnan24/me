@@ -30,6 +30,8 @@ Personal site + blog. Astro 7, static output, deployed to GitHub Pages under bas
 - `src/layouts/PostLayout.astro` — article shell + share links.
 - `src/components/` — `Nav`, `Footer`, `Eyebrow`, `PostCard`. Reuse these; don't duplicate.
 - `src/lib/posts.ts` — pure `sortByDateDesc`/`visiblePosts` (unit-tested; keep them free of `astro:content` imports).
+- `src/lib/og-card.ts` — build-time OG card template (pure; mirrors palette from `tokens.css` — Satori can't read CSS vars).
+- `src/pages/og/[...slug].png.ts` — emits one PNG per post into `dist/og/`. Coupled by convention to `og/${slug}.png` in `PostLayout.astro`: nothing enforces the match, a mismatch silently 404s.
 - `src/pages/{rss.xml,llms.txt}.ts` — generated endpoints; both derive from the blog collection.
 - `public/` — static assets (`images/`, `og-default.png`, `robots.txt`). Referenced base-aware.
 
