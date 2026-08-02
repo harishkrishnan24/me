@@ -46,6 +46,33 @@
   /* ── Motion ── */
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --dur: 0.45s;
+
+  /* ── TEMPORARY bridge aliases ──────────────────────────────
+     The redesign renamed the token vocabulary; the components and
+     pages that consume the old names are rewritten in later tasks.
+     Until then these keep every commit deployable — a dangling
+     var() is invalid at computed value time and silently renders
+     body text black on a near-black background.
+     Task 7 asserts this block is gone. Do not add to it.
+     ──────────────────────────────────────────────────────── */
+  --text: var(--fg);
+  --text-muted: var(--dim);
+  --text-dim: var(--dim);
+  --border: var(--line);
+  --border-bright: var(--line);
+  --surface: var(--panel);
+  --surface-2: var(--panel);
+  --surface-3: var(--panel);
+  --violet: var(--accent);
+  --violet-soft: var(--accent);
+  --violet-line: var(--line);
+  --violet-tint: transparent;
+  --violet-glow: transparent;
+  --teal: var(--accent);
+  --teal-line: var(--line);
+  --teal-tint: transparent;
+  --orange: var(--accent2);
+  --font-sans: var(--font-display);
 }
 
 html[data-theme="light"] {
