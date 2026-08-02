@@ -9,24 +9,24 @@ describe("titleLayout", () => {
     });
   });
 
-  it("steps down at the 50-character boundary", () => {
-    expect(titleLayout("a".repeat(50)).fontSize).toBe(72);
-    expect(titleLayout("a".repeat(51)).fontSize).toBe(64);
+  it("steps down at the 90-character boundary", () => {
+    expect(titleLayout("a".repeat(90)).fontSize).toBe(72);
+    expect(titleLayout("a".repeat(91)).fontSize).toBe(64);
   });
 
-  it("steps down again at the 84-character boundary", () => {
-    expect(titleLayout("a".repeat(84)).fontSize).toBe(64);
-    expect(titleLayout("a".repeat(85)).fontSize).toBe(56);
+  it("steps down again at the 140-character boundary", () => {
+    expect(titleLayout("a".repeat(140)).fontSize).toBe(64);
+    expect(titleLayout("a".repeat(141)).fontSize).toBe(56);
   });
 
   it("leaves a title at the truncation budget intact", () => {
-    const title = "a".repeat(92);
+    const title = "a".repeat(160);
     expect(titleLayout(title).text).toBe(title);
   });
 
   it("truncates past the budget with an ellipsis", () => {
     const { text } = titleLayout("b".repeat(200));
-    expect(text).toHaveLength(93); // at most 92 characters plus the ellipsis
+    expect(text).toHaveLength(161); // at most 160 characters plus the ellipsis
     expect(text.endsWith("…")).toBe(true);
   });
 });
@@ -63,5 +63,22 @@ describe("ogCard", () => {
 
   it("truncates a pathological title inside the tree", () => {
     expect(flatten(ogCard("c".repeat(300)))).toContain("…");
+  });
+});
+
+describe("card palette", () => {
+  it("uses sRGB hex, never oklch — Satori renders oklch as black", () => {
+    const json = JSON.stringify(ogCard("Probe"));
+    expect(json).not.toMatch(/oklch/i);
+  });
+
+  it("uses the dark-theme accent green", () => {
+    expect(JSON.stringify(ogCard("Probe"))).toContain("#7bd77f");
+  });
+
+  it("sets the title in the display face", () => {
+    const json = JSON.stringify(ogCard("Probe"));
+    expect(json).toContain("Instrument Serif");
+    expect(json).not.toContain("Inter");
   });
 });

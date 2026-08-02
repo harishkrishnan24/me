@@ -1,43 +1,30 @@
 /* ─────────────────────────────────────────────────────────────
-   Design tokens — the single source of truth for the palette,
-   type system, and scale. Components reference these vars; they
-   never hardcode hex. Derived from the reference editorial theme.
+   Design tokens — single source of truth for palette and type.
+   Names are SEMANTIC, not literal: --accent is green in dark and
+   light themes and amber in crt, so a name like --violet would
+   lie. Components reference these vars; they never hardcode hex.
+
+   Mirrored (and translated to sRGB hex) in src/lib/og-card.ts —
+   Satori reads neither CSS vars nor oklch(). Update both.
    ───────────────────────────────────────────────────────────── */
 :root {
   /* ── Surfaces ── */
-  --bg: #0c0c13;
-  --surface: #13131d;
-  --surface-2: #1a1a26;
-  --surface-3: #21212f;
-  --border: #21212f;
-  --border-bright: #2e2e42;
+  --bg: #0a0a0c;
+  --panel: #101014;
+  --line: rgba(237, 234, 227, 0.13);
 
   /* ── Text ── */
-  --text: #e8e8f2;
-  --text-muted: #7a7a9a;
-  --text-dim: #4a4a66;
+  --fg: #edeae3;
+  --dim: #8b8880;
 
   /* ── Accents ── */
-  /* Mirrored in src/lib/og-card.ts (Satori can't read CSS vars) — update both. */
-  --violet: #7b6af0;
-  --violet-soft: #beb8f0;
-  --orange: #e06b50;
-  --teal: #48bea6;
-
-  /* Accent tints (low-opacity fills for cards, glows, chips) */
-  --violet-tint: rgba(123, 106, 240, 0.1);
-  --violet-line: rgba(123, 106, 240, 0.22);
-  --violet-glow: rgba(123, 106, 240, 0.07);
-  --orange-tint: rgba(224, 107, 80, 0.06);
-  --orange-line: rgba(224, 107, 80, 0.18);
-  --teal-tint: rgba(72, 190, 166, 0.08);
-  --teal-line: rgba(72, 190, 166, 0.3);
+  --accent: oklch(0.8 0.15 145);
+  --accent2: oklch(0.8 0.15 78);
 
   /* ── Type families (three roles) ── */
-  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
-  --font-mono: "JetBrains Mono", "SF Mono", "Cascadia Code", "Roboto Mono",
-    monospace;
+  --font-display: "Instrument Serif", Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", monospace;
+  --font-serif: "Source Serif 4", Georgia, serif;
 
   /* ── Fluid type scale ── */
   --step--1: clamp(0.83rem, 0.78rem + 0.2vw, 0.94rem);
@@ -47,13 +34,38 @@
   --step-3: clamp(1.9rem, 1.5rem + 2vw, 3rem);
   --step-4: clamp(2.3rem, 1.6rem + 3.4vw, 3.8rem);
 
-  /* ── Spacing / layout ── */
-  --measure: 680px; /* prose line length */
-  --measure-wide: 1080px; /* page content width */
-  --radius: 6px;
-  --radius-sm: 3px;
+  /* ── Layout ── */
+  --measure: 74ch;
+  --measure-wide: 1180px;
+  --nav-h: 62px;
+  /* The design has no rounded corners. Kept as tokens so the
+     flattening is one line and reversible. */
+  --radius: 0;
+  --radius-sm: 0;
 
   /* ── Motion ── */
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --dur: 0.45s;
+}
+
+html[data-theme="light"] {
+  --bg: #f4f2ec;
+  --panel: #eae7df;
+  --line: rgba(20, 20, 26, 0.15);
+  --fg: #14141a;
+  --dim: #6b6862;
+  --accent: oklch(0.52 0.15 145);
+  --accent2: oklch(0.52 0.15 60);
+}
+
+html[data-theme="crt"] {
+  --bg: #0b0a06;
+  --panel: #12100a;
+  --line: oklch(0.4 0.08 86);
+  --fg: oklch(0.86 0.16 86);
+  /* Design specifies 0.60 here; raised to 0.72 so body copy clears
+     WCAG AA against --bg. The theme is a novelty, posts are long. */
+  --dim: oklch(0.72 0.1 86);
+  --accent: oklch(0.86 0.16 86);
+  --accent2: oklch(0.78 0.16 45);
 }

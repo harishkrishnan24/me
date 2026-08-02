@@ -9,18 +9,17 @@ export const CARD_HEIGHT = 630;
 
 const PADDING = 80;
 
-// Satori cannot resolve CSS custom properties, so the palette is derived from
-// src/styles/tokens.css and mirrored here. Two alpha values (violetLine,
-// violetGlow) are deliberate card-scale overrides — see their per-line comments.
+// Satori reads neither CSS custom properties nor oklch(), so the palette
+// is translated to sRGB hex here. These are the computed equivalents of
+// the dark-theme tokens in src/styles/tokens.css — update both.
+// An oklch() string passed to Satori renders BLACK, silently.
 const COLOR = {
-  bg: "#0c0c13", // --bg
-  text: "#e8e8f2", // --text
-  textMuted: "#7a7a9a", // --text-muted
-  textDim: "#4a4a66", // --text-dim
-  violet: "#7b6af0", // --violet
-  teal: "#48bea6", // --teal
-  violetLine: "rgba(123, 106, 240, 0.42)", // near --violet-line, opaque enough to read at card scale
-  violetGlow: "rgba(123, 106, 240, 0.20)", // --violet-glow, strengthened for a 1200px canvas
+  bg: "#0a0a0c", // --bg
+  fg: "#edeae3", // --fg
+  dim: "#8b8880", // --dim
+  line: "rgba(237, 234, 227, 0.13)", // --line
+  accent: "#7bd77f", // --accent  oklch(0.80 0.15 145)
+  accent2: "#f2b036", // --accent2 oklch(0.80 0.15 78)
 } as const;
 
 type Style = Record<string, unknown>;
@@ -40,15 +39,21 @@ const el = (type: string, style: Style, children?: OgChild): OgNode => ({
  * Pick a font size the title fits in, truncating pathological ones.
  *
  * Satori 0.29 ignores `lineClamp`, so overflow has to be prevented here.
- * Measured for Inter 800 at -0.03em in the 1040px content column: roughly
- * 25/28/32 characters per line at 72/64/56px. The space between eyebrow and
- * footer allows three lines. The character budget is a coarse proxy for a
- * proportional font — a guard against absurd titles, not a layout mechanism.
+ * Measured for Instrument Serif 400 at -0.02em in the 1040px content column:
+ * roughly 45/50/58 characters per line at 72/64/56px. The space between
+ * eyebrow and footer allows three lines. The character budget is a coarse
+ * proxy for a proportional font — a guard against absurd titles, not a
+ * layout mechanism.
+ *
+ * Thresholds derived by binary-searching the 3→4 line transition:
+ *   72px: 3-line max = 129 chars → step down at 90 (2-line natural fill)
+ *   64px: 3-line max = 141 chars → step down at 140 (3-line max fill)
+ *   56px: 3-line max = 164 chars → truncate at 160 (buffer before overflow)
  */
 export function titleLayout(title: string): { text: string; fontSize: number } {
-  if (title.length <= 50) return { text: title, fontSize: 72 };
-  if (title.length <= 84) return { text: title, fontSize: 64 };
-  return { text: truncate(title, 92), fontSize: 56 };
+  if (title.length <= 90) return { text: title, fontSize: 72 };
+  if (title.length <= 140) return { text: title, fontSize: 64 };
+  return { text: truncate(title, 160), fontSize: 56 };
 }
 
 function truncate(title: string, max: number): string {
@@ -64,9 +69,9 @@ export function ogCard(title: string): OgNode {
     "div",
     { display: "flex", fontFamily: "JetBrains Mono", fontSize: 26 },
     [
-      el("span", { color: COLOR.violet }, "~/"),
-      el("span", { color: COLOR.text }, "harish"),
-      el("span", { color: COLOR.textDim }, ".dev"),
+      el("span", { color: COLOR.accent }, "~/"),
+      el("span", { color: COLOR.fg }, "harish"),
+      el("span", { color: COLOR.dim }, ".dev"),
     ],
   );
 
@@ -75,22 +80,19 @@ export function ogCard(title: string): OgNode {
       "div",
       {
         fontSize,
-        fontWeight: 800,
-        color: COLOR.text,
+        fontFamily: "Instrument Serif",
+        fontWeight: 400,
+        color: COLOR.fg,
         lineHeight: 1.06,
-        letterSpacing: "-0.03em",
+        letterSpacing: "-0.02em",
       },
       text,
     ),
-    // The default card art-directs a violet->teal gradient onto one known
-    // line of text. That does not generalize to an arbitrary line count, so
-    // the signature moves to a fixed rule and the title stays solid.
     el("div", {
       marginTop: 36,
       width: 220,
       height: 5,
-      borderRadius: 3,
-      backgroundImage: `linear-gradient(90deg, ${COLOR.violet} 0%, ${COLOR.teal} 100%)`,
+      backgroundImage: `linear-gradient(90deg, ${COLOR.accent} 0%, ${COLOR.accent2} 100%)`,
     }),
   ]);
 
@@ -104,16 +106,16 @@ export function ogCard(title: string): OgNode {
           display: "flex",
           fontSize: 18,
           letterSpacing: "0.18em",
-          color: COLOR.violet,
-          border: `1px solid ${COLOR.violetLine}`,
-          borderRadius: 3,
+          color: COLOR.accent,
+          border: `1px solid ${COLOR.line}`,
+          borderRadius: 0,
           padding: "8px 14px",
         },
         "WRITING",
       ),
       el(
         "div",
-        { marginLeft: 22, fontSize: 22, color: COLOR.textMuted },
+        { marginLeft: 22, fontSize: 22, color: COLOR.dim },
         "Harish Krishnan",
       ),
     ],
@@ -129,8 +131,7 @@ export function ogCard(title: string): OgNode {
       justifyContent: "space-between",
       padding: PADDING,
       backgroundColor: COLOR.bg,
-      backgroundImage: `radial-gradient(900px 500px at 12% 0%, ${COLOR.violetGlow}, rgba(123, 106, 240, 0) 70%)`,
-      fontFamily: "Inter",
+      fontFamily: "Instrument Serif",
     },
     [eyebrow, headline, footer],
   );
