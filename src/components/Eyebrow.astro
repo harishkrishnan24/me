@@ -1,10 +1,14 @@
 ---
-// A small mono uppercase label — the reference theme's signature
-// section marker. Accent color picks one of the three palette accents.
+// A small mono uppercase label — the terminal-editorial design's section
+// marker. All eyebrows use the single accent color. The optional `num` prop
+// renders a numbered prefix: num="01" → "01 — Label".
+// The `accent` prop is kept for backward compatibility with pages not yet
+// rewritten (Tasks 3–5); it is intentionally ignored here.
 interface Props {
-  accent?: "violet" | "orange" | "teal";
+  num?: string;
+  accent?: string;
 }
-const { accent = "violet" } = Astro.props;
+const { num } = Astro.props;
 ---
 
-<span class:list={["eyebrow", accent]}><slot /></span>
+<span class="eyebrow">{num ? `${num} — ` : ""}<slot /></span>

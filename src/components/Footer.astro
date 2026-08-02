@@ -1,109 +1,100 @@
 ---
 import { href } from "../lib/links";
 
-const socials = [
-  { label: "GitHub", url: "https://github.com/harishkrishnan24" },
-  { label: "LinkedIn", url: "https://www.linkedin.com/in/harishkrishnan1993/" },
-  { label: "X", url: "https://x.com/harishkforu" },
-  { label: "Email", url: "mailto:harishkrishnan1993@gmail.com" },
-];
 const year = 2026;
 ---
 
 <footer class="site-footer">
-  <div class="wrap footer-inner">
-    <div class="footer-brand">
-      <span class="footer-mark">~/</span>harish<span class="footer-dim">.dev</span>
-      <p class="footer-tagline">
-        Software engineer in Stockholm — writing on engineering, AI systems, and
-        the craft.
-      </p>
+  <div class="footer-grid">
+    <div class="footer-left">
+      <p class="footer-headline">Let's talk.</p>
+      <a class="footer-email" href="mailto:harishkrishnan1993@gmail.com">
+        harishkrishnan1993@gmail.com
+      </a>
     </div>
-    <nav class="footer-socials" aria-label="Social links">
-      {
-        socials.map((s) => (
-          <a href={s.url} target="_blank" rel="noopener noreferrer">
-            {s.label}
-          </a>
-        ))
-      }
+    <nav class="footer-right" aria-label="Footer links">
+      <a href="https://github.com/harishkrishnan24" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href="https://www.linkedin.com/in/harishkrishnan1993/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a href="https://x.com/harishkforu" target="_blank" rel="noopener noreferrer">X</a>
+      <a href={href("bookshelf")}>Bookshelf</a>
     </nav>
   </div>
-  <div class="wrap footer-base">
+  <div class="footer-base">
     <span>© {year} Harish Krishnan</span>
-    <div class="footer-base-links">
-      <a href={href("blog")}>Writing</a>
-      <a href={href("bookshelf")}>Bookshelf</a>
-    </div>
+    <span class="footer-keys">⌘K palette · ` terminal · T theme</span>
   </div>
 </footer>
 
 <style>
   .site-footer {
-    border-top: 1px solid var(--border);
-    margin-top: clamp(60px, 10vw, 120px);
-    padding-block: clamp(36px, 6vw, 56px) 28px;
-    background: linear-gradient(to bottom, transparent, var(--surface));
+    border-top: 1px solid var(--line);
+    padding: 60px 6vw 90px;
   }
-  .footer-inner {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 24px;
+  .footer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 40px;
+    align-items: end;
   }
-  .footer-brand {
+  .footer-headline {
+    font-family: var(--font-display);
+    font-size: 40px;
+    font-weight: 400;
+    line-height: 1.1;
+    color: var(--fg);
+    margin-bottom: 12px;
+  }
+  .footer-email {
     font-family: var(--font-mono);
-    font-size: 14px;
-    color: var(--text);
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.04em;
+    transition: opacity 0.15s var(--ease);
   }
-  .footer-mark {
-    color: var(--violet);
+  .footer-email:hover {
+    opacity: 0.7;
   }
-  .footer-dim {
-    color: var(--text-dim);
-  }
-  .footer-tagline {
-    font-family: var(--font-serif);
-    font-size: var(--step--1);
-    color: var(--text-muted);
-    margin-top: 10px;
-    max-width: 40ch;
-    line-height: 1.6;
-  }
-  .footer-socials {
+  .footer-right {
     display: flex;
     flex-wrap: wrap;
-    gap: 18px;
-    align-items: flex-start;
+    gap: 20px;
+    justify-content: flex-end;
+    align-items: flex-end;
   }
-  .footer-socials a {
-    font-family: var(--font-sans);
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text-muted);
+  .footer-right a {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--dim);
     transition: color 0.15s var(--ease);
   }
-  .footer-socials a:hover {
-    color: var(--teal);
+  .footer-right a:hover {
+    color: var(--accent);
   }
   .footer-base {
     display: flex;
     justify-content: space-between;
-    margin-top: 28px;
+    align-items: center;
+    margin-top: 60px;
     padding-top: 20px;
-    border-top: 1px solid var(--border);
+    border-top: 1px solid var(--line);
     font-family: var(--font-mono);
     font-size: 11px;
-    color: var(--text-dim);
+    color: var(--dim);
+    flex-wrap: wrap;
+    gap: 8px;
   }
-  .footer-base-links {
-    display: flex;
-    gap: 18px;
+  .footer-keys {
+    opacity: 0.6;
   }
-  .footer-base a {
-    color: var(--text-dim);
-  }
-  .footer-base a:hover {
-    color: var(--teal);
+  @media (max-width: 600px) {
+    .footer-right {
+      justify-content: flex-start;
+    }
+    .footer-base {
+      flex-direction: column;
+      align-items: flex-start;
+    }
   }
 </style>

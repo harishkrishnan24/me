@@ -4,11 +4,9 @@ const pathname = Astro.url.pathname;
 ---
 
 <header class="site-header">
-  <nav class="wrap nav" aria-label="Primary">
+  <nav class="nav" aria-label="Primary">
     <a class="brand" href={href("")}>
-      <span class="brand-mark">~/</span>harish<span class="brand-accent"
-        >.dev</span
-      >
+      <span class="brand-slash">~/</span>harish.dev
     </a>
     <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
       <span></span><span></span>
@@ -35,66 +33,83 @@ const pathname = Astro.url.pathname;
         )
       }
     </ul>
+    <button class="theme-dot" aria-label="Cycle theme"></button>
   </nav>
 </header>
 
 <style>
   .site-header {
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    background: color-mix(in srgb, var(--bg) 82%, transparent);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
+    position: fixed;
+    inset: 0 0 auto;
+    height: var(--nav-h);
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+    z-index: 40;
   }
   .nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    padding-block: 14px;
+    height: 100%;
+    padding: 0 6vw;
   }
   .brand {
     font-family: var(--font-mono);
-    font-weight: 500;
-    font-size: 15px;
-    color: var(--text);
+    font-size: 14px;
+    color: var(--fg);
     letter-spacing: -0.01em;
+    white-space: nowrap;
   }
-  .brand-mark {
-    color: var(--violet);
-  }
-  .brand-accent {
-    color: var(--text-dim);
+  .brand-slash {
+    color: var(--accent);
   }
   .nav-links {
     list-style: none;
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
+    align-items: center;
   }
   .nav-links a {
-    font-family: var(--font-sans);
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text-muted);
-    padding: 7px 12px;
-    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--fg);
+    opacity: 0.7;
+    padding: 6px 10px;
     transition:
       color 0.15s var(--ease),
-      background 0.15s var(--ease);
+      opacity 0.15s var(--ease);
   }
   .nav-links a:hover {
-    color: var(--text);
-    background: var(--surface-2);
+    opacity: 1;
+    color: var(--accent);
   }
   .nav-links a[aria-current="page"] {
-    color: var(--violet);
-    background: var(--violet-tint);
+    opacity: 1;
+    color: var(--accent);
   }
 
-  /* Mobile menu toggle (CSS-only via :focus-within fallback handled
-     by the checkbox-free disclosure below); hidden on desktop. */
+  /* Theme dot — wired in Task 6 */
+  .theme-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 1px solid var(--fg);
+    background: var(--accent);
+    cursor: pointer;
+    padding: 0;
+    flex-shrink: 0;
+    transition: opacity 0.15s var(--ease);
+  }
+  .theme-dot:hover {
+    opacity: 0.8;
+  }
+
+  /* Mobile menu toggle — hidden on desktop */
   .nav-toggle {
     display: none;
   }
@@ -102,6 +117,12 @@ const pathname = Astro.url.pathname;
   @media (max-width: 720px) {
     .nav {
       flex-wrap: wrap;
+      align-content: flex-start;
+      padding: 0 4vw;
+    }
+    .brand {
+      /* keep brand visible at top-left, constrain height to nav-h */
+      line-height: var(--nav-h);
     }
     .nav-toggle {
       display: inline-flex;
@@ -110,29 +131,36 @@ const pathname = Astro.url.pathname;
       gap: 5px;
       width: 38px;
       height: 38px;
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
+      background: transparent;
+      border: 1px solid var(--line);
       cursor: pointer;
+      margin-left: auto;
     }
     .nav-toggle span {
       display: block;
       height: 2px;
       width: 18px;
       margin-inline: auto;
-      background: var(--text-muted);
+      background: var(--dim);
+    }
+    /* hide theme-dot on mobile to keep nav uncluttered */
+    .theme-dot {
+      display: none;
     }
     .nav-links {
       flex-basis: 100%;
       flex-direction: column;
-      gap: 2px;
+      gap: 0;
       display: none;
+      border-top: 1px solid var(--line);
+      padding-block: 8px;
     }
     .nav-links.open {
       display: flex;
     }
     .nav-links a {
       display: block;
+      padding: 10px 4vw;
     }
   }
 </style>

@@ -1,8 +1,8 @@
 /* ─────────────────────────────────────────────────────────────
-   Global styles — reset, base typography, prose, the techy
-   backdrop, motion, and shared visual primitives. Consumes
-   tokens.css. Everything degrades gracefully with JS disabled
-   and honors prefers-reduced-motion.
+   Global styles — reset, base typography, prose, motion, and
+   shared visual primitives. Consumes tokens.css. Everything
+   degrades gracefully with JS disabled and honors
+   prefers-reduced-motion.
    ───────────────────────────────────────────────────────────── */
 
 *,
@@ -20,8 +20,8 @@ html {
 
 body {
   background: var(--bg);
-  color: var(--text);
-  font-family: var(--font-serif);
+  color: var(--fg);
+  font-family: var(--font-mono);
   font-size: var(--step-0);
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
@@ -33,63 +33,22 @@ body {
   overflow-x: hidden;
 }
 
-/* ── Techy backdrop: fixed dot-matrix grid + aurora glows ──
-   Pure CSS, zero network requests. A refined nod to the old
-   site's radial-gradient dot background. */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  background-image: radial-gradient(
-    circle at 1px 1px,
-    rgba(123, 106, 240, 0.06) 1px,
-    transparent 0
-  );
-  background-size: 32px 32px;
-  pointer-events: none;
-}
-
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background:
-    radial-gradient(
-      ellipse 70% 50% at 15% 0%,
-      var(--violet-glow) 0%,
-      transparent 60%
-    ),
-    radial-gradient(
-      ellipse 60% 50% at 90% 10%,
-      rgba(72, 190, 166, 0.05) 0%,
-      transparent 55%
-    ),
-    radial-gradient(
-      ellipse 80% 40% at 50% 100%,
-      rgba(224, 107, 80, 0.04) 0%,
-      transparent 60%
-    );
-}
-
 /* ── Headings ── */
 h1,
 h2,
 h3,
 h4 {
-  font-family: var(--font-sans);
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-weight: 400;
   line-height: 1.15;
   letter-spacing: -0.02em;
   text-wrap: balance;
-  color: var(--text);
+  color: var(--fg);
 }
 
 /* ── Links ── */
 a {
-  color: var(--teal);
+  color: var(--accent);
   text-decoration: none;
 }
 
@@ -102,13 +61,15 @@ a {
 }
 
 .prose {
+  font-family: var(--font-serif);
   max-width: var(--measure);
 }
 
 main {
   flex: 1;
   width: 100%;
-  padding-block: clamp(48px, 8vw, 96px);
+  padding-top: var(--nav-h);
+  padding-block-end: clamp(48px, 8vw, 96px);
 }
 
 /* ── Eyebrow label (mono, uppercase) ── */
@@ -118,28 +79,19 @@ main {
   letter-spacing: 0.18em;
   text-transform: uppercase;
   display: inline-block;
-}
-.eyebrow.violet {
-  color: var(--violet);
-}
-.eyebrow.orange {
-  color: var(--orange);
-}
-.eyebrow.teal {
-  color: var(--teal);
+  color: var(--accent);
 }
 
 /* ── Divider + hairline rule ── */
 .divider {
   height: 1px;
-  background: var(--border);
+  background: var(--line);
   margin-block: clamp(40px, 7vw, 64px);
 }
 .rule {
   width: 44px;
   height: 2px;
-  background: linear-gradient(90deg, var(--violet), transparent);
-  border-radius: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
 }
 
 /* ── Prose typography ── */
@@ -165,32 +117,32 @@ main {
   font-style: italic;
 }
 .prose strong {
-  color: var(--text);
+  color: var(--fg);
   font-weight: 700;
 }
 .prose a {
-  border-bottom: 1px solid var(--teal-line);
+  border-bottom: 1px solid var(--line);
   transition: border-color 0.15s var(--ease);
 }
 .prose a:hover {
-  border-color: var(--teal);
+  border-color: var(--accent);
 }
 .prose code {
   font-family: var(--font-mono);
   font-size: 0.85em;
-  background: var(--surface-2);
-  border: 1px solid var(--border);
+  background: var(--panel);
+  border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   padding: 1px 6px;
-  color: var(--violet-soft);
+  color: var(--accent);
 }
 .prose blockquote {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-size: var(--step-1);
-  font-weight: 600;
+  font-weight: 400;
   line-height: 1.4;
-  color: var(--text);
-  border-left: 3px solid var(--violet);
+  color: var(--fg);
+  border-left: 3px solid var(--accent);
   padding: 6px 0 6px 24px;
   margin-block: 1.6em;
 }
@@ -198,13 +150,13 @@ main {
   max-width: 100%;
   height: auto;
   border-radius: var(--radius);
-  border: 1px solid var(--border);
+  border: 1px solid var(--line);
 }
 
 /* Shiki code blocks (markdown.shikiConfig). Re-skin to the palette. */
 .prose pre.astro-code {
-  background: #09090f !important;
-  border: 1px solid var(--border);
+  background: var(--panel) !important;
+  border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 20px 22px;
   font-size: 13px;
@@ -219,21 +171,10 @@ main {
   font-size: inherit;
 }
 
-/* ── Accent-bordered cards ── */
+/* ── Hairline grid cards ── */
 .card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border: 1px solid var(--line);
   padding: clamp(20px, 3vw, 30px);
-}
-.card.violet {
-  border-left: 3px solid var(--violet);
-}
-.card.orange {
-  border-left: 3px solid var(--orange);
-}
-.card.teal {
-  border-left: 3px solid var(--teal);
 }
 
 /* ── Tag chips ── */
@@ -242,11 +183,9 @@ main {
   font-size: 9px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  padding: 5px 10px;
-  border-radius: var(--radius-sm);
-  background: var(--violet-tint);
-  color: var(--violet);
-  border: 1px solid var(--violet-line);
+  padding: 3px 8px;
+  border: 1px solid var(--line);
+  color: var(--dim);
 }
 .tag-row {
   display: flex;
@@ -256,27 +195,25 @@ main {
 
 /* ── Buttons / CTAs ── */
 .btn {
-  font-family: var(--font-sans);
-  font-weight: 600;
+  font-family: var(--font-mono);
   font-size: var(--step--1);
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 11px 20px;
-  border-radius: var(--radius);
-  border: 1px solid var(--violet-line);
-  background: var(--violet-tint);
-  color: var(--violet-soft);
+  padding: 14px 22px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--fg);
   cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
   transition:
-    transform 0.18s var(--ease),
-    border-color 0.18s var(--ease),
-    background 0.18s var(--ease);
+    color 0.18s var(--ease),
+    border-color 0.18s var(--ease);
 }
 .btn:hover {
-  transform: translateY(-2px);
-  border-color: var(--violet);
-  background: rgba(123, 106, 240, 0.16);
+  color: var(--accent);
+  border-color: var(--accent);
 }
 
 /* ── Tables ── */
@@ -287,19 +224,19 @@ table {
   margin-block: 1.5em;
 }
 th {
-  font-family: var(--font-sans);
+  font-family: var(--font-mono);
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 400;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--dim);
   text-align: left;
   padding: 8px 14px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--line);
 }
 td {
   padding: 11px 14px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--line);
   vertical-align: top;
 }
 tr:last-child td {
@@ -343,17 +280,15 @@ tr:last-child td {
 
 /* ── Focus visibility (accessibility) ── */
 :focus-visible {
-  outline: 2px solid var(--violet);
+  outline: 2px solid var(--accent);
   outline-offset: 3px;
   border-radius: 2px;
 }
 
-/* ── Gradient text ── used by hero titles across pages. Global (not scoped)
+/* ── Accent emphasis ── used by hero titles across pages. Global (not scoped)
    so it reaches titles passed into PageHero's slot, which carry the page's
    own scope rather than the component's. */
-.grad {
-  background: linear-gradient(100deg, var(--violet), var(--teal));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+.accent-em {
+  color: var(--accent);
+  font-style: italic;
 }
