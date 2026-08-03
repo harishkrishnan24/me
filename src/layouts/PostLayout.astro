@@ -315,6 +315,16 @@ const shareLinkedIn = `https://www.linkedin.com/sharing/share-offsite/?url=${enc
     gap: 6px;
   }
 
+  /* The separator sits inside .header-tags so it wraps with the chips rather
+     than dangling at the end of the previous line. Once the chips take a line
+     of their own it has nothing to separate, and reads as a stray dot leading
+     the row — so drop it at the width where that wrap becomes the norm. */
+  @media (max-width: 720px) {
+    .header-tags .meta-sep {
+      display: none;
+    }
+  }
+
   .draft-flag {
     font-family: var(--font-mono);
     font-size: 11px;
