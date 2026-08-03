@@ -21,7 +21,7 @@ const year = 2026;
   </div>
   <div class="footer-base">
     <span>© {year} Harish Krishnan</span>
-    <span class="footer-keys">⌘K palette · ` terminal · T theme</span>
+    <span class="footer-keys">⌘K palette · ` terminal</span>
   </div>
 </footer>
 
@@ -86,7 +86,9 @@ const year = 2026;
     gap: 8px;
   }
   .footer-keys {
-    opacity: 0.6;
+    /* No opacity dimming: --dim alone is 5.59:1 on --bg, but at 0.6 it drops
+       to 2.69 and fails AA. This line is the only place the command layer is
+       advertised, so it has to be legible. */
   }
   @media (max-width: 600px) {
     .footer-right {

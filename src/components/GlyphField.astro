@@ -156,13 +156,29 @@ const uid = `gf-${Math.random().toString(36).slice(2, 9)}`;
     }
 
     // ── Animation loop ──────────────────────────────────────────────────────
+    let running = false;
+
     function frame() {
       draw();
-      if (!reducedMotion) {
+      if (!reducedMotion && running) {
         t += 0.012;
         raf = requestAnimationFrame(frame);
       }
       // reduced-motion: one static frame drawn above, loop stops here.
+    }
+
+    function start() {
+      if (running || reducedMotion) return;
+      running = true;
+      raf = requestAnimationFrame(frame);
+    }
+
+    function stop() {
+      running = false;
+      if (raf !== null) {
+        cancelAnimationFrame(raf);
+        raf = null;
+      }
     }
 
     // ── Event listeners ─────────────────────────────────────────────────────
@@ -181,23 +197,45 @@ const uid = `gf-${Math.random().toString(36).slice(2, 9)}`;
 
     // ── Init ────────────────────────────────────────────────────────────────
     resize();
-    frame();
+    // Always paint one frame. For reduced-motion visitors this is the only
+    // frame they ever get, so it must not depend on the loop starting.
+    draw();
 
     if (interactive) window.addEventListener("pointermove", onMove);
     window.addEventListener("resize", onResize);
     window.addEventListener("themechange", onTheme);
 
-    // ── Cleanup when this element is removed from the DOM ───────────────────
-    const mo = new MutationObserver(function () {
-      if (!document.contains(root)) {
-        if (raf !== null) cancelAnimationFrame(raf);
-        if (interactive) window.removeEventListener("pointermove", onMove);
-        window.removeEventListener("resize", onResize);
-        window.removeEventListener("themechange", onTheme);
-        mo.disconnect();
-      }
-    });
-    mo.observe(document.body, { childList: true, subtree: true });
+    // ── Run only while on screen ────────────────────────────────────────────
+    // A frame repaints on the order of 1500 glyphs. requestAnimationFrame
+    // throttles in a BACKGROUND TAB but not in a visible tab that has simply
+    // scrolled past the canvas — so without this the hero keeps animating for
+    // the whole length of an article. rootMargin starts it just before it
+    // scrolls back into view, so there is no visible cold start.
+    // Start unconditionally, then let the observer correct it on its first
+    // callback (which arrives within a frame or two). Gating the initial start
+    // on the observer would make the whole effect depend on it firing — and it
+    // does NOT fire while the document is hidden, so a page opened in a
+    // background tab would have a permanently frozen canvas. This way the
+    // observer is purely an optimisation: worst case it never runs and we are
+    // back to the previous always-on behaviour.
+    start();
+
+    const io = new IntersectionObserver(
+      function (entries) {
+        if (entries[entries.length - 1].isIntersecting) start();
+        else stop();
+      },
+      { rootMargin: "128px" },
+    );
+    io.observe(root);
+
+    // No teardown hook: this is a static multi-page site, so a navigation is a
+    // full document unload and the browser discards all of this. If client-side
+    // view transitions are ever added, the listeners above and this observer
+    // will need explicit cleanup — there is no longer a MutationObserver
+    // watching for removal (it fired on every unrelated DOM mutation, including
+    // every line appended to the terminal, to detect something that never
+    // happens here).
   }
 
   // Defer until DOM is ready (inline scripts run as they're parsed).

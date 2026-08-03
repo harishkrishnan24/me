@@ -223,7 +223,7 @@ main {
   align-items: center;
   gap: 8px;
   padding: 14px 22px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--line-strong);
   background: transparent;
   color: var(--fg);
   cursor: pointer;
@@ -240,7 +240,7 @@ main {
 .btn-ghost {
   background: transparent;
   color: var(--dim);
-  border-color: var(--line);
+  border-color: var(--line-strong);
 }
 .btn-ghost:hover {
   color: var(--fg);

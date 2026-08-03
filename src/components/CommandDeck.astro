@@ -48,6 +48,17 @@ const paletteRows = [
             </a>
           </li>
         ))}
+        {/* Action row, not navigation. This is the keyboard route to theme
+            switching: the bare `T` shortcut was removed because single-character
+            shortcuts collide with screen-reader browse mode (in NVDA/JAWS `t`
+            jumps to the next table) and fail WCAG 2.1.4. ⌘K is modifier-guarded,
+            so reaching it through the palette is safe. */}
+        <li class="palette-item" data-label="cycle theme" data-hint="dark light crt">
+          <button class="palette-row" type="button" id="palette-theme">
+            <span class="palette-label">Cycle theme</span>
+            <span class="palette-hint">dark / light / crt</span>
+          </button>
+        </li>
       </ul>
     </div>
   </div>
@@ -215,14 +226,25 @@ const paletteRows = [
     terminalLog.innerHTML = "";
   }
 
-  // ── Theme dot wiring ──────────────────────────────────────────────────────
-  const themeDot = document.querySelector<HTMLButtonElement>(".theme-dot");
-  if (themeDot) {
-    themeDot.addEventListener("click", () => {
-      const current = document.documentElement.getAttribute("data-theme") ?? "dark";
-      applyTheme(nextTheme(current));
-    });
+  // ── Theme controls ────────────────────────────────────────────────────────
+  // Two affordances, both explicit: the nav dot (pointer) and a palette row
+  // (keyboard, behind the modifier-guarded ⌘K). There is deliberately no bare
+  // `T` shortcut — see the keydown listener.
+  function cycleTheme() {
+    const current = document.documentElement.getAttribute("data-theme") ?? "dark";
+    applyTheme(nextTheme(current));
   }
+
+  document
+    .querySelector<HTMLButtonElement>(".theme-dot")
+    ?.addEventListener("click", cycleTheme);
+
+  document
+    .querySelector<HTMLButtonElement>("#palette-theme")
+    ?.addEventListener("click", () => {
+      cycleTheme();
+      closePalette();
+    });
 
   // ── Konami sequence ───────────────────────────────────────────────────────
   // NOTE: the konami tracker runs BEFORE the isTyping() guard below, so typing
@@ -282,12 +304,12 @@ const paletteRows = [
       return;
     }
 
-    // T — cycle theme
-    if (e.key === "t" || e.key === "T") {
-      const current = document.documentElement.getAttribute("data-theme") ?? "dark";
-      applyTheme(nextTheme(current));
-      return;
-    }
+    // No bare `T` theme shortcut. A single-character shortcut with no modifier
+    // fails WCAG 2.1.4 (Character Key Shortcuts) and collides with screen-reader
+    // browse mode, where NVDA and JAWS bind `t` to "jump to next table" — a
+    // reader tabbing through tables on /about would have repainted the whole
+    // site under themselves. Theme switching lives on the nav dot and on a
+    // palette row instead, both reachable and neither a lone letter.
   });
 
   // ── Palette input filtering ───────────────────────────────────────────────
@@ -363,7 +385,7 @@ const paletteRows = [
     align-items: center;
     gap: 8px;
     padding: 12px 16px;
-    border-bottom: 1px solid var(--line);
+    border-bottom: 1px solid var(--line-strong);
   }
 
   .palette-input {
@@ -403,6 +425,14 @@ const paletteRows = [
     padding: 11px 16px;
     color: var(--fg);
     transition: background 0.1s var(--ease);
+    /* The theme row is a <button>, the rest are <a>. Normalise so the two
+       render identically inside the list. */
+    width: 100%;
+    background: none;
+    border: 0;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
   }
   .palette-row:hover,
   .palette-row:focus-visible {
@@ -462,7 +492,7 @@ const paletteRows = [
     align-items: center;
     gap: 8px;
     padding: 10px 20px;
-    border-top: 1px solid var(--line);
+    border-top: 1px solid var(--line-strong);
     background: var(--bg);
   }
 

@@ -12,6 +12,12 @@
   --bg: #0a0a0c;
   --panel: #101014;
   --line: rgba(237, 234, 227, 0.13);
+  /* --line is a hairline for dividers and structural grids, where WCAG
+     1.4.11 does not apply. Boundaries that IDENTIFY an interactive control
+     (buttons, form fields, the nav toggle, link chips) need 3:1 against
+     --bg, which --line misses at 1.33:1. Use --line-strong for those.
+     Alpha computed per theme: 0.38 here gives 3.08:1. */
+  --line-strong: rgba(237, 234, 227, 0.38);
 
   /* ── Text ── */
   --fg: #edeae3;
@@ -53,6 +59,7 @@ html[data-theme="light"] {
   --bg: #f4f2ec;
   --panel: #eae7df;
   --line: rgba(20, 20, 26, 0.15);
+  --line-strong: rgba(20, 20, 26, 0.47); /* 3.05:1 on --bg */
   --fg: #14141a;
   --dim: #6b6862;
   --accent: oklch(0.52 0.15 145);
@@ -63,6 +70,7 @@ html[data-theme="crt"] {
   --bg: #0b0a06;
   --panel: #12100a;
   --line: oklch(0.4 0.08 86);
+  --line-strong: oklch(0.49 0.08 86); /* 3.1:1 on --bg */
   --fg: oklch(0.86 0.16 86);
   /* Design specifies 0.60 here; raised to 0.72 so body copy clears
      WCAG AA against --bg. The theme is a novelty, posts are long. */
