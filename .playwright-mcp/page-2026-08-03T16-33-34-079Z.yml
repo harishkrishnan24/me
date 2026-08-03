@@ -1,0 +1,373 @@
+- generic [active] [ref=f1e1]:
+  - banner [ref=f1e2]:
+    - navigation "Primary" [ref=f1e3]:
+      - link "~/harish.dev" [ref=f1e4] [cursor=pointer]:
+        - /url: /me/
+      - button "Cycle theme" [ref=f1e5] [cursor=pointer]
+  - main [ref=f1e6]:
+    - generic [ref=f1e7]:
+      - link "← Writing" [ref=f1e8] [cursor=pointer]:
+        - /url: /me/blog
+      - generic [ref=f1e9]:
+        - paragraph [ref=f1e10]: databases · postgresql · 8 min read
+        - heading "There's No Magic in Your Database" [level=1] [ref=f1e11]
+        - generic [ref=f1e12]:
+          - time [ref=f1e13]: July 11, 2026
+          - generic [ref=f1e14]: ·
+          - generic [ref=f1e15]: Harish Krishnan
+          - generic [ref=f1e16]:
+            - generic [ref=f1e17]: ·
+            - generic [ref=f1e18]: databases
+            - generic [ref=f1e19]: postgresql
+            - generic [ref=f1e20]: internals
+            - generic [ref=f1e21]: systems
+      - generic [ref=f1e23]:
+        - complementary "Contents" [ref=f1e24]:
+          - paragraph [ref=f1e25]: Contents
+          - navigation [ref=f1e26]:
+            - list [ref=f1e27]:
+              - listitem [ref=f1e28]:
+                - link "The query has two jobs" [ref=f1e29] [cursor=pointer]:
+                  - /url: "#the-query-has-two-jobs"
+              - listitem [ref=f1e30]:
+                - 'link "The brain: turning text into a plan" [ref=f1e31] [cursor=pointer]':
+                  - /url: "#the-brain-turning-text-into-a-plan"
+              - listitem [ref=f1e32]:
+                - 'link "The storage: going to get the bytes" [ref=f1e33] [cursor=pointer]':
+                  - /url: "#the-storage-going-to-get-the-bytes"
+              - listitem [ref=f1e34]:
+                - link "The three layers that wrap everything" [ref=f1e35] [cursor=pointer]:
+                  - /url: "#the-three-layers-that-wrap-everything"
+              - listitem [ref=f1e36]:
+                - link "The whole thing on one page" [ref=f1e37] [cursor=pointer]:
+                  - /url: "#the-whole-thing-on-one-page"
+              - listitem [ref=f1e38]:
+                - link "The takeaway" [ref=f1e39] [cursor=pointer]:
+                  - /url: "#the-takeaway"
+        - generic [ref=f1e40]:
+          - paragraph [ref=f1e41]: You type SELECT and rows come back. In between is a stack of twelve layers, each solving one very sensible problem. Here's the whole journey, following a single query from your terminal to the disk and back.
+          - article [ref=f1e42]:
+            - paragraph [ref=f1e43]: "You run a query:"
+            - code [ref=f1e45]:
+              - generic [ref=f1e46]: SELECT name FROM users WHERE id = 42;
+            - paragraph [ref=f1e47]:
+              - text: A few milliseconds later, a name comes back. Somewhere in between, a lot happened — and if you’re like most engineers who use databases every day, that “in between” is a black box. It’s just
+              - emphasis [ref=f1e48]: magic behind the scenes
+              - text: .
+            - paragraph [ref=f1e49]: "I want to kill that feeling, because it’s holding you back from a mental model you can actually reason about. So here’s the reframe, and it’s the most important sentence in this whole post:"
+            - blockquote [ref=f1e50]:
+              - paragraph [ref=f1e51]: A database is just a normal program reading and writing files.
+            - paragraph [ref=f1e52]:
+              - text: Your table
+              - code [ref=f1e53]: users
+              - text: is a file on disk — literally, a file in a folder. When you query it, the database opens that file, reads some bytes, and works out which bytes are the row you asked for. That’s the entire trick. Everything else — every layer we’re about to walk through — exists to make that reading
+              - strong [ref=f1e54]: fast
+              - text: ","
+              - strong [ref=f1e55]: safe
+              - text: ", and"
+              - strong [ref=f1e56]: answerable in SQL instead of raw byte offsets
+              - text: .
+            - paragraph [ref=f1e57]:
+              - text: We’ll follow that one query,
+              - code [ref=f1e58]: id = 42
+              - text: ", the whole way down and back. Keep it in your head."
+            - heading "The query has two jobs" [level=2] [ref=f1e59]
+            - paragraph [ref=f1e60]: "Every query splits cleanly into two halves, and this split is the spine of everything that follows:"
+            - list [ref=f1e61]:
+              - listitem [ref=f1e62]:
+                - strong [ref=f1e63]:
+                  - text: The top half — figure out
+                  - emphasis [ref=f1e64]: what
+                  - text: to do.
+                - text: The database receives your text, understands it, and decides on a plan. This is the
+                - emphasis [ref=f1e65]: brain
+                - text: . Nothing has been fetched yet; it’s all thinking.
+              - listitem [ref=f1e66]:
+                - strong [ref=f1e67]:
+                  - text: The bottom half — go
+                  - emphasis [ref=f1e68]: get
+                  - text: the bytes.
+                - text: The plan runs, which means descending to where the data physically lives and pulling row 42 back up.
+            - paragraph [ref=f1e69]: Let’s take the brain first, because that’s where your query lands.
+            - 'heading "The brain: turning text into a plan" [level=2] [ref=f1e70]'
+            - heading "It arrives — the client protocol" [level=3] [ref=f1e71]
+            - paragraph [ref=f1e72]:
+              - text: Before anything, your query has to physically
+              - emphasis [ref=f1e73]: get
+              - text: to the database. Postgres is a separate process, often on a separate machine. So your client opens a socket and speaks an agreed-upon language over it — the wire protocol — sending a message that means “here’s a query, this many bytes, here’s the text.”
+            - blockquote [ref=f1e74]:
+              - paragraph [ref=f1e75]:
+                - strong [ref=f1e76]: "Without this layer:"
+                - text: the database is a sealed box with no door.
+            - heading "It gets understood — the parser" [level=3] [ref=f1e77]
+            - paragraph [ref=f1e78]:
+              - text: Now the database has your query, but only as
+              - emphasis [ref=f1e79]: text
+              - text: — a string of characters. It doesn’t yet know that
+              - code [ref=f1e80]: SELECT
+              - text: means “read” or that
+              - code [ref=f1e81]: users
+              - text: is a table. The parser turns that flat string into a
+              - strong [ref=f1e82]: structured tree
+              - text: ": this is a SELECT, the target column is"
+              - code [ref=f1e83]: name
+              - text: ", the table is"
+              - code [ref=f1e84]: users
+              - text: ", there’s a filter"
+              - code [ref=f1e85]: id = 42
+              - text: .
+            - paragraph [ref=f1e86]: It’s the same move a compiler makes parsing source code before it can run it.
+            - blockquote [ref=f1e87]:
+              - paragraph [ref=f1e88]:
+                - strong [ref=f1e89]: "Without this layer:"
+                - text: code can’t act on an ambiguous, unstructured string.
+            - heading "It gets a strategy — the planner" [level=3] [ref=f1e90]
+            - paragraph [ref=f1e91]:
+              - text: Here’s the layer most people don’t know exists. There’s more than one way to answer your query. To find
+              - code [ref=f1e92]: id = 42
+              - text: ", the database could:"
+            - list [ref=f1e93]:
+              - listitem [ref=f1e94]:
+                - text: read
+                - emphasis [ref=f1e95]: every row
+                - text: in
+                - code [ref=f1e96]: users
+                - text: and check each one (a
+                - strong [ref=f1e97]: sequential scan
+                - text: — slow), or
+              - listitem [ref=f1e98]:
+                - text: use an
+                - strong [ref=f1e99]: index
+                - text: "on"
+                - code [ref=f1e100]: id
+                - text: to jump almost straight to it (an
+                - strong [ref=f1e101]: index scan
+                - text: — fast).
+            - paragraph [ref=f1e102]: The planner weighs what’s available and picks the cheapest path, producing a step-by-step plan. This single decision is the difference between a query returning in one millisecond and one returning in ten seconds.
+            - blockquote [ref=f1e103]:
+              - paragraph [ref=f1e104]:
+                - strong [ref=f1e105]: "Without this layer:"
+                - text: the database does the naive thing every time and falls over at scale.
+            - heading "It runs — the executor" [level=3] [ref=f1e106]
+            - paragraph [ref=f1e107]:
+              - text: The plan is just a recipe. The executor actually
+              - emphasis [ref=f1e108]: cooks
+              - text: "it: “open an index scan on"
+              - code [ref=f1e109]: id
+              - text: ", seek to 42, fetch that row, pull out the"
+              - code [ref=f1e110]: name
+              - text: column, hand it back.” It’s the layer that turns inert instructions into real actions against the storage below.
+            - blockquote [ref=f1e111]:
+              - paragraph [ref=f1e112]:
+                - strong [ref=f1e113]: "Without this layer:"
+                - text: you have a plan and no one to carry it out.
+            - paragraph [ref=f1e114]:
+              - text: That’s the whole brain. Your query has been
+              - strong [ref=f1e115]: received
+              - text: ","
+              - strong [ref=f1e116]: understood
+              - text: ","
+              - strong [ref=f1e117]: strategized
+              - text: ", and the executor is now reaching down into storage to actually fetch row 42. Notice that"
+              - emphasis [ref=f1e118]: no table data has been touched yet
+              - text: . That reach-down is where the second half begins.
+            - 'heading "The storage: going to get the bytes" [level=2] [ref=f1e119]'
+            - heading [level=3] [ref=f1e120]:
+              - text: A quick aside — how does it even know what
+              - code [ref=f1e121]: users
+              - text: is?
+            - paragraph [ref=f1e122]:
+              - text: How did the planner know there’s an index on
+              - code [ref=f1e123]: id
+              - text: "? How does the executor know"
+              - code [ref=f1e124]: users
+              - text: has a
+              - code [ref=f1e125]: name
+              - text: column that holds text? The database stores
+              - strong [ref=f1e126]: facts about itself
+              - text: in the
+              - emphasis [ref=f1e127]: catalog
+              - text: "— and here’s the lovely part: the catalog is"
+              - emphasis [ref=f1e128]: itself just tables
+              - text: . A table listing your tables. A table listing your columns. A table listing your indexes. The database describes itself using its own storage machinery, then bootstraps on top of it.
+            - heading "Finding it fast — the index (a B-tree)" [level=3] [ref=f1e129]
+            - paragraph [ref=f1e130]:
+              - text: The executor wants
+              - code [ref=f1e131]: id = 42
+              - text: ". The dumb way: read all ten million rows and check each one. The smart way: an index — a separate, sorted, tree-shaped structure that lets you find"
+              - code [ref=f1e132]: "42"
+              - text: by walking a handful of branches instead of scanning everything.
+            - paragraph [ref=f1e133]:
+              - text: "It’s the index at the back of a textbook. You don’t read all 900 pages to find “mitochondria”; you flip to the M’s. The B-tree answers exactly one question:"
+              - emphasis [ref=f1e134]:
+                - text: for
+                - code [ref=f1e135]: id = 42
+                - text: ", which page holds the row, and where in that page?"
+            - heading "Where rows actually live — the heap" [level=3] [ref=f1e136]
+            - paragraph [ref=f1e137]:
+              - text: The index told us
+              - emphasis [ref=f1e138]: where
+              - text: . The row itself lives in the
+              - strong [ref=f1e139]: heap
+              - text: — the table’s real data, organized into fixed-size
+              - strong [ref=f1e140]: pages
+              - text: of 8KB each. Inside a page, individual rows are
+              - strong [ref=f1e141]: tuples
+              - text: ", and a small directory at the top of the page records the exact byte offset of each one."
+            - paragraph [ref=f1e142]: Fixed-size pages are the unit everything else is built on. Remember that number, 8KB — it shows up everywhere.
+            - heading "Skipping the disk — the buffer pool" [level=3] [ref=f1e143]
+            - paragraph [ref=f1e144]:
+              - text: We know row 42 is in, say, page 17. But reading from disk is
+              - emphasis [ref=f1e145]: slow
+              - text: "— orders of magnitude slower than RAM — and popular pages get read over and over. So the database keeps a big pool of memory that caches recently-used pages. Before touching disk, the executor asks the buffer pool: “got page 17?”"
+            - list [ref=f1e146]:
+              - listitem [ref=f1e147]:
+                - strong [ref=f1e148]: "Yes"
+                - text: → handed over instantly, no disk touched.
+              - listitem [ref=f1e149]:
+                - strong [ref=f1e150]: "No"
+                - text: → go to disk, read it, and
+                - emphasis [ref=f1e151]: keep a copy
+                - text: for next time (evicting some cold page if the pool is full).
+            - paragraph [ref=f1e152]: A hot table effectively lives in RAM, and repeated queries never pay the disk cost.
+            - heading "The floor — disk I/O" [level=3] [ref=f1e153]
+            - paragraph [ref=f1e154]: If the pool didn’t have page 17, we finally hit bottom. The disk manager opens the file, computes where page 17 sits (17 × 8KB = byte offset 139,264), and reads exactly 8KB from that spot.
+            - blockquote [ref=f1e155]:
+              - paragraph [ref=f1e156]: This is where “page 17” stops being an abstraction and becomes a real read from a real file.
+            - heading "And back up" [level=3] [ref=f1e157]
+            - paragraph [ref=f1e158]:
+              - text: Now it all reverses. The 8KB page rises from disk → into the buffer pool (cached for next time) → the heap layer finds tuple 42 inside it → the executor extracts the
+              - code [ref=f1e159]: name
+              - text: column → hands it up through the plan → the protocol layer packages it → and it travels back over the socket to your terminal.
+            - paragraph [ref=f1e160]: Query answered. That’s the full descent and return — one round trip.
+            - heading "The three layers that wrap everything" [level=2] [ref=f1e161]
+            - paragraph [ref=f1e162]:
+              - text: So far we only
+              - emphasis [ref=f1e163]: read
+              - text: . The moment you
+              - emphasis [ref=f1e164]: write
+              - text: ", three more layers wake up. Change the query:"
+            - code [ref=f1e166]:
+              - generic [ref=f1e167]: UPDATE users SET name = 'Ada' WHERE id = 42;
+            - paragraph [ref=f1e168]:
+              - strong [ref=f1e169]: Transactions and MVCC.
+              - text: What if someone reads row 42 while you’re mid-update? What if your change is half-done? What if you
+              - code [ref=f1e170]: ROLLBACK
+              - text: "? A transaction is the promise that a group of changes happens"
+              - emphasis [ref=f1e171]: all-or-nothing
+              - text: ", and that concurrent users never see each other’s half-finished work. Postgres pulls this off with MVCC — it keeps"
+              - emphasis [ref=f1e172]: multiple versions
+              - text: of a row and shows each transaction the version that was correct when it started. Readers never block writers; writers never block readers.
+            - paragraph [ref=f1e173]:
+              - strong [ref=f1e174]: Write-ahead logging (WAL).
+              - text: "Your update modified page 17 — but that page is sitting in the buffer pool, in memory, not yet on disk. The power dies. The change is gone, even though you told the user “committed.” That’s a lie a database can’t tell. The fix:"
+              - emphasis [ref=f1e175]: before
+              - text: changing anything, append a tiny note to a separate, append-only log on disk — “about to set row 42’s name to Ada.” Only once that note is durable do you report success. On restart, replay the log and redo anything that didn’t make it. It’s counterintuitive — to make writes
+              - emphasis [ref=f1e176]: safer
+              - text: ", you"
+              - emphasis [ref=f1e177]: write more
+              - text: — but the log write is a fast sequential append, and it’s the price of “committed” actually meaning committed.
+            - paragraph [ref=f1e178]:
+              - strong [ref=f1e179]: Replication.
+              - text: "One machine is a single point of failure. Replication keeps copies of the database on other machines — and the mechanism falls right out of WAL: the primary streams that same log to the replicas, and each one replays it to stay in sync. Reads spread across copies; if the primary dies, a replica takes over. It comes almost for free, because the log already describes every change."
+            - heading "The whole thing on one page" [level=2] [ref=f1e180]
+            - table [ref=f1e181]:
+              - rowgroup [ref=f1e182]:
+                - row [ref=f1e183]:
+                  - columnheader "Layer" [ref=f1e184]
+                  - columnheader "Its one job" [ref=f1e185]
+              - rowgroup [ref=f1e186]:
+                - row [ref=f1e187]:
+                  - cell [ref=f1e188]:
+                    - strong [ref=f1e189]: Client protocol
+                  - cell "Get the query in, send rows back, over a socket" [ref=f1e190]
+                - row [ref=f1e191]:
+                  - cell [ref=f1e192]:
+                    - strong [ref=f1e193]: Parser
+                  - cell "Text → structured query tree" [ref=f1e194]
+                - row [ref=f1e195]:
+                  - cell [ref=f1e196]:
+                    - strong [ref=f1e197]: Planner
+                  - cell "Choose the cheapest strategy (scan vs. index)" [ref=f1e198]
+                - row [ref=f1e199]:
+                  - cell [ref=f1e200]:
+                    - strong [ref=f1e201]: Executor
+                  - cell "Run the plan, step by step" [ref=f1e202]
+                - row [ref=f1e203]:
+                  - cell [ref=f1e204]:
+                    - strong [ref=f1e205]: Catalog
+                  - cell "The database’s facts about itself (tables of tables)" [ref=f1e206]
+                - row [ref=f1e207]:
+                  - cell [ref=f1e208]:
+                    - strong [ref=f1e209]: Index / B-tree
+                  - cell "Find a row fast without scanning" [ref=f1e210]
+                - row [ref=f1e211]:
+                  - cell [ref=f1e212]:
+                    - strong [ref=f1e213]: Heap
+                  - cell "Where rows physically live, in 8KB pages" [ref=f1e214]
+                - row [ref=f1e215]:
+                  - cell [ref=f1e216]:
+                    - strong [ref=f1e217]: Buffer pool
+                  - cell "Cache hot pages in RAM, skip the disk" [ref=f1e218]
+                - row [ref=f1e219]:
+                  - cell [ref=f1e220]:
+                    - strong [ref=f1e221]: Disk I/O
+                  - cell "Read and write real 8KB pages in the file" [ref=f1e222]
+                - row [ref=f1e223]:
+                  - cell [ref=f1e224]:
+                    - strong [ref=f1e225]: Transactions / MVCC
+                  - cell "All-or-nothing changes and safe concurrency" [ref=f1e226]
+                - row [ref=f1e227]:
+                  - cell [ref=f1e228]:
+                    - strong [ref=f1e229]: WAL
+                  - cell "Log before data, so “committed” survives a crash" [ref=f1e230]
+                - row [ref=f1e231]:
+                  - cell [ref=f1e232]:
+                    - strong [ref=f1e233]: Replication
+                  - cell "Ship the WAL to copies for safety and scale" [ref=f1e234]
+            - heading "The takeaway" [level=2] [ref=f1e235]
+            - paragraph [ref=f1e236]: A query comes in the top, falls through the brain and into storage to fetch some bytes, and three safety layers wrap the whole thing so it stays correct, durable, and available. That’s it. That’s the database.
+            - paragraph [ref=f1e237]:
+              - text: "None of these layers is magic. Each one is a sensible answer to a specific, concrete problem:"
+              - emphasis [ref=f1e238]: how does the query get in? how do we understand it? how do we avoid scanning everything? how do we not touch the slow disk? how do we survive a crash?
+              - text: Once you can name the problem, the layer that solves it stops being mysterious.
+            - paragraph [ref=f1e239]: So carry the map. The next time a query is slow, or a “committed” write goes missing, or two transactions step on each other, you’ll know exactly which of these twelve rooms to go looking in.
+      - generic [ref=f1e240]:
+        - generic [ref=f1e241]:
+          - generic [ref=f1e242]: databases
+          - generic [ref=f1e243]: postgresql
+          - generic [ref=f1e244]: internals
+          - generic [ref=f1e245]: systems
+        - generic [ref=f1e246]:
+          - generic [ref=f1e247]:
+            - paragraph [ref=f1e248]: Harish Krishnan
+            - paragraph [ref=f1e249]: Software engineer based in Stockholm. Building systems, writing about them.
+          - navigation "Share this post" [ref=f1e250]:
+            - generic [ref=f1e251]: Share
+            - link "X / Twitter" [ref=f1e252] [cursor=pointer]:
+              - /url: https://twitter.com/intent/tweet?text=There's%20No%20Magic%20in%20Your%20Database&url=https%3A%2F%2Fharishkrishnan24.github.io%2Fme%2Fblog%2Fwhat-happens-when-you-run-a-query%2F
+            - link "LinkedIn" [ref=f1e253] [cursor=pointer]:
+              - /url: https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fharishkrishnan24.github.io%2Fme%2Fblog%2Fwhat-happens-when-you-run-a-query%2F
+            - button "Copy link" [ref=f1e254] [cursor=pointer]
+        - generic [ref=f1e255]:
+          - paragraph [ref=f1e256]: Next
+          - link "Why Your AI Features Feel Bolted On →" [ref=f1e257] [cursor=pointer]:
+            - /url: /me/blog/why-ai-features-feel-bolted-on
+  - contentinfo [ref=f1e258]:
+    - generic [ref=f1e259]:
+      - generic [ref=f1e260]:
+        - paragraph [ref=f1e261]: Let's talk.
+        - link "harishkrishnan1993@gmail.com" [ref=f1e262] [cursor=pointer]:
+          - /url: mailto:harishkrishnan1993@gmail.com
+      - navigation "Footer links" [ref=f1e263]:
+        - link "GitHub" [ref=f1e264] [cursor=pointer]:
+          - /url: https://github.com/harishkrishnan24
+        - link "LinkedIn" [ref=f1e265] [cursor=pointer]:
+          - /url: https://www.linkedin.com/in/harishkrishnan1993/
+        - link "X" [ref=f1e266] [cursor=pointer]:
+          - /url: https://x.com/harishkforu
+        - link "Bookshelf" [ref=f1e267] [cursor=pointer]:
+          - /url: /me/bookshelf
+    - generic [ref=f1e268]:
+      - generic [ref=f1e269]: © 2026 Harish Krishnan
+      - generic [ref=f1e270]: "⌘K palette · ` terminal · T theme"

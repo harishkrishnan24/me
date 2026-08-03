@@ -1,0 +1,290 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - navigation "Primary" [ref=e3]:
+      - link "~/harish.dev" [ref=e4] [cursor=pointer]:
+        - /url: /me/
+      - button "Cycle theme" [ref=e5] [cursor=pointer]
+  - main [ref=e6]:
+    - generic [ref=e11]:
+      - generic [ref=e12]: About · Software Engineer · Stockholm
+      - heading "A perpetual student of the craft." [level=2] [ref=e13]
+    - generic [ref=e15]:
+      - generic [ref=e16]:
+        - generic [ref=e17]: Background
+        - paragraph [ref=e18]: Software engineer based in Stockholm with experience across startups and enterprise. I build applications, teach, and write — and I'm always learning what comes next.
+        - generic [ref=e19]:
+          - paragraph [ref=e20]: I'm Harish Krishnan, a software engineer based in Stockholm with experience in both startups and enterprise environments. I've built software applications using a wide range of technologies, and I actively share my knowledge through Udemy courses and technical writing. Previously, I've worked with companies like SAP, Boeing, and Siemens, and also as a contractor at companies like FoodDocs in Tallinn.
+          - paragraph [ref=e21]: Currently, I'm focused on deepening my expertise in Generative AI, Machine Learning, and distributed systems, while strengthening my fundamentals in software engineering. I'm also actively learning Go and Rust to build efficient, scalable systems. I'm passionate about continuous learning, with a strong interest in applying emerging technologies to solve real-world problems.
+      - table "At a glance" [ref=e22]:
+        - rowgroup [ref=e23]:
+          - row [ref=e24]:
+            - rowheader "ROLE" [ref=e25]
+            - cell "Software Engineer" [ref=e26]
+          - row [ref=e27]:
+            - rowheader "ALSO" [ref=e28]
+            - cell "Course instructor · writer" [ref=e29]
+          - row [ref=e30]:
+            - rowheader "FOCUS" [ref=e31]
+            - cell "AI systems · distributed systems" [ref=e32]
+          - row [ref=e33]:
+            - rowheader "LEARNING" [ref=e34]
+            - cell "Go · Rust" [ref=e35]
+    - generic [ref=e36]:
+      - generic [ref=e37]:
+        - generic [ref=e38]: Technical skills
+        - heading "What I work with" [level=2] [ref=e39]
+      - generic [ref=e40]:
+        - heading "Languages" [level=3] [ref=e41]
+        - generic [ref=e42]:
+          - generic [ref=e43]: JavaScript / TypeScript
+          - generic [ref=e44]: Python
+          - generic [ref=e45]: Go
+          - generic [ref=e46]: Rust
+      - generic [ref=e47]:
+        - generic [ref=e48]:
+          - heading "Technologies & frameworks" [level=3] [ref=e49]
+          - generic [ref=e50]: currently learning
+        - generic [ref=e52]:
+          - generic [ref=e53]: React
+          - generic [ref=e54]: Angular
+          - generic [ref=e55]: Vue.js
+          - generic [ref=e56]: Svelte
+          - generic [ref=e57]: Node.js
+          - generic [ref=e58]: Express
+          - generic [ref=e59]: NestJS
+          - generic [ref=e60]: React Native
+          - generic [ref=e61]: Docker
+          - generic [ref=e62]: Kubernetes
+          - generic [ref=e63]: AWS
+          - generic [ref=e64]: MongoDB
+          - generic [ref=e65]: PostgreSQL
+          - generic [ref=e66]: GraphQL
+          - generic [ref=e67]: gRPC
+          - generic [ref=e68]: Cypress
+          - generic [ref=e69]: Protractor
+          - generic [ref=e70]: Jest
+          - generic [ref=e71]: Vitest
+          - generic [ref=e72]: React Testing Library
+          - generic [ref=e73]: Redux
+          - generic [ref=e74]: NgRx
+          - generic [ref=e75]: VueX
+          - generic [ref=e76]: AWS SageMaker
+          - generic [ref=e77]: Crew AI
+          - generic [ref=e78]: LangGraph
+          - generic [ref=e79]: LangChain
+          - generic [ref=e80]: MCP
+    - generic [ref=e81]:
+      - generic [ref=e82]:
+        - generic [ref=e83]: Certifications
+        - heading "Verified credentials" [level=2] [ref=e84]
+      - generic [ref=e85]:
+        - paragraph [ref=e86]: My professional certifications are issued and verified on Credly.
+        - link "View my badges on Credly →" [ref=e87] [cursor=pointer]:
+          - /url: https://www.credly.com/users/harish-krishnan.623b2d03
+    - generic [ref=e88]:
+      - generic [ref=e89]:
+        - generic [ref=e90]: Work experience
+        - heading "Where I've worked" [level=2] [ref=e91]
+      - generic [ref=e92]:
+        - article [ref=e93]:
+          - generic [ref=e94]:
+            - heading "Software Engineer" [level=3] [ref=e95]
+            - paragraph [ref=e96]: DigitalRoute · Current Position · Stockholm, Sweden
+          - paragraph [ref=e97]: Currently working on building robust Usage Data solutions.
+          - list [ref=e98]:
+            - listitem [ref=e99]: ▹ Building scalable web applications using modern technologies such as React and Node.js
+            - listitem [ref=e100]: ▹ Integrating AI/ML and LLM solutions
+          - generic [ref=e101]:
+            - generic [ref=e102]: React
+            - generic [ref=e103]: Node.js
+            - generic [ref=e104]: Express.js
+            - generic [ref=e105]: JavaScript
+            - generic [ref=e106]: TypeScript
+            - generic [ref=e107]: HTML
+            - generic [ref=e108]: CSS
+            - generic [ref=e109]: StoryBook
+            - generic [ref=e110]: Redux
+            - generic [ref=e111]: AWS Services
+            - generic [ref=e112]: AWS SageMaker
+            - generic [ref=e113]: Jest
+            - generic [ref=e114]: Vitest
+            - generic [ref=e115]: React Testing Library
+            - generic [ref=e116]: Playwright
+        - article [ref=e117]:
+          - generic [ref=e118]:
+            - heading "Course Instructor (during my free time)" [level=3] [ref=e119]
+            - paragraph [ref=e120]: Udemy · June 2023 — Present · Remote
+          - paragraph [ref=e121]: Creating courses on the Udemy platform, focusing on software development, programming languages, and modern web technologies.
+          - list [ref=e122]:
+            - listitem [ref=e123]: ▹ Created six courses with over a thousand students enrolled
+            - listitem [ref=e124]: ▹ Maintain a rating of 4+ out of five across more than 50 reviews
+          - generic [ref=e125]:
+            - generic [ref=e126]: JavaScript
+            - generic [ref=e127]: TypeScript
+            - generic [ref=e128]: React
+            - generic [ref=e129]: Node.js
+            - generic [ref=e130]: Go
+            - generic [ref=e131]: Rust
+        - article [ref=e132]:
+          - generic [ref=e133]:
+            - heading "Software Engineer" [level=3] [ref=e134]
+            - paragraph [ref=e135]: SAP Labs · Nov 2020 — Jan 2024 · Bengaluru, India
+          - paragraph [ref=e136]: Worked on enterprise software solutions, contributing to large-scale applications used by businesses worldwide using Angular, React, Node.js, Spring Boot, and more.
+          - list [ref=e137]:
+            - listitem [ref=e138]: ▹ Developed enterprise-grade software applications for Real Estate and Human Resource
+            - listitem [ref=e139]: ▹ Awarded three times for effective contribution to the team
+          - generic [ref=e140]:
+            - generic [ref=e141]: Angular
+            - generic [ref=e142]: React
+            - generic [ref=e143]: Node.js
+            - generic [ref=e144]: Spring Boot
+            - generic [ref=e145]: Java
+            - generic [ref=e146]: TypeScript
+            - generic [ref=e147]: JavaScript
+            - generic [ref=e148]: HTML
+            - generic [ref=e149]: CSS
+            - generic [ref=e150]: SAPUI5
+            - generic [ref=e151]: SAP CAP
+            - generic [ref=e152]: SAP BTP
+            - generic [ref=e153]: Jenkins
+            - generic [ref=e154]: Go
+            - generic [ref=e155]: Protractor
+            - generic [ref=e156]: DevOps
+            - generic [ref=e157]: Security
+        - article [ref=e158]:
+          - generic [ref=e159]:
+            - heading "Front-end Developer" [level=3] [ref=e160]
+            - paragraph [ref=e161]: Fragma Data Systems · Jul 2020 — Nov 2020 · Remote
+          - paragraph [ref=e162]: Contributed to UI development of multiple projects, for a bank called Mashreq in the UAE and a state government project.
+          - list [ref=e163]:
+            - listitem [ref=e164]: ▹ Developed UI solutions using React and its ecosystem
+          - generic [ref=e165]:
+            - generic [ref=e166]: React
+            - generic [ref=e167]: JavaScript
+            - generic [ref=e168]: TypeScript
+            - generic [ref=e169]: CSS
+            - generic [ref=e170]: HTML
+            - generic [ref=e171]: Redux
+            - generic [ref=e172]: Jest
+            - generic [ref=e173]: React Testing Library
+        - article [ref=e174]:
+          - generic [ref=e175]:
+            - heading "Full Stack Developer" [level=3] [ref=e176]
+            - paragraph [ref=e177]: FoodDocs (Contractor) · May 2017 — Mar 2020 · Remote
+          - paragraph [ref=e178]: Worked on building a food safety management system.
+          - list [ref=e179]:
+            - listitem [ref=e180]: ▹ Used Angular, Vue.js, Laravel, MySQL, Cypress, and Flutter to develop applications
+          - generic [ref=e181]:
+            - generic [ref=e182]: Angular
+            - generic [ref=e183]: Vue.js
+            - generic [ref=e184]: Laravel
+            - generic [ref=e185]: MySQL
+            - generic [ref=e186]: Cypress
+            - generic [ref=e187]: Flutter
+            - generic [ref=e188]: HTML
+            - generic [ref=e189]: CSS
+            - generic [ref=e190]: Bootstrap
+        - article [ref=e191]:
+          - generic [ref=e192]:
+            - heading "Software Engineer" [level=3] [ref=e193]
+            - paragraph [ref=e194]: Boeing · Dec 2018 — May 2019 · Bengaluru, India
+          - paragraph [ref=e195]: Worked on developing software solutions for aerospace applications.
+          - list [ref=e196]:
+            - listitem [ref=e197]: ▹ Used Angular to develop a dashboard creation application
+            - listitem [ref=e198]: ▹ Used Java / Spring Boot to develop backend services
+          - generic [ref=e199]:
+            - generic [ref=e200]: Angular
+            - generic [ref=e201]: Java
+            - generic [ref=e202]: Spring Boot
+            - generic [ref=e203]: TypeScript
+            - generic [ref=e204]: HTML
+            - generic [ref=e205]: CSS
+            - generic [ref=e206]: NgRx Store
+        - article [ref=e207]:
+          - generic [ref=e208]:
+            - heading "Freelance Developer" [level=3] [ref=e209]
+            - paragraph [ref=e210]: Upwork · May 2017 — Dec 2018 · Remote
+          - paragraph [ref=e211]: Worked as a freelance developer on a real estate project, focusing on UI development and client collaboration to deliver high-quality web applications.
+          - list [ref=e212]:
+            - listitem [ref=e213]: ▹ Actively contributed to UI development using Angular — building reusable components, setting up projects from scratch, and more
+            - listitem [ref=e214]: ▹ Worked hand-in-hand with the owner of the idea to improve the product UI flow
+            - listitem [ref=e215]: ▹ Involved in the recruitment of new people
+            - listitem [ref=e216]: ▹ Communicated with the back-end developer, providing suggestions and integrating the UI with the back-end
+          - generic [ref=e217]:
+            - generic [ref=e218]: Angular
+            - generic [ref=e219]: TypeScript
+            - generic [ref=e220]: JavaScript
+            - generic [ref=e221]: HTML
+            - generic [ref=e222]: CSS
+            - generic [ref=e223]: NgRx Store
+        - article [ref=e224]:
+          - generic [ref=e225]:
+            - heading "Software Engineer" [level=3] [ref=e226]
+            - paragraph [ref=e227]: Squash Apps · Sep 2016 — May 2017 · Coimbatore, India
+          - paragraph [ref=e228]: Started as an entry-level software engineer and quickly developed full-stack development skills, contributing to in-house products and client projects.
+          - list [ref=e229]:
+            - listitem [ref=e230]: ▹ Joined as an entry-level software engineer
+            - listitem [ref=e231]: ▹ Quickly ramped up with MERN stack skills within a month
+            - listitem [ref=e232]: ▹ Actively contributed to in-house products, leading to an opportunity to work with US-based clients
+          - generic [ref=e233]:
+            - generic [ref=e234]: MongoDB
+            - generic [ref=e235]: Express.js
+            - generic [ref=e236]: React
+            - generic [ref=e237]: Node.js (MERN Stack)
+            - generic [ref=e238]: Ionic
+    - generic [ref=e239]:
+      - generic [ref=e240]:
+        - generic [ref=e241]: Interests & hobbies
+        - heading "Away from the keyboard (mostly)" [level=2] [ref=e242]
+      - generic [ref=e243]:
+        - paragraph [ref=e245]: Reading technical books and research papers across a range of topics
+        - paragraph [ref=e247]: Rust & Go programming languages
+        - paragraph [ref=e249]: Experimenting with new technologies
+        - paragraph [ref=e251]: Technical writing and blogging
+        - paragraph [ref=e253]: Building side projects and prototypes
+        - paragraph [ref=e255]: Contributing to open-source projects
+        - paragraph [ref=e257]: Formula One
+    - generic [ref=e258]:
+      - generic [ref=e259]:
+        - generic [ref=e260]: Education & learning
+        - heading "A learning-first mindset" [level=2] [ref=e261]
+      - generic [ref=e262]:
+        - paragraph [ref=e263]: I believe in continuous learning and staying current with the latest trends in technology. My educational journey includes a formal Bachelor of Engineering in Automobile Engineering, complemented by self-directed learning through online platforms, books, and hands-on projects in software development and engineering principles.
+        - paragraph [ref=e264]:
+          - text: I'm also passionate about sharing knowledge, which is why I create content on
+          - link "Medium" [ref=e265] [cursor=pointer]:
+            - /url: https://harishkrishnan1993.medium.com/
+          - text: and develop courses on
+          - link "Udemy" [ref=e266] [cursor=pointer]:
+            - /url: https://www.udemy.com/user/harish-krishnan-5/
+          - text: .
+    - generic [ref=e267]:
+      - generic [ref=e268]: Philosophy
+      - blockquote [ref=e269]: With enough time, effort, and curiosity, any skill can be mastered and applied effectively.
+    - generic [ref=e270]:
+      - generic [ref=e271]:
+        - generic [ref=e272]: Let's connect
+        - heading "Always up for a good conversation" [level=2] [ref=e273]
+      - generic [ref=e274]:
+        - paragraph [ref=e275]: I'm always open to interesting conversations about technology, collaboration opportunities, or simply connecting with fellow developers. Feel free to reach out through any of the platforms linked on the home page.
+        - paragraph [ref=e276]: Whether you're looking for technical insights, want to discuss a project, or just want to chat about the latest in software development, I'd love to hear from you.
+      - link "Get in touch →" [ref=e278] [cursor=pointer]:
+        - /url: /me/
+  - contentinfo [ref=e279]:
+    - generic [ref=e280]:
+      - generic [ref=e281]:
+        - paragraph [ref=e282]: Let's talk.
+        - link "harishkrishnan1993@gmail.com" [ref=e283] [cursor=pointer]:
+          - /url: mailto:harishkrishnan1993@gmail.com
+      - navigation "Footer links" [ref=e284]:
+        - link "GitHub" [ref=e285] [cursor=pointer]:
+          - /url: https://github.com/harishkrishnan24
+        - link "LinkedIn" [ref=e286] [cursor=pointer]:
+          - /url: https://www.linkedin.com/in/harishkrishnan1993/
+        - link "X" [ref=e287] [cursor=pointer]:
+          - /url: https://x.com/harishkforu
+        - link "Bookshelf" [ref=e288] [cursor=pointer]:
+          - /url: /me/bookshelf
+    - generic [ref=e289]:
+      - generic [ref=e290]: © 2026 Harish Krishnan
+      - generic [ref=e291]: "⌘K palette · ` terminal · T theme"
