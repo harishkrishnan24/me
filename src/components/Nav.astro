@@ -8,31 +8,37 @@ const pathname = Astro.url.pathname;
     <a class="brand" href={href("")}>
       <span class="brand-slash">~/</span>harish.dev
     </a>
-    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
-      <span></span><span></span>
-    </button>
-    <ul class="nav-links">
-      {
-        navLinks.map((link) =>
-          link.external ? (
-            <li>
-              <a href={link.path} target="_blank" rel="noopener noreferrer">
-                {link.label}
-              </a>
-            </li>
-          ) : (
-            <li>
-              <a
-                href={href(link.path)}
-                aria-current={isActive(pathname, link.path) ? "page" : undefined}
-              >
-                {link.label}
-              </a>
-            </li>
-          ),
-        )
-      }
-    </ul>
+    <!-- CSS-only no-JS fallback: <details>/<summary> works without JS.
+         On JS-enabled visitors the toggle button (.nav-toggle) is shown instead
+         and the details element is kept in sync. On mobile with JS disabled,
+         the summary acts as the toggle via native browser disclosure behaviour. -->
+    <details class="nav-details">
+      <summary class="nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span>
+      </summary>
+      <ul class="nav-links">
+        {
+          navLinks.map((link) =>
+            link.external ? (
+              <li>
+                <a href={link.path} target="_blank" rel="noopener noreferrer">
+                  {link.label}
+                </a>
+              </li>
+            ) : (
+              <li>
+                <a
+                  href={href(link.path)}
+                  aria-current={isActive(pathname, link.path) ? "page" : undefined}
+                >
+                  {link.label}
+                </a>
+              </li>
+            ),
+          )
+        }
+      </ul>
+    </details>
     <button class="theme-dot" aria-label="Cycle theme"></button>
   </nav>
 </header>
@@ -110,8 +116,22 @@ const pathname = Astro.url.pathname;
     opacity: 0.8;
   }
 
-  /* Mobile menu toggle — hidden on desktop */
+  /* details/summary reset — on desktop it's always open, on mobile
+     the summary acts as the hamburger toggle. */
+  .nav-details {
+    display: contents; /* transparent on desktop — children flow into .nav flex */
+  }
+  .nav-details[open] .nav-links {
+    display: flex;
+  }
+
+  /* Mobile menu toggle — hidden on desktop; summary element acts as it */
   .nav-toggle {
+    display: none;
+    list-style: none; /* remove default triangle from <summary> */
+  }
+  /* Remove WebKit default disclosure triangle */
+  .nav-toggle::-webkit-details-marker {
     display: none;
   }
 
@@ -125,6 +145,11 @@ const pathname = Astro.url.pathname;
       /* keep brand visible at top-left, constrain height to nav-h */
       line-height: var(--nav-h);
     }
+    .nav-details {
+      display: block; /* becomes a real positioned element on mobile */
+      order: 3; /* after brand and theme-dot in the row — actually we want it after brand */
+      margin-left: auto;
+    }
     .nav-toggle {
       display: inline-flex;
       flex-direction: column;
@@ -135,7 +160,6 @@ const pathname = Astro.url.pathname;
       background: transparent;
       border: 1px solid var(--line);
       cursor: pointer;
-      margin-left: auto;
     }
     .nav-toggle span {
       display: block;
@@ -148,6 +172,7 @@ const pathname = Astro.url.pathname;
     .theme-dot {
       display: none;
     }
+    /* Default: links hidden; shown when details is open */
     .nav-links {
       flex-basis: 100%;
       flex-direction: column;
@@ -155,7 +180,15 @@ const pathname = Astro.url.pathname;
       display: none;
       border-top: 1px solid var(--line);
       padding-block: 8px;
+      /* Position below the nav bar */
+      position: absolute;
+      top: var(--nav-h);
+      left: 0;
+      right: 0;
+      background: var(--bg);
+      z-index: 50;
     }
+    .nav-details[open] .nav-links,
     .nav-links.open {
       display: flex;
     }
@@ -167,14 +200,16 @@ const pathname = Astro.url.pathname;
 </style>
 
 <script>
-  // Progressive enhancement: the menu toggle. Without JS, the nav
-  // links render inline (no toggle needed on desktop); on mobile the
-  // toggle simply reveals the already-present list. Content is never
-  // hidden from crawlers or no-JS users on desktop widths.
-  const toggle = document.querySelector(".nav-toggle");
-  const links = document.querySelector(".nav-links");
-  toggle?.addEventListener("click", () => {
-    const open = links?.classList.toggle("open");
-    toggle.setAttribute("aria-expanded", String(Boolean(open)));
-  });
+  // Progressive enhancement: with JS, we keep the details element in sync with
+  // aria-expanded for screen readers and for legacy JS that may query it.
+  // Without JS, the native <details>/<summary> behaviour handles the toggle —
+  // clicking the summary opens/closes the nav on mobile. No JS = no broken nav.
+  const details = document.querySelector<HTMLDetailsElement>(".nav-details");
+  const toggle = document.querySelector<HTMLElement>(".nav-toggle");
+
+  if (details && toggle) {
+    details.addEventListener("toggle", () => {
+      toggle.setAttribute("aria-expanded", String(details.open));
+    });
+  }
 </script>

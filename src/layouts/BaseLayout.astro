@@ -13,6 +13,7 @@ import "../styles/global.css";
 
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
+import CommandDeck from "../components/CommandDeck.astro";
 import { href } from "../lib/links";
 
 interface Props {
@@ -119,6 +120,17 @@ const jsonLd =
       set:html={JSON.stringify(jsonLd)}
     />
 
+    <!-- Theme boot: must be inline+blocking before stylesheets to prevent flash.
+         On a multi-page static site, every navigation is a full page load, so
+         this runs on every click — a deferred script means every page shows dark
+         briefly before switching, not just the first load. -->
+    <script is:inline>
+      try {
+        var t = localStorage.getItem("hk-theme");
+        if (t === "light" || t === "crt") document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    </script>
+
     <link
       rel="icon"
       href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👨‍💻</text></svg>"
@@ -130,5 +142,6 @@ const jsonLd =
       <slot />
     </main>
     <Footer />
+    <CommandDeck />
   </body>
 </html>
