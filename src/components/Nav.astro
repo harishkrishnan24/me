@@ -116,14 +116,22 @@ const pathname = Astro.url.pathname;
     opacity: 0.8;
   }
 
-  /* details/summary reset — on desktop it's always open, on mobile
-     the summary acts as the hamburger toggle. */
+  /* details/summary reset — on desktop it's always open; on mobile
+     the summary acts as the hamburger toggle.
+     ::details-content override is required: Chrome applies
+     `content-visibility: hidden` to the ::details-content pseudo-element
+     on a closed <details>, and `display:contents` on the host element
+     does NOT defeat that hidden state — the pseudo-element sits between
+     the host and its rendered children and Chrome's UA sheet wins.
+     Overriding ::details-content directly forces the inner content
+     visible at all times on desktop. Mobile hiding is handled separately
+     by `.nav-links { display: none }` inside the ≤720px query, which
+     is author CSS that Chrome does respect. */
   .nav-details {
-    /* display:contents makes <details> a transparent box so its children flow
-       directly into the parent flex container on desktop. This relies on correct
-       display:contents behaviour on <details> — fixed in Firefox ~127 and present
-       in all evergreen Safari versions (older Safari had bugs here). This site
-       targets evergreen browsers only. */
+    display: contents;
+  }
+  .nav-details::details-content {
+    content-visibility: visible;
     display: contents;
   }
   .nav-details[open] .nav-links {
@@ -173,9 +181,10 @@ const pathname = Astro.url.pathname;
       margin-inline: auto;
       background: var(--dim);
     }
-    /* hide theme-dot on mobile to keep nav uncluttered */
+    /* theme-dot visible on mobile — it is the only way to change theme
+       on touch devices (palette and terminal are keyboard-only). */
     .theme-dot {
-      display: none;
+      order: 2;
     }
     /* Default: links hidden; shown when details is open */
     .nav-links {
