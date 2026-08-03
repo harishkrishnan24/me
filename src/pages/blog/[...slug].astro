@@ -1,21 +1,29 @@
 ---
 import { getCollection, render } from "astro:content";
 import PostLayout from "../../layouts/PostLayout.astro";
-import { visiblePosts } from "../../lib/posts";
+import { visiblePosts, sortByDateDesc } from "../../lib/posts";
 
 // One static page per visible post. Drafts are excluded from the
 // production build but available in `astro dev`.
 export async function getStaticPaths() {
   const all = await getCollection("blog");
-  const posts = visiblePosts(all, import.meta.env.DEV);
-  return posts.map((post) => ({
+  const posts = sortByDateDesc(visiblePosts(all, import.meta.env.DEV));
+  return posts.map((post, i) => ({
     params: { slug: post.id },
-    props: { post },
+    props: {
+      post,
+      // "next" = next older post in descending-date order (i + 1)
+      nextPost: posts[i + 1] ?? null,
+    },
   }));
 }
 
-const { post } = Astro.props;
-const { Content } = await render(post);
+const { post, nextPost } = Astro.props;
+const { Content, headings } = await render(post);
+
+// Rough reading time: ~200 wpm, minimum 1 min
+const wordCount = (post.body ?? "").split(/\s+/).filter(Boolean).length;
+const readingTime = Math.max(1, Math.ceil(wordCount / 200));
 ---
 
 <PostLayout
@@ -25,6 +33,9 @@ const { Content } = await render(post);
   date={post.data.date}
   tags={post.data.tags}
   draft={post.data.draft}
+  headings={headings}
+  readingTime={readingTime}
+  nextPost={nextPost ? { title: nextPost.data.title, slug: nextPost.id } : undefined}
 >
   <Content />
 </PostLayout>

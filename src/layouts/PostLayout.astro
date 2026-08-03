@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
-import Eyebrow from "../components/Eyebrow.astro";
 import { href } from "../lib/links";
+import type { MarkdownHeading } from "astro";
 
 interface Props {
   title: string;
@@ -11,8 +11,22 @@ interface Props {
   date: Date;
   tags: string[];
   draft?: boolean;
+  headings: MarkdownHeading[];
+  readingTime: number;
+  nextPost?: { title: string; slug: string };
 }
-const { title, description, slug, date, tags, draft } = Astro.props;
+
+const {
+  title,
+  description,
+  slug,
+  date,
+  tags,
+  draft,
+  headings,
+  readingTime,
+  nextPost,
+} = Astro.props;
 
 const dateLabel = date.toLocaleDateString("en-US", {
   year: "numeric",
@@ -20,6 +34,14 @@ const dateLabel = date.toLocaleDateString("en-US", {
   day: "numeric",
 });
 const isoDate = date.toISOString().slice(0, 10);
+
+// Only h2 headings in the sidebar. Fewer than 2 → omit sidebar entirely.
+const h2Headings = headings.filter((h) => h.depth === 2);
+const showSidebar = h2Headings.length >= 2;
+
+// Accent kicker: first two tags + reading time
+const kickerParts = [...tags.slice(0, 2), `${readingTime} min read`];
+const kicker = kickerParts.join(" · ");
 
 // Share targets — absolute URL is required.
 const postUrl = new URL(Astro.url.pathname, Astro.site).href;
@@ -35,57 +57,158 @@ const shareLinkedIn = `https://www.linkedin.com/sharing/share-offsite/?url=${enc
   publishedTime={date}
   tags={tags}
 >
-  <article class="wrap post">
+  <!-- Scroll-progress bar: fixed directly under the nav. Pure enhancement —
+       invisible and harmless with JS disabled. -->
+  <div class="progress-bar" aria-hidden="true">
+    <div class="progress-fill" id="progress-fill"></div>
+  </div>
+
+  <div class="wrap post-wrap">
+
+    <!-- Back link -->
     <a class="back" href={href("blog")}>← Writing</a>
 
-    <header class="post-hero reveal">
-      <Eyebrow>
-        <time datetime={isoDate}>{dateLabel}</time>
-        {draft && <span class="draft-flag">· draft</span>}
-      </Eyebrow>
+    <!-- ── POST HEADER ────────────────────────────────────────────────────── -->
+    <header class="post-hero">
+      <!-- Accent kicker: tags · N min read -->
+      <p class="post-kicker">{kicker}</p>
+
+      <!-- Display h1 -->
       <h1 class="post-title">{title}</h1>
-      <p class="post-deck">{description}</p>
-      <div class="rule"></div>
+
+      <!-- Metadata row: date · author · tags -->
+      <div class="post-meta-row">
+        <time class="post-meta-item" datetime={isoDate}>{dateLabel}</time>
+        <span class="meta-sep" aria-hidden="true">·</span>
+        <span class="post-meta-item">Harish Krishnan</span>
+        {
+          tags.length > 0 && (
+            <>
+              <span class="meta-sep" aria-hidden="true">·</span>
+              <div class="tag-row header-tags">
+                {tags.map((t) => (
+                  <span class="tag">{t}</span>
+                ))}
+              </div>
+            </>
+          )
+        }
+        {draft && <span class="draft-flag">· draft</span>}
+      </div>
+
+      <!-- Hairline rule below metadata -->
+      <div class="header-rule"></div>
     </header>
 
-    <div class="prose reveal">
-      <slot />
+    <!-- ── BODY: optional 2-col grid (TOC left, content right) ───────────── -->
+    <div class:list={["post-body", { "post-body--toc": showSidebar }]}>
+
+      {
+        showSidebar && (
+          <aside class="post-toc" aria-label="Contents">
+            <p class="toc-label">Contents</p>
+            <nav>
+              <ol class="toc-list">
+                {h2Headings.map((h) => (
+                  <li>
+                    <a class="toc-link" href={`#${h.slug}`}>
+                      {h.text}
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </nav>
+          </aside>
+        )
+      }
+
+      <div class="post-content">
+        <!-- Lead paragraph: display face at 19px -->
+        <p class="post-deck">{description}</p>
+
+        <!-- Prose body: Source Serif 4 via global .prose class -->
+        <article class="prose post-article">
+          <slot />
+        </article>
+      </div>
     </div>
 
-    {
-      tags.length > 0 && (
-        <div class="tag-row post-tags">
-          {tags.map((t) => (
-            <span class="tag">{t}</span>
-          ))}
-        </div>
-      )
-    }
+    <!-- ── FOOTER: tags → author block → next-post ───────────────────────── -->
+    <footer class="post-footer">
 
-    <footer class="share">
-      <span class="share-label">Share</span>
-      <a
-        class="share-btn"
-        href={shareX}
-        target="_blank"
-        rel="noopener noreferrer">X / Twitter</a
-      >
-      <a
-        class="share-btn"
-        href={shareLinkedIn}
-        target="_blank"
-        rel="noopener noreferrer">LinkedIn</a
-      >
-      <button class="share-btn copy-link" data-url={postUrl} type="button">
-        Copy link
-      </button>
+      {
+        tags.length > 0 && (
+          <div class="tag-row footer-tags">
+            {tags.map((t) => (
+              <span class="tag">{t}</span>
+            ))}
+          </div>
+        )
+      }
+
+      <!-- Author block + share links -->
+      <div class="author-block">
+        <div class="author-info">
+          <p class="author-name">Harish Krishnan</p>
+          <p class="author-bio">
+            Software engineer based in Stockholm. Building systems, writing
+            about them.
+          </p>
+        </div>
+
+        <nav class="share-row" aria-label="Share this post">
+          <span class="share-label">Share</span>
+          <a
+            class="share-btn"
+            href={shareX}
+            target="_blank"
+            rel="noopener noreferrer">X / Twitter</a
+          >
+          <a
+            class="share-btn"
+            href={shareLinkedIn}
+            target="_blank"
+            rel="noopener noreferrer">LinkedIn</a
+          >
+          <button class="share-btn copy-link" data-url={postUrl} type="button">
+            Copy link
+          </button>
+        </nav>
+      </div>
+
+      {
+        nextPost && (
+          <div class="next-post">
+            <p class="next-post-label">Next</p>
+            <a
+              class="next-post-link"
+              href={href(`blog/${nextPost.slug}`)}
+            >
+              {nextPost.title} →
+            </a>
+          </div>
+        )
+      }
+
     </footer>
-  </article>
+  </div>
 </BaseLayout>
 
 <script>
-  // Progressive enhancement: copy-to-clipboard. Without JS the X/LinkedIn
-  // links still work; only this button is inert.
+  // Scroll-progress bar — progressive enhancement.
+  const fill = document.getElementById("progress-fill");
+  if (fill) {
+    const update = () => {
+      const scrollable =
+        document.documentElement.scrollHeight - window.innerHeight;
+      const pct = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0;
+      fill.style.width = `${pct}%`;
+    };
+    window.addEventListener("scroll", update, { passive: true });
+    update();
+  }
+
+  // Copy-link button — progressive enhancement.
   const btn = document.querySelector<HTMLButtonElement>(".copy-link");
   btn?.addEventListener("click", async () => {
     const url = btn.dataset.url;
@@ -102,70 +225,260 @@ const shareLinkedIn = `https://www.linkedin.com/sharing/share-offsite/?url=${enc
 </script>
 
 <style>
-  .post {
-    max-width: var(--measure);
+  /* ── PROGRESS BAR ────────────────────────────────────────────────────────── */
+  .progress-bar {
+    position: fixed;
+    top: var(--nav-h);
+    left: 0;
+    right: 0;
+    height: 2px;
+    z-index: 200;
+    pointer-events: none;
   }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--accent);
+    transition: width 80ms linear;
+  }
+
+  /* ── POST WRAPPER ────────────────────────────────────────────────────────── */
+  .post-wrap {
+    padding-top: clamp(32px, 5vw, 56px);
+  }
+
   .back {
     font-family: var(--font-mono);
-    font-size: 12px;
-    color: var(--text-muted);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--dim);
     display: inline-block;
     margin-bottom: 40px;
     transition: color 0.15s var(--ease);
   }
   .back:hover {
-    color: var(--teal);
-  }
-  .post-hero {
-    position: relative;
-    margin-bottom: 44px;
-  }
-  .post-title {
-    font-size: var(--step-4);
-    font-weight: 800;
-    line-height: 1.06;
-    letter-spacing: -0.03em;
-    margin-block: 20px 18px;
-  }
-  .post-deck {
-    font-size: var(--step-1);
-    font-style: italic;
-    color: var(--text-muted);
-    line-height: 1.55;
-    max-width: 36em;
-    margin-bottom: 28px;
-  }
-  .draft-flag {
-    color: var(--orange);
-  }
-  .post-tags {
-    margin-top: 48px;
-    padding-top: 32px;
-    border-top: 1px solid var(--border);
+    color: var(--accent);
   }
 
-  .share {
-    margin-top: 28px;
+  /* ── HEADER ──────────────────────────────────────────────────────────────── */
+  .post-hero {
+    margin-bottom: 40px;
+  }
+
+  .post-kicker {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 18px;
+  }
+
+  .post-title {
+    font-family: var(--font-display);
+    font-size: clamp(38px, 6.4vw, 92px);
+    font-weight: 400;
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    color: var(--fg);
+    margin-bottom: 28px;
+    text-wrap: balance;
+    max-width: 20ch;
+  }
+
+  .post-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .post-meta-item {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--dim);
+  }
+
+  .meta-sep {
+    color: var(--dim);
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+
+  .header-tags {
+    gap: 6px;
+  }
+
+  .draft-flag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent2);
+  }
+
+  /* 1px hairline rule below metadata */
+  .header-rule {
+    height: 1px;
+    background: var(--line);
+    margin-top: 20px;
+  }
+
+  /* ── DECK / LEAD PARAGRAPH ───────────────────────────────────────────────── */
+  .post-deck {
+    font-family: var(--font-display);
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--fg);
+    max-width: 56ch;
+    margin-bottom: 40px;
+  }
+
+  /* ── BODY GRID ───────────────────────────────────────────────────────────── */
+  .post-body {
+    /* No sidebar: article uses its own max-width */
+  }
+
+  .post-body--toc {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 64px;
+    max-width: var(--measure-wide);
+    align-items: start;
+  }
+
+  /* ── TABLE OF CONTENTS ───────────────────────────────────────────────────── */
+  .post-toc {
+    position: sticky;
+    top: 110px;
+  }
+
+  .toc-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 14px;
+  }
+
+  .toc-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .toc-link {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--dim);
+    line-height: 1.5;
+    display: block;
+    border-left: 1px solid var(--line);
+    padding: 3px 0 3px 12px;
+    transition:
+      color 0.15s var(--ease),
+      border-color 0.15s var(--ease);
+  }
+  .toc-link:hover {
+    color: var(--fg);
+    border-color: var(--accent);
+  }
+
+  /* ── ARTICLE ─────────────────────────────────────────────────────────────── */
+  .post-content {
+    max-width: var(--measure);
+  }
+
+  .post-article {
+    font-size: var(--step-0);
+    line-height: 1.75;
+    color: var(--fg);
+  }
+
+  /* Pull-quote override — thinner rule, wider indent, display face.
+     :global() reaches into slotted markdown content. */
+  .post-article :global(blockquote) {
+    border-left: 2px solid var(--accent);
+    padding: 6px 0 6px 26px;
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--fg);
+    margin-block: 1.6em;
+  }
+
+  /* ── FOOTER ──────────────────────────────────────────────────────────────── */
+  .post-footer {
+    margin-top: 64px;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-width: var(--measure-wide);
+  }
+
+  .footer-tags {
+    margin-bottom: 32px;
+  }
+
+  /* Author block */
+  .author-block {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    padding-block: 28px;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 40px;
+  }
+
+  .author-name {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 400;
+    color: var(--fg);
+    margin-bottom: 6px;
+  }
+
+  .author-bio {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--dim);
+    line-height: 1.55;
+    max-width: 36ch;
+  }
+
+  /* Share row */
+  .share-row {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 10px;
+    align-self: flex-end;
   }
+
   .share-label {
     font-family: var(--font-mono);
     font-size: 10px;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: var(--text-dim);
+    color: var(--dim);
     margin-right: 4px;
   }
+
   .share-btn {
     font-family: var(--font-mono);
     font-size: 12px;
-    color: var(--text-muted);
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
+    color: var(--dim);
+    background: transparent;
+    border: 1px solid var(--line);
     padding: 6px 12px;
     cursor: pointer;
     transition:
@@ -173,7 +486,57 @@ const shareLinkedIn = `https://www.linkedin.com/sharing/share-offsite/?url=${enc
       border-color 0.15s var(--ease);
   }
   .share-btn:hover {
-    color: var(--teal);
-    border-color: var(--teal-line);
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  /* Next post */
+  .next-post {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .next-post-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+
+  .next-post-link {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 400;
+    color: var(--fg);
+    line-height: 1.25;
+    transition: color 0.15s var(--ease);
+  }
+  .next-post-link:hover {
+    color: var(--accent);
+  }
+
+  /* ── MOBILE ──────────────────────────────────────────────────────────────── */
+  @media (max-width: 860px) {
+    /* Collapse to single column — sidebar hidden */
+    .post-body--toc {
+      display: block;
+    }
+    .post-toc {
+      display: none;
+    }
+    .post-content {
+      max-width: 100%;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .post-title {
+      max-width: none;
+    }
+    .post-deck {
+      font-size: 17px;
+    }
   }
 </style>
