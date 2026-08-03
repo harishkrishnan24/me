@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Eyebrow from "../components/Eyebrow.astro";
-import GlyphField from "../components/GlyphField.astro";
+import PageHead from "../components/PageHead.astro";
 import { href } from "../lib/links";
 
 interface Book {
@@ -35,15 +35,7 @@ const read: Book[] = [
 >
 
   <!-- ── PAGE HEAD — GlyphField band behind Eyebrow + display h2 ────────── -->
-  <div class="page-head">
-    <div class="page-head-bg" aria-hidden="true">
-      <GlyphField density={26} interactive={false} height="200px" />
-    </div>
-    <div class="page-head-content wrap">
-      <Eyebrow>Bookshelf · Papers</Eyebrow>
-      <h2 class="page-title">My digital library.</h2>
-    </div>
-  </div>
+  <PageHead eyebrow="Bookshelf · Papers">My digital library.</PageHead>
 
   <!-- ── INTRO ─────────────────────────────────────────────────────────────── -->
   <section class="wrap section-intro">
@@ -125,66 +117,16 @@ const read: Book[] = [
 </BaseLayout>
 
 <style>
-  /* ── PAGE HEAD ─────────────────────────────────────────────────────────── */
-  .page-head {
-    position: relative;
-    height: 200px;
-    overflow: hidden;
-  }
-  .page-head-bg {
-    position: absolute;
-    inset: 0;
-  }
-  .page-head-content {
-    position: relative;
-    z-index: 2;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding-block: clamp(24px, 4vw, 40px);
-    background: linear-gradient(
-      to right,
-      color-mix(in srgb, var(--bg) 82%, transparent) 0%,
-      color-mix(in srgb, var(--bg) 82%, transparent) 55%,
-      transparent 100%
-    );
-  }
-  @media (max-width: 860px) {
-    .page-head-content {
-      background: color-mix(in srgb, var(--bg) 88%, transparent);
-    }
-  }
-  .page-title {
-    font-family: var(--font-display);
-    font-size: clamp(34px, 5.4vw, 80px);
-    font-weight: 400;
-    line-height: 1.05;
-    letter-spacing: -0.03em;
-    max-width: 20ch;
-    margin-top: 10px;
-  }
-
   /* ── SHARED SECTION ─────────────────────────────────────────────────────── */
   .section-intro,
   .section-shelf {
     padding-block: clamp(48px, 7vw, 72px);
     border-top: 1px solid var(--line);
   }
-  .section-header {
-    margin-bottom: clamp(24px, 4vw, 40px);
-  }
-  .section-header h2 {
-    font-size: var(--step-2);
-    margin-top: 10px;
-  }
 
   /* ── INTRO ────────────────────────────────────────────────────────────── */
+  /* max-width override over the global .intro-deck base */
   .intro-deck {
-    font-family: var(--font-mono);
-    font-size: var(--step--1);
-    color: var(--dim);
-    line-height: 1.7;
     max-width: 58ch;
   }
 

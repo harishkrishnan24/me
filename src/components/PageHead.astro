@@ -1,0 +1,67 @@
+---
+// Shared page-head band: 200px GlyphField canvas with scrim behind an
+// Eyebrow label and a display h2. Used on all five content pages so that
+// the scrim and glyph density are tuned in one place.
+import Eyebrow from "./Eyebrow.astro";
+import GlyphField from "./GlyphField.astro";
+
+interface Props {
+  eyebrow: string;
+}
+
+const { eyebrow } = Astro.props;
+---
+
+<div class="page-head">
+  <div class="page-head-bg" aria-hidden="true">
+    <GlyphField density={26} interactive={false} height="200px" />
+  </div>
+  <div class="page-head-content wrap">
+    <Eyebrow>{eyebrow}</Eyebrow>
+    <h2 class="page-title"><slot /></h2>
+  </div>
+</div>
+
+<style>
+  /* ── PAGE HEAD ─────────────────────────────────────────────────────────── */
+  .page-head {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+  }
+  .page-head-bg {
+    position: absolute;
+    inset: 0;
+  }
+  /* Scrim: horizontal gradient so text reads clearly over glyphs.
+     Mirrors the hero pattern in index.astro. */
+  .page-head-content {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-block: clamp(24px, 4vw, 40px);
+    background: linear-gradient(
+      to right,
+      color-mix(in srgb, var(--bg) 82%, transparent) 0%,
+      color-mix(in srgb, var(--bg) 82%, transparent) 55%,
+      transparent 100%
+    );
+  }
+  @media (max-width: 860px) {
+    .page-head-content {
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+    }
+  }
+  .page-title {
+    font-family: var(--font-display);
+    font-size: clamp(34px, 5.4vw, 80px);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    max-width: 20ch;
+    margin-top: 10px;
+  }
+</style>
