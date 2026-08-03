@@ -248,6 +248,16 @@ const nowItems = [
     );
   }
 
+  /* Below the two-column breakpoint the copy spans the full width, so a
+     horizontal scrim that fades out at 55% leaves the right half of every
+     line sitting on raw glyphs. Go flat instead — the field still reads
+     around the copy block, above and below it. */
+  @media (max-width: 860px) {
+    .hero-content {
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+    }
+  }
+
   /* Restore interactivity for all links, buttons, and the spec table. */
   .hero-content a,
   .hero-content button,
