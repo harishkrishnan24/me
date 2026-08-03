@@ -311,9 +311,8 @@ tr:last-child td {
   border-radius: 2px;
 }
 
-/* ── Accent emphasis ── used by hero titles across pages. Global (not scoped)
-   so it reaches titles passed into PageHero's slot, which carry the page's
-   own scope rather than the component's. */
+/* ── Accent emphasis ── used by page titles. Global (not scoped)
+   so it reaches titles in page slots that carry the page's own scope. */
 .accent-em {
   color: var(--accent);
   font-style: italic;
