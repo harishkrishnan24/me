@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Eyebrow from "../components/Eyebrow.astro";
-import PageHero from "../components/PageHero.astro";
+import GlyphField from "../components/GlyphField.astro";
 
 interface ProjectLink {
   label: string;
@@ -13,7 +13,6 @@ interface Project {
   description: string;
   highlights: string[];
   tech: string[];
-  accent: "violet" | "orange" | "teal";
   links: ProjectLink[];
 }
 
@@ -30,7 +29,6 @@ const projects: Project[] = [
       "Implemented in both Go and Rust",
     ],
     tech: ["Go", "Rust"],
-    accent: "violet",
     links: [
       {
         label: "interpreter (Go)",
@@ -54,7 +52,6 @@ const projects: Project[] = [
       "Action dispatch and listener flow",
     ],
     tech: ["JavaScript"],
-    accent: "teal",
     links: [
       {
         label: "redux-from-scratch",
@@ -69,94 +66,244 @@ const projects: Project[] = [
   title="Projects"
   description="Projects by Harish Krishnan — building interpreters, reverse-engineering libraries, and exploring how systems work under the hood."
 >
-  <!-- HERO -->
-  <PageHero eyebrow="Projects · Things I've built" motif="blocks">
-    Things I build to<br /><span class="accent-em">understand them</span>.
-    <Fragment slot="deck">
-      A small collection of projects where I reverse-engineer the tools I rely
-      on — interpreters, state libraries, the machinery underneath. Building
-      them is how I learn how they really work.
-    </Fragment>
-  </PageHero>
 
-  <div class="wrap"><div class="divider"></div></div>
-
-  <!-- PROJECTS -->
-  <section class="wrap projects">
-    <div class="projects-head reveal">
-      <Eyebrow>Selected work</Eyebrow>
+  <!-- ── PAGE HEAD — GlyphField band behind Eyebrow + display h2 ────────── -->
+  <div class="page-head">
+    <div class="page-head-bg" aria-hidden="true">
+      <GlyphField density={26} interactive={false} height="200px" />
     </div>
+    <div class="page-head-content wrap">
+      <Eyebrow>Projects · Things I've built</Eyebrow>
+      <h2 class="page-title">
+        Things I build to <span class="accent-em">understand them</span>.
+      </h2>
+    </div>
+  </div>
+
+  <!-- ── CASE NOTE — deck + hairline stat cells ────────────────────────── -->
+  <section class="wrap section-case">
+    <div class="case-grid reveal">
+      <div class="case-note">
+        <Eyebrow>Selected work</Eyebrow>
+        <p class="case-deck">
+          A small collection of projects where I reverse-engineer the tools I rely
+          on — interpreters, state libraries, the machinery underneath. Building
+          them is how I learn how they really work.
+        </p>
+      </div>
+      <div class="stat-cells">
+        <div class="stat-cell">
+          <span class="stat-num">2</span>
+          <span class="stat-label">Projects</span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-num">3</span>
+          <span class="stat-label">Languages</span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-num">∞</span>
+          <span class="stat-label">Things learned</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PROJECTS — hairline grid of project cells ─────────────────────── -->
+  <section class="wrap section-projects">
     <div class="projects-grid">
       {
         projects.map((project) => (
-          <article class:list={["card", project.accent, "reveal", "project-card"]}>
-            <h3 class="project-title">{project.title}</h3>
-            <p class="project-summary">{project.summary}</p>
-            <p class="project-desc">{project.description}</p>
-
+          <article class="project-cell reveal">
+            <header class="project-cell-head">
+              <span class="project-cell-label">
+                {project.tech.join(" · ")}
+              </span>
+              <h3 class="project-cell-title">{project.title}</h3>
+              <p class="project-cell-summary">{project.summary}</p>
+            </header>
+            <p class="project-cell-desc">{project.description}</p>
             <ul class="project-highlights">
               {project.highlights.map((h) => (
                 <li>{h}</li>
               ))}
             </ul>
-
-            <div class="tag-row project-tags">
-              {project.tech.map((t) => (
-                <span class="tag">{t}</span>
-              ))}
-            </div>
-
-            <div class="project-links">
-              {project.links.map((link) => (
-                <a
-                  class="project-link"
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {link.label} →
-                </a>
-              ))}
-            </div>
+            <footer class="project-cell-footer">
+              <div class="tag-row project-tags">
+                {project.tech.map((t) => (
+                  <span class="tag">{t}</span>
+                ))}
+              </div>
+              <div class="project-links">
+                {project.links.map((link) => (
+                  <a
+                    class="project-link"
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {link.label} →
+                  </a>
+                ))}
+              </div>
+            </footer>
           </article>
         ))
       }
     </div>
   </section>
+
 </BaseLayout>
 
 <style>
-  /* PROJECTS */
-  .projects {
-    display: block;
+  /* ── PAGE HEAD ─────────────────────────────────────────────────────────── */
+  .page-head {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
   }
-  .projects-head {
-    margin-bottom: 22px;
+  .page-head-bg {
+    position: absolute;
+    inset: 0;
+  }
+  .page-head-content {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-block: clamp(24px, 4vw, 40px);
+    background: linear-gradient(
+      to right,
+      color-mix(in srgb, var(--bg) 82%, transparent) 0%,
+      color-mix(in srgb, var(--bg) 82%, transparent) 55%,
+      transparent 100%
+    );
+  }
+  @media (max-width: 860px) {
+    .page-head-content {
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+    }
+  }
+  .page-title {
+    font-family: var(--font-display);
+    font-size: clamp(34px, 5.4vw, 80px);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    max-width: 20ch;
+    margin-top: 10px;
+  }
+
+  /* ── CASE NOTE ──────────────────────────────────────────────────────────── */
+  .section-case {
+    padding-block: clamp(48px, 7vw, 72px);
+    border-top: 1px solid var(--line);
+  }
+  .case-grid {
+    display: grid;
+    grid-template-columns: 1fr minmax(240px, 340px);
+    gap: clamp(32px, 5vw, 64px);
+    align-items: start;
+  }
+  .case-note .eyebrow {
+    display: inline-block;
+    margin-bottom: 16px;
+  }
+  .case-deck {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--dim);
+    line-height: 1.7;
+    max-width: 50ch;
+    margin-top: 0;
+  }
+  /* Hairline stat cells */
+  .stat-cells {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border: 1px solid var(--line);
+    gap: 1px;
+    background: var(--line);
+  }
+  .stat-cell {
+    background: var(--bg);
+    padding: clamp(16px, 2.5vw, 24px) clamp(14px, 2vw, 20px);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 400;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+  @media (max-width: 720px) {
+    .case-grid {
+      grid-template-columns: 1fr;
+    }
+    .stat-cells {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* ── PROJECTS GRID ──────────────────────────────────────────────────────── */
+  .section-projects {
+    padding-block: clamp(48px, 7vw, 72px);
+    border-top: 1px solid var(--line);
   }
   .projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 22px;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    border: 1px solid var(--line);
+    gap: 1px;
+    background: var(--line);
   }
-  .project-card {
+  .project-cell {
+    background: var(--bg);
+    padding: clamp(24px, 4vw, 36px);
     display: flex;
     flex-direction: column;
   }
-  .project-title {
-    font-size: var(--step-1);
-    margin-bottom: 8px;
-    color: var(--text);
+  .project-cell-head {
+    margin-bottom: 16px;
   }
-  .project-summary {
-    font-family: var(--font-sans);
-    font-weight: 600;
-    color: var(--text);
-    line-height: 1.4;
-    margin-bottom: 12px;
+  .project-cell-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 10px;
   }
-  .project-desc {
-    font-family: var(--font-serif);
-    color: var(--text-muted);
+  .project-cell-title {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 400;
+    color: var(--fg);
+    line-height: 1.15;
+    margin-bottom: 10px;
+  }
+  .project-cell-summary {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--dim);
+    line-height: 1.6;
+  }
+  .project-cell-desc {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--dim);
     line-height: 1.6;
     margin-bottom: 18px;
   }
@@ -167,36 +314,47 @@ const projects: Project[] = [
     margin-bottom: 20px;
   }
   .project-highlights li {
-    position: relative;
-    padding-left: 20px;
+    font-family: var(--font-mono);
     font-size: var(--step--1);
-    color: var(--text-muted);
+    color: var(--fg);
+    padding-left: 18px;
+    position: relative;
     line-height: 1.45;
   }
   .project-highlights li::before {
     content: "▹";
     position: absolute;
     left: 0;
-    color: var(--teal);
-    font-family: var(--font-mono);
+    color: var(--accent);
+    font-size: 0.85em;
+  }
+  .project-cell-footer {
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    display: grid;
+    gap: 12px;
   }
   .project-tags {
-    margin-bottom: 18px;
+    /* tag-row from global.css handles flex wrap gap */
   }
   .project-links {
     display: grid;
     gap: 8px;
-    margin-top: auto;
   }
   .project-link {
     font-family: var(--font-mono);
     font-size: 12px;
-    color: var(--teal);
-    border-bottom: 1px solid transparent;
+    color: var(--accent);
     width: fit-content;
-    transition: border-color 0.15s var(--ease);
+    transition: opacity 0.15s var(--ease);
   }
   .project-link:hover {
-    border-bottom-color: var(--teal-line);
+    opacity: 0.7;
+  }
+  @media (max-width: 720px) {
+    .projects-grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

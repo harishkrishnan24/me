@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Eyebrow from "../components/Eyebrow.astro";
-import PageHero from "../components/PageHero.astro";
+import GlyphField from "../components/GlyphField.astro";
 import { href } from "../lib/links";
 
 const languages = ["JavaScript / TypeScript", "Python", "Go", "Rust"];
@@ -42,7 +42,6 @@ const tech: Tech[] = [
 ];
 
 interface Job {
-  accent: "violet" | "orange" | "teal";
   title: string;
   company: string;
   duration: string;
@@ -54,7 +53,6 @@ interface Job {
 
 const jobs: Job[] = [
   {
-    accent: "violet",
     title: "Software Engineer",
     company: "DigitalRoute",
     duration: "Current Position",
@@ -83,7 +81,6 @@ const jobs: Job[] = [
     ],
   },
   {
-    accent: "teal",
     title: "Course Instructor (during my free time)",
     company: "Udemy",
     duration: "June 2023 — Present",
@@ -97,7 +94,6 @@ const jobs: Job[] = [
     ],
   },
   {
-    accent: "orange",
     title: "Software Engineer",
     company: "SAP Labs",
     duration: "Nov 2020 — Jan 2024",
@@ -129,7 +125,6 @@ const jobs: Job[] = [
     ],
   },
   {
-    accent: "violet",
     title: "Front-end Developer",
     company: "Fragma Data Systems",
     duration: "Jul 2020 — Nov 2020",
@@ -149,7 +144,6 @@ const jobs: Job[] = [
     bullets: ["Developed UI solutions using React and its ecosystem"],
   },
   {
-    accent: "teal",
     title: "Full Stack Developer",
     company: "FoodDocs (Contractor)",
     duration: "May 2017 — Mar 2020",
@@ -171,7 +165,6 @@ const jobs: Job[] = [
     ],
   },
   {
-    accent: "orange",
     title: "Software Engineer",
     company: "Boeing",
     duration: "Dec 2018 — May 2019",
@@ -193,7 +186,6 @@ const jobs: Job[] = [
     ],
   },
   {
-    accent: "violet",
     title: "Freelance Developer",
     company: "Upwork",
     duration: "May 2017 — Dec 2018",
@@ -216,7 +208,6 @@ const jobs: Job[] = [
     ],
   },
   {
-    accent: "teal",
     title: "Software Engineer",
     company: "Squash Apps",
     duration: "Sep 2016 — May 2017",
@@ -253,95 +244,109 @@ const interests = [
   title="About"
   description="Harish Krishnan — software engineer based in Stockholm. Background, skills, work experience, and the craft."
 >
-  <!-- HERO -->
-  <PageHero
-    eyebrow="About · Software Engineer · Stockholm"
-    motif="constellation"
-  >
-    <img
-      class="avatar"
-      slot="lead"
-      src={href("images/profile.jpg")}
-      alt="Harish Krishnan"
-      width="120"
-      height="120"
-    />
-    A perpetual student of the craft.
-    <Fragment slot="deck">
-      Software engineer based in Stockholm with experience across startups and
-      enterprise. I build applications, teach, and write — and I'm always
-      learning what comes next.
-    </Fragment>
-  </PageHero>
 
-  <div class="wrap"><div class="divider"></div></div>
+  <!-- ── PAGE HEAD — GlyphField band behind Eyebrow + display h2 ────────── -->
+  <div class="page-head">
+    <div class="page-head-bg" aria-hidden="true">
+      <GlyphField density={26} interactive={false} height="200px" />
+    </div>
+    <div class="page-head-content wrap">
+      <Eyebrow>About · Software Engineer · Stockholm</Eyebrow>
+      <h2 class="page-title">A perpetual student of the craft.</h2>
+    </div>
+  </div>
 
-  <!-- BACKGROUND -->
-  <section class="wrap reveal">
-    <Eyebrow>Background</Eyebrow>
-    <div class="prose section-prose">
-      <p>
-        I'm Harish Krishnan, a software engineer based in Stockholm with
-        experience in both startups and enterprise environments. I've built
-        software applications using a wide range of technologies, and I actively
-        share my knowledge through Udemy courses and technical writing.
-        Previously, I've worked with companies like SAP, Boeing, and Siemens, and
-        also as a contractor at companies like FoodDocs in Tallinn.
-      </p>
-      <p>
-        Currently, I'm focused on deepening my expertise in Generative AI,
-        Machine Learning, and distributed systems, while strengthening my
-        fundamentals in software engineering. I'm also actively learning Go and
-        Rust to build efficient, scalable systems. I'm passionate about
-        continuous learning, with a strong interest in applying emerging
-        technologies to solve real-world problems.
-      </p>
+  <!-- ── BACKGROUND — two-column: prose + spec table ───────────────────── -->
+  <section class="wrap section-intro">
+    <div class="intro-grid reveal">
+      <div class="intro-prose">
+        <Eyebrow>Background</Eyebrow>
+        <p class="intro-deck">
+          Software engineer based in Stockholm with experience across startups and
+          enterprise. I build applications, teach, and write — and I'm always
+          learning what comes next.
+        </p>
+        <div class="prose">
+          <p>
+            I'm Harish Krishnan, a software engineer based in Stockholm with
+            experience in both startups and enterprise environments. I've built
+            software applications using a wide range of technologies, and I actively
+            share my knowledge through Udemy courses and technical writing.
+            Previously, I've worked with companies like SAP, Boeing, and Siemens, and
+            also as a contractor at companies like FoodDocs in Tallinn.
+          </p>
+          <p>
+            Currently, I'm focused on deepening my expertise in Generative AI,
+            Machine Learning, and distributed systems, while strengthening my
+            fundamentals in software engineering. I'm also actively learning Go and
+            Rust to build efficient, scalable systems. I'm passionate about
+            continuous learning, with a strong interest in applying emerging
+            technologies to solve real-world problems.
+          </p>
+        </div>
+      </div>
+      <table class="spec-table" aria-label="At a glance">
+        <tbody>
+          <tr>
+            <th scope="row">ROLE</th>
+            <td>Software Engineer</td>
+          </tr>
+          <tr>
+            <th scope="row">ALSO</th>
+            <td>Course instructor · writer</td>
+          </tr>
+          <tr>
+            <th scope="row">FOCUS</th>
+            <td>AI systems · distributed systems</td>
+          </tr>
+          <tr>
+            <th scope="row">LEARNING</th>
+            <td>Go · Rust</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </section>
 
-  <div class="wrap"><div class="divider"></div></div>
-
-  <!-- TECHNICAL SKILLS -->
-  <section class="wrap reveal">
-    <Eyebrow>Technical skills</Eyebrow>
-    <h2 class="section-title">What I work with</h2>
-
-    <div class="skills-grid">
-      <div class="card violet">
-        <h3 class="skill-head">Languages</h3>
-        <div class="tag-row">
-          {languages.map((l) => <span class="tag">{l}</span>)}
-        </div>
+  <!-- ── TOOLBOX — chips ───────────────────────────────────────────────── -->
+  <section class="wrap section-toolbox">
+    <header class="section-header reveal">
+      <Eyebrow>Technical skills</Eyebrow>
+      <h2>What I work with</h2>
+    </header>
+    <div class="toolbox-group reveal">
+      <h3 class="toolbox-label">Languages</h3>
+      <div class="tag-row">
+        {languages.map((l) => <span class="tag">{l}</span>)}
       </div>
-
-      <div class="card teal">
-        <div class="skill-head-row">
-          <h3 class="skill-head">Technologies & frameworks</h3>
-          <span class="learning-legend">
-            <span class="learning-dot" aria-hidden="true"></span> currently learning
-          </span>
-        </div>
-        <div class="tag-row">
-          {
-            tech.map((t) => (
-              <span class:list={["tag", { "tag-learning": t.learning }]}>
-                {t.label}
-              </span>
-            ))
-          }
-        </div>
+    </div>
+    <div class="toolbox-group reveal">
+      <div class="toolbox-group-head">
+        <h3 class="toolbox-label">Technologies & frameworks</h3>
+        <span class="learning-legend">
+          <span class="learning-dot" aria-hidden="true"></span> currently learning
+        </span>
+      </div>
+      <div class="tag-row">
+        {
+          tech.map((t) => (
+            <span class:list={["tag", { "tag-learning": t.learning }]}>
+              {t.label}
+            </span>
+          ))
+        }
       </div>
     </div>
   </section>
 
-  <div class="wrap"><div class="divider"></div></div>
-
-  <!-- CERTIFICATIONS -->
-  <section class="wrap reveal">
-    <Eyebrow>Certifications</Eyebrow>
-    <h2 class="section-title">Verified credentials</h2>
-    <div class="card orange cert-card">
-      <p class="muted">
+  <!-- ── CERTIFICATIONS ───────────────────────────────────────────────── -->
+  <section class="wrap section-certs">
+    <header class="section-header reveal">
+      <Eyebrow>Certifications</Eyebrow>
+      <h2>Verified credentials</h2>
+    </header>
+    <div class="cert-cell reveal">
+      <p class="cert-note">
         My professional certifications are issued and verified on Credly.
       </p>
       <a
@@ -353,17 +358,17 @@ const interests = [
     </div>
   </section>
 
-  <div class="wrap"><div class="divider"></div></div>
-
-  <!-- WORK EXPERIENCE -->
-  <section class="wrap reveal">
-    <Eyebrow>Work experience</Eyebrow>
-    <h2 class="section-title">Where I've worked</h2>
-    <div class="work-list">
+  <!-- ── TRACK RECORD — hairline link rows ────────────────────────────── -->
+  <section class="wrap section-track">
+    <header class="section-header reveal">
+      <Eyebrow>Work experience</Eyebrow>
+      <h2>Where I've worked</h2>
+    </header>
+    <div class="track-list">
       {
         jobs.map((job) => (
-          <article class:list={["card", job.accent, "job"]}>
-            <header class="job-head">
+          <article class="job-row reveal">
+            <header class="job-row-head">
               <h3 class="job-title">{job.title}</h3>
               <p class="job-meta">
                 {job.company} · {job.duration} · {job.location}
@@ -386,24 +391,30 @@ const interests = [
     </div>
   </section>
 
-  <div class="wrap"><div class="divider"></div></div>
-
-  <!-- INTERESTS -->
-  <section class="wrap reveal">
-    <Eyebrow>Interests & hobbies</Eyebrow>
-    <h2 class="section-title">Away from the keyboard (mostly)</h2>
-    <ul class="interest-list">
-      {interests.map((i) => <li>{i}</li>)}
-    </ul>
+  <!-- ── HOW I WORK — hairline grid of interests ───────────────────────── -->
+  <section class="wrap section-interests">
+    <header class="section-header reveal">
+      <Eyebrow>Interests & hobbies</Eyebrow>
+      <h2>Away from the keyboard (mostly)</h2>
+    </header>
+    <div class="interests-grid reveal">
+      {
+        interests.map((i) => (
+          <div class="interest-cell">
+            <p>{i}</p>
+          </div>
+        ))
+      }
+    </div>
   </section>
 
-  <div class="wrap"><div class="divider"></div></div>
-
-  <!-- EDUCATION -->
-  <section class="wrap reveal">
-    <Eyebrow>Education & learning</Eyebrow>
-    <h2 class="section-title">A learning-first mindset</h2>
-    <div class="prose section-prose">
+  <!-- ── EDUCATION ─────────────────────────────────────────────────────── -->
+  <section class="wrap section-edu">
+    <header class="section-header reveal">
+      <Eyebrow>Education & learning</Eyebrow>
+      <h2>A learning-first mindset</h2>
+    </header>
+    <div class="prose reveal">
       <p>
         I believe in continuous learning and staying current with the latest
         trends in technology. My educational journey includes a formal Bachelor
@@ -429,24 +440,22 @@ const interests = [
     </div>
   </section>
 
-  <div class="wrap"><div class="divider"></div></div>
-
-  <!-- PHILOSOPHY -->
-  <section class="wrap reveal philosophy">
+  <!-- ── PHILOSOPHY ────────────────────────────────────────────────────── -->
+  <section class="wrap section-philosophy reveal">
     <Eyebrow>Philosophy</Eyebrow>
-    <blockquote class="quote">
+    <blockquote class="philosophy-quote">
       With enough time, effort, and curiosity, any skill can be mastered and
       applied effectively.
     </blockquote>
   </section>
 
-  <div class="wrap"><div class="divider"></div></div>
-
-  <!-- CONNECT -->
-  <section class="wrap reveal connect">
-    <Eyebrow>Let's connect</Eyebrow>
-    <h2 class="section-title">Always up for a good conversation</h2>
-    <div class="prose section-prose">
+  <!-- ── CONNECT ───────────────────────────────────────────────────────── -->
+  <section class="wrap section-connect">
+    <header class="section-header reveal">
+      <Eyebrow>Let's connect</Eyebrow>
+      <h2>Always up for a good conversation</h2>
+    </header>
+    <div class="prose reveal">
       <p>
         I'm always open to interesting conversations about technology,
         collaboration opportunities, or simply connecting with fellow
@@ -459,57 +468,161 @@ const interests = [
         to hear from you.
       </p>
     </div>
-    <div class="cta-row">
+    <div class="cta-row reveal">
       <a class="btn" href={href("")}>Get in touch →</a>
     </div>
   </section>
+
 </BaseLayout>
 
 <style>
-  /* HERO — title/deck/layout now live in PageHero; the avatar is passed into
-     PageHero's `lead` slot and keeps its styling here. */
-  .avatar {
-    width: clamp(88px, 14vw, 120px);
-    height: clamp(88px, 14vw, 120px);
-    border-radius: 50%;
-    border: 1px solid var(--border-bright);
-    object-fit: cover;
-    flex-shrink: 0;
-    box-shadow: 0 0 0 4px var(--violet-glow);
+  /* ── PAGE HEAD ─────────────────────────────────────────────────────────── */
+  .page-head {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+  }
+  .page-head-bg {
+    position: absolute;
+    inset: 0;
+  }
+  /* Scrim: horizontal gradient so text reads clearly over glyphs.
+     Mirrors the hero pattern in index.astro. */
+  .page-head-content {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-block: clamp(24px, 4vw, 40px);
+    background: linear-gradient(
+      to right,
+      color-mix(in srgb, var(--bg) 82%, transparent) 0%,
+      color-mix(in srgb, var(--bg) 82%, transparent) 55%,
+      transparent 100%
+    );
+  }
+  @media (max-width: 860px) {
+    .page-head-content {
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+    }
+  }
+  .page-title {
+    font-family: var(--font-display);
+    font-size: clamp(34px, 5.4vw, 80px);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    max-width: 20ch;
+    margin-top: 10px;
   }
 
-  /* Section scaffolding */
-  .section-title {
+  /* ── SECTION SHARED ─────────────────────────────────────────────────────── */
+  .section-intro,
+  .section-toolbox,
+  .section-certs,
+  .section-track,
+  .section-interests,
+  .section-edu,
+  .section-philosophy,
+  .section-connect {
+    padding-block: clamp(48px, 7vw, 72px);
+    border-top: 1px solid var(--line);
+  }
+  .section-header {
+    margin-bottom: clamp(24px, 4vw, 40px);
+  }
+  .section-header h2 {
     font-size: var(--step-2);
-    margin-block: 10px 24px;
-  }
-  .section-prose {
-    margin-top: 14px;
-  }
-  .muted {
-    color: var(--text-muted);
-    line-height: 1.6;
-    max-width: 34em;
+    margin-top: 10px;
   }
 
-  /* Skills */
-  .skills-grid {
+  /* ── BACKGROUND / INTRO ─────────────────────────────────────────────────── */
+  .intro-grid {
     display: grid;
-    gap: 20px;
+    grid-template-columns: 1fr minmax(200px, 280px);
+    gap: clamp(32px, 5vw, 64px);
+    align-items: start;
   }
-  .skill-head {
-    font-size: var(--step-0);
+  .intro-prose .eyebrow {
+    display: inline-block;
     margin-bottom: 16px;
   }
-  .skill-head-row {
+  .intro-deck {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--dim);
+    line-height: 1.7;
+    max-width: 44ch;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 720px) {
+    .intro-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Spec table — overrides global table defaults within this page. */
+  .spec-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--step--1);
+    margin-block: 0;
+  }
+  .spec-table tr {
+    border-bottom: 1px solid var(--line);
+  }
+  .spec-table tr:last-child {
+    border-bottom: none;
+  }
+  .spec-table th {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 400;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    text-align: left;
+    padding: 10px 16px 10px 0;
+    width: 88px;
+    vertical-align: top;
+    white-space: nowrap;
+    border-bottom: none;
+  }
+  .spec-table td {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--fg);
+    padding: 10px 0;
+    line-height: 1.5;
+    vertical-align: top;
+    border-bottom: none;
+  }
+
+  /* ── TOOLBOX ────────────────────────────────────────────────────────────── */
+  .toolbox-group {
+    margin-bottom: clamp(20px, 3vw, 28px);
+  }
+  .toolbox-group:last-child {
+    margin-bottom: 0;
+  }
+  .toolbox-group-head {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: baseline;
     gap: 10px;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
   }
-  .skill-head-row .skill-head {
+  .toolbox-label {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    font-weight: 400;
+    color: var(--fg);
+    margin-bottom: 14px;
+  }
+  .toolbox-group-head .toolbox-label {
     margin-bottom: 0;
   }
   .learning-legend {
@@ -517,7 +630,7 @@ const interests = [
     font-size: 10px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--text-dim);
+    color: var(--dim);
     display: inline-flex;
     align-items: center;
     gap: 7px;
@@ -526,14 +639,13 @@ const interests = [
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: var(--teal);
-    box-shadow: 0 0 0 3px var(--teal-tint);
+    background: var(--accent);
+    flex-shrink: 0;
   }
-  /* "Currently learning" tags — teal accent + leading dot */
+  /* "currently learning" chips */
   .tag-learning {
-    background: var(--teal-tint);
-    color: var(--teal);
-    border-color: var(--teal-line);
+    border-color: var(--accent);
+    color: var(--accent);
   }
   .tag-learning::before {
     content: "";
@@ -546,92 +658,117 @@ const interests = [
     vertical-align: middle;
   }
 
-  /* Certifications */
-  .cert-card {
+  /* ── CERTIFICATIONS ─────────────────────────────────────────────────────── */
+  .cert-cell {
+    border: 1px solid var(--line);
+    padding: clamp(20px, 3vw, 30px);
     display: grid;
     gap: 18px;
     justify-items: start;
+    max-width: 520px;
+  }
+  .cert-note {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--dim);
+    line-height: 1.6;
   }
 
-  /* Work experience */
-  .work-list {
-    display: grid;
-    gap: 18px;
+  /* ── TRACK RECORD — hairline rows ───────────────────────────────────────── */
+  .track-list {
+    border-top: 1px solid var(--line);
+  }
+  .job-row {
+    border-bottom: 1px solid var(--line);
+    padding-block: clamp(20px, 3vw, 32px);
+  }
+  .job-row-head {
+    margin-bottom: 12px;
   }
   .job-title {
+    font-family: var(--font-display);
     font-size: var(--step-1);
+    font-weight: 400;
+    color: var(--fg);
   }
   .job-meta {
     font-family: var(--font-mono);
-    font-size: 12px;
-    color: var(--text-dim);
-    margin-top: 6px;
-    line-height: 1.5;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--dim);
+    margin-top: 4px;
   }
   .job-desc {
-    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--dim);
     line-height: 1.6;
-    margin-block: 16px 12px;
+    margin-bottom: 12px;
+    max-width: 60ch;
   }
   .job-bullets {
     list-style: none;
     display: grid;
-    gap: 9px;
-    margin-bottom: 18px;
+    gap: 8px;
+    margin-bottom: 16px;
   }
   .job-bullets li {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--fg);
+    padding-left: 18px;
     position: relative;
-    padding-left: 22px;
     line-height: 1.55;
   }
   .job-bullets li::before {
     content: "▹";
     position: absolute;
     left: 0;
-    color: var(--teal);
-    font-family: var(--font-mono);
+    color: var(--accent);
+    font-size: 0.85em;
+  }
+  .job-tags {
+    margin-top: 4px;
   }
 
-  /* Interests */
-  .interest-list {
-    list-style: none;
+  /* ── HOW I WORK — interests hairline grid ───────────────────────────────── */
+  .interests-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 12px 24px;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    border: 1px solid var(--line);
+    gap: 1px;
+    background: var(--line);
   }
-  .interest-list li {
-    position: relative;
-    padding-left: 26px;
-    color: var(--text);
-    line-height: 1.5;
+  .interest-cell {
+    background: var(--bg);
+    padding: clamp(20px, 3vw, 28px);
   }
-  .interest-list li::before {
-    content: "▹";
-    position: absolute;
-    left: 0;
-    color: var(--violet);
+  .interest-cell p {
     font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--fg);
+    line-height: 1.6;
   }
 
-  /* Philosophy */
-  .philosophy {
-    max-width: var(--measure-wide);
-  }
-  .quote {
-    font-family: var(--font-sans);
+  /* ── PHILOSOPHY ──────────────────────────────────────────────────────────── */
+  .philosophy-quote {
+    font-family: var(--font-display);
     font-size: var(--step-2);
-    font-weight: 600;
+    font-weight: 400;
     line-height: 1.35;
-    color: var(--text);
-    border-left: 3px solid var(--violet);
+    color: var(--fg);
+    border-left: 3px solid var(--accent);
     padding: 8px 0 8px 26px;
     margin-top: 18px;
     max-width: 24em;
     text-wrap: balance;
   }
 
-  /* Connect */
-  .connect .cta-row {
-    margin-top: 26px;
+  /* ── CONNECT ─────────────────────────────────────────────────────────────── */
+  .cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 24px;
   }
 </style>

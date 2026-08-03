@@ -1,11 +1,9 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Eyebrow from "../components/Eyebrow.astro";
-import PageHero from "../components/PageHero.astro";
+import GlyphField from "../components/GlyphField.astro";
 import { href } from "../lib/links";
 
-// Repositories I've contributed to, grouped by kind. Each card links to
-// the project's source. Data lives here so the markup stays a simple map.
 interface Repo {
   name: string;
   url: string;
@@ -14,14 +12,12 @@ interface Repo {
 }
 interface RepoGroup {
   label: string;
-  accent: "violet" | "orange" | "teal";
   repos: Repo[];
 }
 
 const repoGroups: RepoGroup[] = [
   {
     label: "Package Libraries",
-    accent: "violet",
     repos: [
       {
         name: "Prisma",
@@ -53,7 +49,6 @@ const repoGroups: RepoGroup[] = [
   },
   {
     label: "Open Source Learning Sites",
-    accent: "teal",
     repos: [
       {
         name: "JavaScript.info",
@@ -72,7 +67,6 @@ const repoGroups: RepoGroup[] = [
   },
   {
     label: "Developer Tools",
-    accent: "orange",
     repos: [
       {
         name: "Bulletproof React",
@@ -85,8 +79,6 @@ const repoGroups: RepoGroup[] = [
   },
 ];
 
-// Individual merged/closed contributions, preserved verbatim from the
-// source site (project, type, what changed, status + link).
 interface Contribution {
   project: string;
   type: string;
@@ -208,48 +200,58 @@ const contributions: Contribution[] = [
   title="Open Source"
   description="Open source contributions by Harish Krishnan — merged pull requests and repositories across Angular, Qwik, Prisma, Apollo Client, and more."
 >
-  <!-- HERO -->
-  <PageHero eyebrow="Open Source" motif="graph">
-    Giving back to the community.
-    <Fragment slot="deck">
+
+  <!-- ── PAGE HEAD — GlyphField band behind Eyebrow + display h2 ────────── -->
+  <div class="page-head">
+    <div class="page-head-bg" aria-hidden="true">
+      <GlyphField density={26} interactive={false} height="200px" />
+    </div>
+    <div class="page-head-content wrap">
+      <Eyebrow>Open Source</Eyebrow>
+      <h2 class="page-title">Giving back to the community.</h2>
+    </div>
+  </div>
+
+  <!-- ── INTRO ─────────────────────────────────────────────────────────────── -->
+  <section class="wrap section-intro">
+    <p class="intro-deck reveal">
       Open source software has been instrumental in my growth as a developer. I
       believe in giving back to the community that has given me so much — here
       are my contributions across the projects I rely on every day.
-    </Fragment>
-  </PageHero>
+    </p>
+  </section>
 
-  <div class="wrap"><div class="divider"></div></div>
-
-  <!-- CONTRIBUTED REPOSITORIES -->
-  <section class="wrap repos">
-    <div class="repos-head reveal">
+  <!-- ── REPOSITORIES — hairline link rows ────────────────────────────────── -->
+  <section class="wrap section-repos">
+    <header class="section-header reveal">
       <Eyebrow>Repositories</Eyebrow>
       <h2>Projects I've contributed to</h2>
-    </div>
-
+    </header>
     {
       repoGroups.map((group) => (
         <div class="repo-group reveal">
           <h3 class="group-label">{group.label}</h3>
-          <div class="repo-grid">
+          <div class="repo-rows">
             {group.repos.map((repo) => (
-              <div class:list={["card", group.accent, "repo-card"]}>
-                <h3 class="repo-name">{repo.name}</h3>
-                <p class="repo-desc">{repo.description}</p>
-                <div class="tag-row">
-                  {repo.tags.map((t) => (
-                    <span class="tag">{t}</span>
-                  ))}
+              <a
+                class="repo-row"
+                href={repo.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <div class="repo-row-inner">
+                  <div class="repo-row-body">
+                    <span class="repo-row-name">{repo.name}</span>
+                    <p class="repo-row-desc">{repo.description}</p>
+                    <div class="tag-row repo-row-tags">
+                      {repo.tags.map((t) => (
+                        <span class="tag">{t}</span>
+                      ))}
+                    </div>
+                  </div>
+                  <span class="repo-row-cta">View on GitHub →</span>
                 </div>
-                <a
-                  class="repo-arrow"
-                  href={repo.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  View on GitHub →
-                </a>
-              </div>
+              </a>
             ))}
           </div>
         </div>
@@ -257,15 +259,12 @@ const contributions: Contribution[] = [
     }
   </section>
 
-  <div class="wrap"><div class="divider"></div></div>
-
-  <!-- COMMUNITY CONTRIBUTIONS -->
-  <section class="wrap contributions">
-    <div class="contrib-head reveal">
+  <!-- ── CONTRIBUTIONS — table ─────────────────────────────────────────────── -->
+  <section class="wrap section-contributions">
+    <header class="section-header reveal">
       <Eyebrow>Contributions</Eyebrow>
-      <h2>Merged & accepted work</h2>
-    </div>
-
+      <h2>Merged &amp; accepted work</h2>
+    </header>
     <div class="table-wrap reveal">
       <table>
         <thead>
@@ -301,100 +300,183 @@ const contributions: Contribution[] = [
     </div>
   </section>
 
-  <div class="wrap"><div class="divider"></div></div>
-
-  <!-- COLLABORATE -->
-  <section class="wrap collaborate">
-    <div class="collab-intro reveal">
+  <!-- ── COLLABORATE ───────────────────────────────────────────────────────── -->
+  <section class="wrap section-collaborate">
+    <header class="section-header reveal">
       <Eyebrow>Collaborate</Eyebrow>
       <h2>Want to build something?</h2>
-      <p class="muted">
-        I'm always looking for interesting projects to contribute to and
-        passionate developers to collaborate with. Whether you need help with a
-        project, want to pair program, or have an idea for a new open source
-        initiative, let's connect.
-      </p>
-      <div class="cta-row">
-        <a
-          class="btn"
-          href="https://github.com/harishkrishnan24"
-          target="_blank"
-          rel="noopener noreferrer">See my GitHub →</a
-        >
-        <a class="btn ghost" href={href("about")}>Get in touch</a>
-      </div>
+    </header>
+    <p class="collab-blurb reveal">
+      I'm always looking for interesting projects to contribute to and
+      passionate developers to collaborate with. Whether you need help with a
+      project, want to pair program, or have an idea for a new open source
+      initiative, let's connect.
+    </p>
+    <div class="cta-row reveal">
+      <a
+        class="btn"
+        href="https://github.com/harishkrishnan24"
+        target="_blank"
+        rel="noopener noreferrer">See my GitHub →</a
+      >
+      <a class="btn btn-ghost" href={href("about")}>Get in touch</a>
     </div>
   </section>
+
 </BaseLayout>
 
 <style>
-  /* Section heads */
-  .repos-head,
-  .contrib-head {
-    margin-bottom: 28px;
+  /* ── PAGE HEAD ─────────────────────────────────────────────────────────── */
+  .page-head {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
   }
-  .repos-head h2,
-  .contrib-head h2,
-  .collab-intro h2 {
+  .page-head-bg {
+    position: absolute;
+    inset: 0;
+  }
+  .page-head-content {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-block: clamp(24px, 4vw, 40px);
+    background: linear-gradient(
+      to right,
+      color-mix(in srgb, var(--bg) 82%, transparent) 0%,
+      color-mix(in srgb, var(--bg) 82%, transparent) 55%,
+      transparent 100%
+    );
+  }
+  @media (max-width: 860px) {
+    .page-head-content {
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+    }
+  }
+  .page-title {
+    font-family: var(--font-display);
+    font-size: clamp(34px, 5.4vw, 80px);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    max-width: 20ch;
+    margin-top: 10px;
+  }
+
+  /* ── SHARED SECTION ─────────────────────────────────────────────────────── */
+  .section-intro,
+  .section-repos,
+  .section-contributions,
+  .section-collaborate {
+    padding-block: clamp(48px, 7vw, 72px);
+    border-top: 1px solid var(--line);
+  }
+  .section-header {
+    margin-bottom: clamp(24px, 4vw, 40px);
+  }
+  .section-header h2 {
     font-size: var(--step-2);
     margin-top: 10px;
   }
 
-  /* Repo groups */
-  .repo-group + .repo-group {
-    margin-top: 36px;
+  /* ── INTRO ────────────────────────────────────────────────────────────── */
+  .intro-deck {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--dim);
+    line-height: 1.7;
+    max-width: 60ch;
+  }
+
+  /* ── REPO ROWS ───────────────────────────────────────────────────────── */
+  .repo-group {
+    margin-bottom: clamp(32px, 5vw, 48px);
+  }
+  .repo-group:last-child {
+    margin-bottom: 0;
   }
   .group-label {
     font-family: var(--font-mono);
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.12em;
+    font-size: 10px;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: 16px;
+    color: var(--dim);
+    margin-bottom: 12px;
   }
-  .repo-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 22px;
+  .repo-rows {
+    border-top: 1px solid var(--line);
   }
-  .repo-card {
-    display: flex;
-    flex-direction: column;
-  }
-  .repo-name {
-    font-size: var(--step-1);
-    margin-bottom: 8px;
-    color: var(--text);
-  }
-  .repo-desc {
-    font-family: var(--font-serif);
-    color: var(--text-muted);
-    line-height: 1.6;
-    margin-bottom: 18px;
-    flex: 1;
-  }
-  .repo-card .tag-row {
-    margin-bottom: 18px;
-  }
-  .repo-arrow {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    color: var(--teal);
-    display: inline-block;
-    border-bottom: 1px solid transparent;
+  .repo-row {
+    display: block;
+    border-bottom: 1px solid var(--line);
     transition: border-color 0.15s var(--ease);
+    color: var(--fg);
   }
-  .repo-arrow:hover {
-    border-bottom-color: var(--teal-line);
+  .repo-row:hover {
+    border-bottom-color: var(--accent);
+  }
+  .repo-row-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    padding: clamp(16px, 2.5vw, 24px) 0;
+  }
+  .repo-row-body {
+    flex: 1;
+    min-width: 0;
+  }
+  .repo-row-name {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 400;
+    color: var(--fg);
+    display: block;
+    margin-bottom: 6px;
+    transition: color 0.15s var(--ease);
+  }
+  .repo-row:hover .repo-row-name {
+    color: var(--accent);
+  }
+  .repo-row-desc {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--dim);
+    line-height: 1.6;
+    margin-bottom: 10px;
+    max-width: 52ch;
+  }
+  .repo-row-tags {
+    /* uses global .tag-row */
+  }
+  .repo-row-cta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding-top: 4px;
+    transition: opacity 0.15s var(--ease);
+  }
+  .repo-row:hover .repo-row-cta {
+    opacity: 0.7;
+  }
+  @media (max-width: 600px) {
+    .repo-row-inner {
+      flex-direction: column;
+      gap: 12px;
+    }
   }
 
-  /* Contributions table */
+  /* ── CONTRIBUTIONS TABLE ─────────────────────────────────────────────── */
   .table-wrap {
     overflow-x: auto;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    background: var(--surface);
+    border: 1px solid var(--line);
   }
   .table-wrap table {
     margin-block: 0;
@@ -407,28 +489,26 @@ const contributions: Contribution[] = [
   .td-project {
     font-family: var(--font-mono);
     font-size: var(--step--1);
-    color: var(--text);
+    color: var(--fg);
   }
   .status-link {
     font-family: var(--font-mono);
     font-size: var(--step--1);
-    color: var(--teal);
-    border-bottom: 1px solid transparent;
-    transition: border-color 0.15s var(--ease);
+    color: var(--accent);
     white-space: nowrap;
+    transition: opacity 0.15s var(--ease);
   }
   .status-link:hover {
-    border-bottom-color: var(--teal-line);
+    opacity: 0.7;
   }
 
-  /* Collaborate */
-  .collab-intro h2 {
-    margin-block: 10px 14px;
-  }
-  .muted {
-    color: var(--text-muted);
+  /* ── COLLABORATE ─────────────────────────────────────────────────────── */
+  .collab-blurb {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--dim);
     line-height: 1.6;
-    max-width: 38em;
+    max-width: 52ch;
     margin-bottom: 28px;
   }
   .cta-row {
@@ -436,20 +516,13 @@ const contributions: Contribution[] = [
     flex-wrap: wrap;
     gap: 12px;
   }
-  .btn.ghost {
+  .btn-ghost {
     background: transparent;
-    border-color: var(--border-bright);
-    color: var(--text-muted);
+    color: var(--dim);
+    border-color: var(--line);
   }
-  .btn.ghost:hover {
-    color: var(--text);
-    border-color: var(--text-muted);
-    background: var(--surface-2);
-  }
-
-  @media (max-width: 720px) {
-    .repo-grid {
-      grid-template-columns: 1fr;
-    }
+  .btn-ghost:hover {
+    color: var(--fg);
+    border-color: var(--dim);
   }
 </style>

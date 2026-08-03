@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Eyebrow from "../../components/Eyebrow.astro";
+import GlyphField from "../../components/GlyphField.astro";
 import PostCard from "../../components/PostCard.astro";
 import { sortByDateDesc, visiblePosts } from "../../lib/posts";
 
@@ -14,20 +15,29 @@ const posts = sortByDateDesc(visiblePosts(all, import.meta.env.DEV));
   title="Writing"
   description="Essays on software engineering, AI systems, and the craft — by Harish Krishnan."
 >
-  <div class="wrap blog-index">
-    <header class="blog-head reveal">
+
+  <!-- ── PAGE HEAD — GlyphField band behind Eyebrow + display h2 ────────── -->
+  <div class="page-head">
+    <div class="page-head-bg" aria-hidden="true">
+      <GlyphField density={26} interactive={false} height="200px" />
+    </div>
+    <div class="page-head-content wrap">
       <Eyebrow>The Writing</Eyebrow>
-      <h1>Notes on building software.</h1>
-      <p class="lede">
-        Essays on architecture, AI systems, and the craft. Self-hosted, no
-        tracking, no paywall.
-      </p>
-      <div class="rule"></div>
-    </header>
+      <h2 class="page-title">Notes on building software.</h2>
+    </div>
+  </div>
+
+  <!-- ── BLOG BODY ─────────────────────────────────────────────────────────── -->
+  <div class="wrap blog-body">
+    <p class="lede reveal">
+      Essays on architecture, AI systems, and the craft. Self-hosted, no
+      tracking, no paywall.
+    </p>
+    <div class="rule"></div>
 
     {
       posts.length === 0 ? (
-        <p class="empty">No posts yet — first one is coming.</p>
+        <p class="empty reveal">No posts yet — first one is coming.</p>
       ) : (
         <div class="post-list">
           {posts.map((p) => (
@@ -44,35 +54,72 @@ const posts = sortByDateDesc(visiblePosts(all, import.meta.env.DEV));
       )
     }
   </div>
+
 </BaseLayout>
 
 <style>
-  .blog-index {
+  /* ── PAGE HEAD ─────────────────────────────────────────────────────────── */
+  .page-head {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+  }
+  .page-head-bg {
+    position: absolute;
+    inset: 0;
+  }
+  .page-head-content {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-block: clamp(24px, 4vw, 40px);
+    background: linear-gradient(
+      to right,
+      color-mix(in srgb, var(--bg) 82%, transparent) 0%,
+      color-mix(in srgb, var(--bg) 82%, transparent) 55%,
+      transparent 100%
+    );
+  }
+  @media (max-width: 860px) {
+    .page-head-content {
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+    }
+  }
+  .page-title {
+    font-family: var(--font-display);
+    font-size: clamp(34px, 5.4vw, 80px);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    max-width: 20ch;
+    margin-top: 10px;
+  }
+
+  /* ── BLOG BODY ────────────────────────────────────────────────────────── */
+  .blog-body {
+    padding-block: clamp(48px, 7vw, 72px);
+    border-top: 1px solid var(--line);
     max-width: var(--measure-wide);
   }
-  .blog-head {
-    max-width: var(--measure);
-    margin-bottom: 48px;
-  }
-  .blog-head h1 {
-    font-size: var(--step-3);
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    margin-block: 18px 16px;
-  }
   .lede {
-    font-size: var(--step-1);
-    font-style: italic;
-    color: var(--text-muted);
-    line-height: 1.55;
-    max-width: 36em;
-    margin-bottom: 26px;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--dim);
+    line-height: 1.7;
+    max-width: 52ch;
+    margin-bottom: 24px;
   }
+  /* .rule is defined globally; provides the gradient accent line. */
   .post-list {
-    max-width: var(--measure);
+    margin-top: clamp(24px, 4vw, 40px);
   }
   .empty {
-    color: var(--text-muted);
-    font-style: italic;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--dim);
+    margin-top: clamp(24px, 4vw, 40px);
   }
 </style>
