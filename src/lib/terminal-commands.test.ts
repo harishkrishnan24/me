@@ -32,4 +32,20 @@ describe("runCommand", () => {
   it("ignores surrounding whitespace and empty input", () => {
     expect(runCommand("   ").lines).toEqual(["harish@dev:~$ "]);
   });
+
+  describe("theme command", () => {
+    it("echoes the prompt line", () => {
+      expect(runCommand("theme").lines[0]).toBe("harish@dev:~$ theme");
+    });
+
+    it("reports the theme it was given", () => {
+      expect(runCommand("theme", "light").lines.join("\n")).toContain("current theme: light");
+      expect(runCommand("theme", "dark").lines.join("\n")).toContain("current theme: dark");
+      expect(runCommand("theme", "crt").lines.join("\n")).toContain("current theme: crt");
+    });
+
+    it("defaults to dark when argument is omitted", () => {
+      expect(runCommand("theme").lines.join("\n")).toContain("current theme: dark");
+    });
+  });
 });

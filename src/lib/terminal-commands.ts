@@ -32,7 +32,7 @@ const HELP_TEXT = [
   "  clear      — clear the terminal",
 ];
 
-export function runCommand(input: string): CommandResult {
+export function runCommand(input: string, currentTheme = "dark"): CommandResult {
   const trimmed = input.trim();
   const promptLine = `harish@dev:~$ ${trimmed}`;
 
@@ -81,10 +81,7 @@ export function runCommand(input: string): CommandResult {
       return {
         lines: [
           promptLine,
-          "current theme: " +
-            (typeof document !== "undefined"
-              ? (document.documentElement.getAttribute("data-theme") ?? "dark")
-              : "dark"),
+          "current theme: " + currentTheme,
           "press T to cycle themes",
         ],
       };

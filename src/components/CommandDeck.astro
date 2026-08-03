@@ -89,17 +89,38 @@ const paletteRows = [
   // ── State ─────────────────────────────────────────────────────────────────
   let paletteOpen = false;
   let terminalOpen = false;
+  // Captures focus before an overlay opens so we can restore it on close.
+  let focusReturnTarget: HTMLElement | null = null;
+  // Tracks siblings we added inert to, so we only remove what we set.
+  let inertedSiblings: Element[] = [];
 
   // ── Helpers ───────────────────────────────────────────────────────────────
   function isTyping(): boolean {
     const tag = (document.activeElement?.tagName ?? "").toLowerCase();
-    return tag === "input" || tag === "textarea";
+    const ce = (document.activeElement as HTMLElement | null)?.isContentEditable;
+    return tag === "input" || tag === "textarea" || !!ce;
+  }
+
+  // Apply inert to every top-level body sibling of #command-deck that isn't
+  // already inert — making aria-modal="true" truthful for screen readers.
+  function trapSiblings() {
+    const siblings = Array.from(document.body.children).filter(el => el !== deck);
+    inertedSiblings = siblings.filter(el => !el.hasAttribute("inert"));
+    inertedSiblings.forEach(el => el.setAttribute("inert", ""));
+  }
+
+  // Remove inert only from elements we added it to — never clobber pre-existing inert.
+  function releaseSiblings() {
+    inertedSiblings.forEach(el => el.removeAttribute("inert"));
+    inertedSiblings = [];
   }
 
   function openPalette() {
+    focusReturnTarget = document.activeElement as HTMLElement | null;
     paletteOpen = true;
     deck.removeAttribute("aria-hidden");
     deck.removeAttribute("inert");
+    if (!terminalOpen) trapSiblings();
     paletteOverlay.classList.add("visible");
     paletteInput.value = "";
     filterPalette("");
@@ -112,13 +133,19 @@ const paletteRows = [
     if (!terminalOpen) {
       deck.setAttribute("aria-hidden", "true");
       deck.setAttribute("inert", "");
+      releaseSiblings();
     }
+    paletteInput.blur();
+    focusReturnTarget?.focus?.();
+    focusReturnTarget = null;
   }
 
   function openTerminal() {
+    focusReturnTarget = document.activeElement as HTMLElement | null;
     terminalOpen = true;
     deck.removeAttribute("aria-hidden");
     deck.removeAttribute("inert");
+    if (!paletteOpen) trapSiblings();
     terminalOverlay.classList.add("visible");
     terminalInput.value = "";
     terminalInput.focus();
@@ -130,7 +157,11 @@ const paletteRows = [
     if (!paletteOpen) {
       deck.setAttribute("aria-hidden", "true");
       deck.setAttribute("inert", "");
+      releaseSiblings();
     }
+    terminalInput.blur();
+    focusReturnTarget?.focus?.();
+    focusReturnTarget = null;
   }
 
   function closeAll() {
@@ -175,6 +206,10 @@ const paletteRows = [
   }
 
   // ── Konami sequence ───────────────────────────────────────────────────────
+  // NOTE: the konami tracker runs BEFORE the isTyping() guard below, so typing
+  // the sequence inside the palette or terminal input intentionally triggers the
+  // glitch. This is a feature of the easter egg — do not "fix" it by moving the
+  // tracker after the isTyping() check.
   const KONAMI = [
     "ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown",
     "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight",
@@ -208,7 +243,7 @@ const paletteRows = [
       if (paletteOpen) {
         closePalette();
       } else {
-        closePalette(); // ensure terminal is closed
+        closeTerminal(); // ensure terminal is closed before opening palette
         openPalette();
       }
       return;
@@ -248,7 +283,7 @@ const paletteRows = [
       const input = terminalInput.value;
       terminalInput.value = "";
 
-      const result = runCommand(input);
+      const result = runCommand(input, document.documentElement.getAttribute("data-theme") ?? "dark");
 
       if (result.clear) {
         clearLog();

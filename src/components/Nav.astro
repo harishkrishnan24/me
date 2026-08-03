@@ -119,7 +119,12 @@ const pathname = Astro.url.pathname;
   /* details/summary reset — on desktop it's always open, on mobile
      the summary acts as the hamburger toggle. */
   .nav-details {
-    display: contents; /* transparent on desktop — children flow into .nav flex */
+    /* display:contents makes <details> a transparent box so its children flow
+       directly into the parent flex container on desktop. This relies on correct
+       display:contents behaviour on <details> — fixed in Firefox ~127 and present
+       in all evergreen Safari versions (older Safari had bugs here). This site
+       targets evergreen browsers only. */
+    display: contents;
   }
   .nav-details[open] .nav-links {
     display: flex;
@@ -188,8 +193,7 @@ const pathname = Astro.url.pathname;
       background: var(--bg);
       z-index: 50;
     }
-    .nav-details[open] .nav-links,
-    .nav-links.open {
+    .nav-details[open] .nav-links {
       display: flex;
     }
     .nav-links a {
