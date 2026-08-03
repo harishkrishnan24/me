@@ -83,14 +83,12 @@ const shareLinkedIn = `https://www.linkedin.com/sharing/share-offsite/?url=${enc
         <span class="post-meta-item">Harish Krishnan</span>
         {
           tags.length > 0 && (
-            <>
+            <div class="tag-row header-tags">
               <span class="meta-sep" aria-hidden="true">·</span>
-              <div class="tag-row header-tags">
-                {tags.map((t) => (
-                  <span class="tag">{t}</span>
-                ))}
-              </div>
-            </>
+              {tags.map((t) => (
+                <span class="tag">{t}</span>
+              ))}
+            </div>
           )
         }
         {draft && <span class="draft-flag">· draft</span>}
@@ -198,13 +196,18 @@ const shareLinkedIn = `https://www.linkedin.com/sharing/share-offsite/?url=${enc
   // Scroll-progress bar — progressive enhancement.
   const fill = document.getElementById("progress-fill");
   if (fill) {
+    // Cache scrollHeight on load; recompute on resize so the bar stays
+    // accurate after an orientation change or viewport resize.
+    let scrollable = document.documentElement.scrollHeight - window.innerHeight;
     const update = () => {
-      const scrollable =
-        document.documentElement.scrollHeight - window.innerHeight;
       const pct = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0;
       fill.style.width = `${pct}%`;
     };
     window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", () => {
+      scrollable = document.documentElement.scrollHeight - window.innerHeight;
+      update();
+    }, { passive: true });
     update();
   }
 

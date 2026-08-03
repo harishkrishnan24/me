@@ -2,6 +2,7 @@
 import { getCollection, render } from "astro:content";
 import PostLayout from "../../layouts/PostLayout.astro";
 import { visiblePosts, sortByDateDesc } from "../../lib/posts";
+import { readingMinutes } from "../../lib/reading-time";
 
 // One static page per visible post. Drafts are excluded from the
 // production build but available in `astro dev`.
@@ -21,9 +22,7 @@ export async function getStaticPaths() {
 const { post, nextPost } = Astro.props;
 const { Content, headings } = await render(post);
 
-// Rough reading time: ~200 wpm, minimum 1 min
-const wordCount = (post.body ?? "").split(/\s+/).filter(Boolean).length;
-const readingTime = Math.max(1, Math.ceil(wordCount / 200));
+const readingTime = readingMinutes(post.body ?? "");
 ---
 
 <PostLayout
