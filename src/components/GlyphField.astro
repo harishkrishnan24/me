@@ -172,9 +172,11 @@ const uid = `gf-${Math.random().toString(36).slice(2, 9)}`;
     }
     function onResize() {
       resize();
+      if (reducedMotion) draw();
     }
     function onTheme() {
       readColors();
+      if (reducedMotion) draw();
     }
 
     // ── Init ────────────────────────────────────────────────────────────────

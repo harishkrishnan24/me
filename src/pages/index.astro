@@ -10,11 +10,12 @@ import { sortByDateDesc, visiblePosts } from "../lib/posts";
 const all = await getCollection("blog");
 const latest = sortByDateDesc(visiblePosts(all, import.meta.env.DEV)).slice(0, 3);
 
-// Current status items — shown as a hairline 3-cell grid in the "01 — Now" section.
+// Current status items — shown as a hairline grid in the "01 — Now" section.
 const nowItems = [
   "Building Usage Data solutions at DigitalRoute",
   "Going deep on Generative AI, ML & distributed systems",
   "Learning Go and Rust for efficient, scalable systems",
+  "Writing essays and recording Udemy courses",
 ];
 ---
 
@@ -156,6 +157,59 @@ const nowItems = [
     }
   </section>
 
+  <!-- ────────────────────────────────────────────────────────────────────────
+       03 — GET IN TOUCH  · hairline link list
+       ──────────────────────────────────────────────────────────────────────── -->
+  <section class="wrap section-contact">
+    <div class="contact-grid">
+      <div class="contact-sidebar">
+        <Eyebrow num="03">Get in touch</Eyebrow>
+      </div>
+      <div class="contact-main">
+        <h2>Let's talk.</h2>
+        <p class="contact-blurb">
+          Open to conversations about engineering, AI systems, collaboration — or
+          just connecting with fellow developers.
+        </p>
+        <ul class="contact-links">
+          <li>
+            <span class="contact-label">email</span>
+            <a class="contact-value" href="mailto:harishkrishnan1993@gmail.com"
+              >harishkrishnan1993@gmail.com</a
+            >
+          </li>
+          <li>
+            <span class="contact-label">github</span>
+            <a
+              class="contact-value"
+              href="https://github.com/harishkrishnan24"
+              target="_blank"
+              rel="noopener noreferrer">@harishkrishnan24</a
+            >
+          </li>
+          <li>
+            <span class="contact-label">linkedin</span>
+            <a
+              class="contact-value"
+              href="https://www.linkedin.com/in/harishkrishnan1993/"
+              target="_blank"
+              rel="noopener noreferrer">in/harishkrishnan1993</a
+            >
+          </li>
+          <li>
+            <span class="contact-label">x</span>
+            <a
+              class="contact-value"
+              href="https://x.com/harishkforu"
+              target="_blank"
+              rel="noopener noreferrer">@harishkforu</a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
 </BaseLayout>
 
 <style>
@@ -178,12 +232,20 @@ const nowItems = [
 
   /* Content sits on top of the canvas; pointer-events:none passes mousemove
      through to the canvas for cursor reactivity. Interactive children
-     restore pointer-events via the selectors below. */
+     restore pointer-events via the selectors below.
+     The gradient scrim ensures the deck text clears WCAG AA contrast
+     (measured ~2.4:1 without it) against the densest glyph cells. */
   .hero-content {
     position: relative;
     z-index: 2;
     pointer-events: none;
     padding-block: clamp(40px, 7vw, 80px);
+    background: linear-gradient(
+      to right,
+      color-mix(in srgb, var(--bg) 82%, transparent) 0%,
+      color-mix(in srgb, var(--bg) 82%, transparent) 55%,
+      transparent 100%
+    );
   }
 
   /* Restore interactivity for all links, buttons, and the spec table. */
@@ -381,7 +443,7 @@ const nowItems = [
      Technique: 1px gap on a var(--line) background creates hairlines. */
   .now-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     border: 1px solid var(--line);
     gap: 1px;
     background: var(--line);
@@ -413,5 +475,77 @@ const nowItems = [
     font-size: var(--step--1);
     color: var(--dim);
     padding-block: 24px;
+  }
+
+  /* ── CONTACT ─────────────────────────────────────────────────────────────── */
+  .section-contact {
+    padding-block: clamp(56px, 8vw, 80px);
+    border-top: 1px solid var(--line);
+  }
+
+  /* Two-column layout: 200px label column left, content right. */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 200px minmax(0, 1fr);
+    gap: 56px;
+    align-items: start;
+  }
+
+  .section-contact h2 {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 400;
+    margin-top: 10px;
+    margin-bottom: 16px;
+  }
+
+  .contact-blurb {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--dim);
+    line-height: 1.6;
+    max-width: 40ch;
+    margin-bottom: 24px;
+  }
+
+  /* Hairline list: each row separated by 1px var(--line). */
+  .contact-links {
+    list-style: none;
+    border-top: 1px solid var(--line);
+  }
+
+  .contact-links li {
+    display: flex;
+    gap: 16px;
+    align-items: baseline;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .contact-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--dim);
+    min-width: 72px;
+  }
+
+  .contact-value {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--fg);
+    transition: color 0.15s var(--ease);
+  }
+
+  .contact-value:hover {
+    color: var(--accent);
+  }
+
+  @media (max-width: 720px) {
+    .contact-grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
   }
 </style>
