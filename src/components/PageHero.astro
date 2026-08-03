@@ -9,17 +9,16 @@ import MotifHero from "./MotifHero.astro";
 
 interface Props {
   eyebrow: string;
-  accent?: "violet" | "orange" | "teal";
   motif: "constellation" | "blocks" | "books" | "graph";
 }
-const { eyebrow, accent = "violet", motif } = Astro.props;
+const { eyebrow, motif } = Astro.props;
 ---
 
 <section class="page-hero">
   <div class="wrap page-hero-inner">
     <div class="page-hero-copy">
       <slot name="lead" />
-      <Eyebrow accent={accent}>{eyebrow}</Eyebrow>
+      <Eyebrow>{eyebrow}</Eyebrow>
       <h1 class="hero-title"><slot /></h1>
       <p class="hero-deck"><slot name="deck" /></p>
     </div>

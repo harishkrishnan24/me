@@ -2,11 +2,8 @@
 // A small mono uppercase label — the terminal-editorial design's section
 // marker. All eyebrows use the single accent color. The optional `num` prop
 // renders a numbered prefix: num="01" → "01 — Label".
-// The `accent` prop is kept for backward compatibility with pages not yet
-// rewritten (Tasks 3–5); it is intentionally ignored here.
 interface Props {
   num?: string;
-  accent?: string;
 }
 const { num } = Astro.props;
 ---
