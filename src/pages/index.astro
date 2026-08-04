@@ -80,13 +80,15 @@ const nowItems = [
           </nav>
         </div>
 
-        <!-- Spec table — pointer-events:auto so text is selectable -->
+        <!-- Spec table — the hero's skim layer, next to the deck's read layer.
+             Only rows that say something the status line and deck do NOT.
+             ROLE was cut: it repeated the status line above verbatim.
+             LEARNING was cut: "01 — Now" states it below, About states it
+             twice, and Projects actually demonstrates it — which is stronger
+             than claiming it in the hero.
+             pointer-events:auto so the text stays selectable. -->
         <table class="spec-table" aria-label="At a glance">
           <tbody>
-            <tr>
-              <th scope="row">ROLE</th>
-              <td>Software Engineer</td>
-            </tr>
             <tr>
               <th scope="row">ALSO</th>
               <td>Course instructor · writer</td>
@@ -94,10 +96,6 @@ const nowItems = [
             <tr>
               <th scope="row">FOCUS</th>
               <td>AI systems · distributed systems</td>
-            </tr>
-            <tr>
-              <th scope="row">LEARNING</th>
-              <td>Go · Rust</td>
             </tr>
           </tbody>
         </table>
