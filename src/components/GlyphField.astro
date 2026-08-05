@@ -103,6 +103,21 @@ const uid = `gf-${Math.random().toString(36).slice(2, 9)}`;
       // Only compute bounding rect once per frame (and only when interactive).
       const rect = interactive ? canvas.getBoundingClientRect() : null;
 
+      // The cursor halo is a HOVER effect: it lights up only while the pointer
+      // is actually over the field. pointermove is bound to the window (so the
+      // position is still tracked when the pointer is over the hero copy, which
+      // sits above the canvas), which means the halo would otherwise follow the
+      // cursor across the nav bar and into the sections below — anywhere within
+      // 260px of a cell. Gate on the bounds instead of the event target: it is
+      // immune to whatever is stacked on top of the canvas, and the rect is
+      // already computed above, so it costs nothing.
+      const hovering =
+        rect !== null &&
+        mx >= rect.left &&
+        mx <= rect.right &&
+        my >= rect.top &&
+        my <= rect.bottom;
+
       for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
           // ── Algorithm from the design spec ──────────────────────────────
@@ -111,9 +126,9 @@ const uid = `gf-${Math.random().toString(36).slice(2, 9)}`;
             Math.sin((i + j) * 0.07 + t * 1.4);
           let v = (n + 2) / 4;
 
-          // Cursor proximity influence (interactive only).
+          // Cursor proximity influence (only while hovering the field).
           let near = 0;
-          if (interactive && rect) {
+          if (hovering && rect) {
             // Cell centre in viewport CSS-px coordinates.
             const cx = rect.left + (i + 0.5) * density;
             const cy = rect.top + (j + 0.5) * density;
@@ -186,6 +201,14 @@ const uid = `gf-${Math.random().toString(36).slice(2, 9)}`;
       mx = e.clientX;
       my = e.clientY;
     }
+    // Park the pointer off-canvas when it leaves the window, otherwise a last
+    // known position inside the bounds leaves the halo frozen mid-field.
+    function onPointerOut(e) {
+      if (!e.relatedTarget) {
+        mx = -9999;
+        my = -9999;
+      }
+    }
     function onResize() {
       resize();
       if (reducedMotion) draw();
@@ -201,7 +224,10 @@ const uid = `gf-${Math.random().toString(36).slice(2, 9)}`;
     // frame they ever get, so it must not depend on the loop starting.
     draw();
 
-    if (interactive) window.addEventListener("pointermove", onMove);
+    if (interactive) {
+      window.addEventListener("pointermove", onMove);
+      document.addEventListener("pointerout", onPointerOut);
+    }
     window.addEventListener("resize", onResize);
     window.addEventListener("themechange", onTheme);
 
