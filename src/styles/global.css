@@ -151,16 +151,80 @@ main {
   padding: 6px 0 6px 24px;
   margin-block: 1.6em;
 }
+/* A markdown blockquote's content is always wrapped in a <p>, and
+   `.prose p` gives every paragraph a 1.35em bottom margin. Because the
+   blockquote's own padding-bottom is non-zero, that margin can't collapse
+   out through the box — it just sits inside it, on top of the padding,
+   nearly doubling the blockquote's height and making it lopsided (6px
+   above the text, ~36px below). The blockquote's own margin-block already
+   sets the spacing that matters; the nested paragraph doesn't need to add
+   more of its own. */
+.prose blockquote p:last-child {
+  margin-bottom: 0;
+}
 .prose img {
   max-width: 100%;
   height: auto;
   border-radius: var(--radius);
   border: 1px solid var(--line);
 }
+/* Inline diagrams — hand-drawn SVGs embedded directly in a post's markdown.
+   No <img> wrapper, so .prose img above doesn't reach them; they need their
+   own responsive rule or a fixed-width/height SVG overflows the measure on
+   mobile. Text color varies per element (set via each text's own fill
+   attribute); only the font family is uniform, so it lives here once
+   instead of being repeated on every <text> node. */
+.prose figure {
+  margin: 1.8em 0;
+}
+.prose figure svg,
+.prose .diagram-panel svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin-inline: auto;
+}
+.prose svg text {
+  font-family: var(--font-mono);
+}
+.prose figcaption {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--dim);
+  margin-top: 10px;
+  text-align: center;
+}
+/* The roofline diagram gets a contained panel rather than the source's
+   full-bleed dark "breakout" box — this site's redesign already gives
+   .prose exactly one such treatment (code blocks), so reusing --panel/
+   --line keeps the post visually consistent instead of inventing a
+   one-off hardcoded dark surface that ignores the light and crt themes. */
+.prose .diagram-panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: clamp(20px, 4vw, 32px) clamp(16px, 3vw, 22px);
+  margin: 1.8em 0;
+}
+.prose .diagram-panel figcaption {
+  margin-top: 14px;
+}
 
-/* Shiki code blocks (markdown.shikiConfig). Re-skin to the palette. */
+/* Shiki code blocks (markdown.shikiConfig, theme: github-dark). Re-skin to
+   the palette. Shiki bakes every token's color as an inline `style` on its
+   own <span> — e.g. an array index like `[i]` comes out as
+   `color:#E1E4E8`, a near-white meant to sit on github-dark's near-black.
+   That's fixed and theme-blind: it doesn't know this site has a light and
+   a crt theme too, and #E1E4E8 on the light theme's cream panel is close
+   to invisible — exactly the punctuation/index tokens, since identifiers
+   and operators happen to land on mid-tone hues that stay legible by
+   accident. Force one color, in one place, for every token: it costs
+   Shiki's syntax highlighting, which these snippets (2-4 lines of C or a
+   bare formula) don't lean on for comprehension anyway. Inline `style`
+   normally wins over a stylesheet, but not over `!important`. */
 .prose pre.astro-code {
   background: var(--panel) !important;
+  color: var(--fg) !important;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 20px 22px;
@@ -168,6 +232,9 @@ main {
   line-height: 1.7;
   overflow-x: auto;
   margin-block: 1.5em;
+}
+.prose pre.astro-code span {
+  color: var(--fg) !important;
 }
 .prose pre.astro-code code {
   background: none;

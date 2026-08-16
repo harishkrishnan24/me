@@ -42,6 +42,24 @@ transistors making a single thread wait less:
 - **Branch prediction** guesses which way an `if` will go before the
   deciding value has even arrived, and starts running that path early.
 
+<figure>
+
+<svg viewBox="0 0 640 150" width="640" height="150" role="img" aria-label="Latency ladder: registers near instant, cache about ten times slower, main memory over a hundred times slower">
+  <text x="0" y="24" font-size="12" font-weight="700" fill="var(--fg)">REGISTERS</text>
+  <rect x="150" y="10" width="16" height="16" fill="var(--accent)"/>
+  <text x="176" y="23" font-size="11" fill="var(--dim)">≈1×</text>
+  <text x="0" y="74" font-size="12" font-weight="700" fill="var(--fg)">ON-CHIP CACHE</text>
+  <rect x="150" y="60" width="70" height="16" fill="var(--accent)" opacity="0.72"/>
+  <text x="230" y="73" font-size="11" fill="var(--dim)">≈10× slower</text>
+  <text x="0" y="124" font-size="12" font-weight="700" fill="var(--fg)">MAIN MEMORY (DRAM)</text>
+  <rect x="150" y="110" width="470" height="16" fill="var(--accent)" opacity="0.45"/>
+  <text x="472" y="123" font-size="10" fill="var(--fg)" text-anchor="middle">≈100×+ slower — the wall</text>
+</svg>
+
+<figcaption>Fig. 1 — schematic, order of magnitude</figcaption>
+
+</figure>
+
 > **Without these three tricks:** a CPU core spends most of its life idle,
 > waiting on memory, no matter how fast its arithmetic units are.
 
@@ -99,6 +117,24 @@ levels, and only two are left to the programmer:
 | **Warp**   | hardware, fixed 32 | The unit that actually executes in lockstep                 |
 | **Block**  | the programmer     | Threads share on-chip memory and rendezvous at a barrier    |
 | **Grid**   | the programmer     | Every block in the launch — no cross-block sync at all      |
+
+<figure>
+
+<svg viewBox="0 0 640 180" width="640" height="180" role="img" aria-label="A grid contains independent blocks; one block is expanded to show two warps of 32 threads each">
+  <rect x="10" y="16" width="620" height="150" rx="8" fill="none" stroke="var(--line-strong)"/>
+  <text x="24" y="34" font-size="10.5" font-weight="700" fill="var(--dim)">GRID — INDEPENDENT BLOCKS, NO CROSS-BLOCK SYNC</text>
+  <rect x="28" y="46" width="170" height="104" rx="6" fill="var(--line-strong)" opacity="0.35"/>
+  <rect x="235" y="46" width="170" height="104" rx="6" fill="var(--accent)"/>
+  <rect x="442" y="46" width="170" height="104" rx="6" fill="var(--line-strong)" opacity="0.35"/>
+  <text x="320" y="70" text-anchor="middle" font-size="10" font-weight="700" fill="var(--bg)">WARP 0 · 32 THREADS</text>
+  <rect x="255" y="78" width="130" height="26" rx="4" fill="var(--bg)" opacity="0.22"/>
+  <text x="320" y="122" text-anchor="middle" font-size="10" font-weight="700" fill="var(--bg)">WARP 1 · 32 THREADS</text>
+  <rect x="255" y="128" width="130" height="18" rx="4" fill="var(--bg)" opacity="0.18"/>
+</svg>
+
+<figcaption>Fig. 2 — one block, expanded — blockDim.x = 64 → 2 warps</figcaption>
+
+</figure>
 
 A block's total independence from every other block is what lets the
 scheduler spray them across every streaming multiprocessor on the chip with
@@ -170,6 +206,32 @@ arithmetic intensity = N FLOPs / 12N bytes ≈ 1/12 FLOP per byte
 That number is almost insultingly low, and that's exactly the point: this
 kernel is nearly pure data movement wearing a kernel's clothing. The one add
 per element is free. The three memory accesses are the entire cost.
+
+<div class="diagram-panel">
+
+<svg viewBox="0 0 700 320" width="700" height="320" role="img" aria-label="Roofline chart: a diagonal bandwidth-bound line rises to a ridge point, then a flat compute-bound ceiling continues to the right">
+  <line x1="60" y1="270" x2="60" y2="24" stroke="var(--line-strong)" stroke-width="1.5"/>
+  <line x1="60" y1="270" x2="660" y2="270" stroke="var(--line-strong)" stroke-width="1.5"/>
+  <text x="8" y="20" font-size="10.5" fill="var(--dim)">ATTAINABLE</text>
+  <text x="8" y="33" font-size="10.5" fill="var(--dim)">FLOP/S</text>
+  <text x="560" y="292" font-size="10.5" fill="var(--dim)">ARITHMETIC INTENSITY (FLOPS/BYTE) →</text>
+  <polygon points="60,270 60,110 240,50 240,270" fill="var(--accent2)" opacity="0.14"/>
+  <polygon points="240,270 240,50 660,50 660,270" fill="var(--accent)" opacity="0.12"/>
+  <polyline points="60,270 240,50 660,50" fill="none" stroke="var(--fg)" stroke-width="2.5"/>
+  <line x1="240" y1="50" x2="240" y2="270" stroke="var(--accent)" stroke-width="1.2" stroke-dasharray="4,4"/>
+  <text x="248" y="66" font-size="10.5" font-weight="700" fill="var(--accent)">RIDGE POINT</text>
+  <text x="248" y="80" font-size="9.5" fill="var(--dim)">= PEAK FLOP/S ÷ PEAK BANDWIDTH</text>
+  <text x="80" y="150" font-size="12.5" font-weight="700" fill="var(--accent2)">MEMORY-BOUND</text>
+  <text x="80" y="166" font-size="10" fill="var(--dim)">time ≈ bytes ÷ bandwidth</text>
+  <text x="420" y="150" font-size="12.5" font-weight="700" fill="var(--accent)">COMPUTE-BOUND</text>
+  <text x="420" y="166" font-size="10" fill="var(--dim)">time ≈ FLOPs ÷ peak throughput</text>
+  <circle cx="95" cy="255" r="6" fill="var(--accent2)"/>
+  <text x="108" y="252" font-size="10.5" fill="var(--fg)">vector add — AI ≈ 1/12</text>
+</svg>
+
+<figcaption>Fig. 3 — schematic roofline. Left of the ridge, more math is nearly free.</figcaption>
+
+</div>
 
 The **roofline model** turns that ratio into a verdict. Plot attainable
 performance against arithmetic intensity for a given chip and the result is
