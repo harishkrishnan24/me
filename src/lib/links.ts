@@ -32,13 +32,8 @@ export const navLinks: NavLink[] = [
   { label: "Writing", path: "blog" },
   { label: "Open Source", path: "opensource" },
   {
-    label: "Résumé",
+    label: "LinkedIn",
     path: "https://www.linkedin.com/in/harishkrishnan1993/",
-    external: true,
-  },
-  {
-    label: "Udemy",
-    path: "https://www.udemy.com/user/harish-krishnan-5/",
     external: true,
   },
 ];
