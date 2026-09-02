@@ -1,5 +1,5 @@
 ---
-title: "The Mutex Is the Borrow Checker, Moved to Runtime"
+title: "Rust's Concurrency Rule Doesn't Relax — It Moves"
 description: "Rust's rule against shared mutable state doesn't relax once you add threads. It just changes who enforces it — and gains a second rule deciding who's allowed to cross the thread boundary at all."
 date: 2026-08-29
 tags: ["rust", "concurrency", "systems", "async"]
