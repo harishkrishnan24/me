@@ -14,12 +14,12 @@ const PADDING = 80;
 // the dark-theme tokens in src/styles/tokens.css — update both.
 // An oklch() string passed to Satori renders BLACK, silently.
 const COLOR = {
-  bg: "#0a0a0c", // --bg
-  fg: "#edeae3", // --fg
-  dim: "#8b8880", // --dim
-  line: "rgba(237, 234, 227, 0.13)", // --line
-  accent: "#7bd77f", // --accent  oklch(0.80 0.15 145)
-  accent2: "#f2b036", // --accent2 oklch(0.80 0.15 78)
+  bg: "#0f1012", // --bg (dark)
+  fg: "#ebe8e2", // --fg
+  dim: "#8d8a84", // --dim
+  line: "#26282d", // --line
+  accent: "#84b8a0", // --accent
+  accent2: "#d9a55b", // --accent2
 } as const;
 
 type Style = Record<string, unknown>;
@@ -39,21 +39,19 @@ const el = (type: string, style: Style, children?: OgChild): OgNode => ({
  * Pick a font size the title fits in, truncating pathological ones.
  *
  * Satori 0.29 ignores `lineClamp`, so overflow has to be prevented here.
- * Measured for Instrument Serif 400 at -0.02em in the 1040px content column:
- * roughly 45/50/58 characters per line at 72/64/56px. The space between
- * eyebrow and footer allows three lines. The character budget is a coarse
- * proxy for a proportional font — a guard against absurd titles, not a
- * layout mechanism.
- *
- * Thresholds derived by binary-searching the 3→4 line transition:
- *   72px: 3-line max = 129 chars → step down at 90 (2-line natural fill)
- *   64px: 3-line max = 141 chars → step down at 140 (3-line max fill)
- *   56px: 3-line max = 164 chars → truncate at 160 (buffer before overflow)
+ * Measured for Source Serif 4 400 at -0.02em in the 1040px content column
+ * (Satori, embedFont: false, counting distinct text baselines). The space
+ * between eyebrow and footer allows three lines. 3-line maxima:
+ *   72px: 82 chars (2-line max 56) → step down at 56
+ *   64px: 93 chars → step down at 90
+ *   56px: 110 chars → step down at 106
+ *   48px: 131 chars → truncate at 128
  */
 export function titleLayout(title: string): { text: string; fontSize: number } {
-  if (title.length <= 90) return { text: title, fontSize: 72 };
-  if (title.length <= 140) return { text: title, fontSize: 64 };
-  return { text: truncate(title, 160), fontSize: 56 };
+  if (title.length <= 56) return { text: title, fontSize: 72 };
+  if (title.length <= 90) return { text: title, fontSize: 64 };
+  if (title.length <= 106) return { text: title, fontSize: 56 };
+  return { text: truncate(title, 128), fontSize: 48 };
 }
 
 function truncate(title: string, max: number): string {
@@ -80,7 +78,7 @@ export function ogCard(title: string): OgNode {
       "div",
       {
         fontSize,
-        fontFamily: "Instrument Serif",
+        fontFamily: "Source Serif 4",
         fontWeight: 400,
         color: COLOR.fg,
         lineHeight: 1.06,
@@ -131,7 +129,7 @@ export function ogCard(title: string): OgNode {
       justifyContent: "space-between",
       padding: PADDING,
       backgroundColor: COLOR.bg,
-      fontFamily: "Instrument Serif",
+      fontFamily: "Source Serif 4",
     },
     [eyebrow, headline, footer],
   );

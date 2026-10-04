@@ -9,24 +9,29 @@ describe("titleLayout", () => {
     });
   });
 
-  it("steps down at the 90-character boundary", () => {
-    expect(titleLayout("a".repeat(90)).fontSize).toBe(72);
-    expect(titleLayout("a".repeat(91)).fontSize).toBe(64);
+  it("steps down at the 56-character boundary", () => {
+    expect(titleLayout("a".repeat(56)).fontSize).toBe(72);
+    expect(titleLayout("a".repeat(57)).fontSize).toBe(64);
   });
 
-  it("steps down again at the 140-character boundary", () => {
-    expect(titleLayout("a".repeat(140)).fontSize).toBe(64);
-    expect(titleLayout("a".repeat(141)).fontSize).toBe(56);
+  it("steps down again at the 90-character boundary", () => {
+    expect(titleLayout("a".repeat(90)).fontSize).toBe(64);
+    expect(titleLayout("a".repeat(91)).fontSize).toBe(56);
+  });
+
+  it("steps down to the smallest size past 106 characters", () => {
+    expect(titleLayout("a".repeat(106)).fontSize).toBe(56);
+    expect(titleLayout("a".repeat(107)).fontSize).toBe(48);
   });
 
   it("leaves a title at the truncation budget intact", () => {
-    const title = "a".repeat(160);
+    const title = "a".repeat(128);
     expect(titleLayout(title).text).toBe(title);
   });
 
   it("truncates past the budget with an ellipsis", () => {
     const { text } = titleLayout("b".repeat(200));
-    expect(text).toHaveLength(161); // at most 160 characters plus the ellipsis
+    expect(text).toHaveLength(129); // at most 128 characters plus the ellipsis
     expect(text.endsWith("…")).toBe(true);
   });
 });
@@ -73,12 +78,12 @@ describe("card palette", () => {
   });
 
   it("uses the dark-theme accent green", () => {
-    expect(JSON.stringify(ogCard("Probe"))).toContain("#7bd77f");
+    expect(JSON.stringify(ogCard("Probe"))).toContain("#84b8a0");
   });
 
-  it("sets the title in the display face", () => {
+  it("sets the title in the serif face", () => {
     const json = JSON.stringify(ogCard("Probe"));
-    expect(json).toContain("Instrument Serif");
-    expect(json).not.toContain("Inter");
+    expect(json).toContain("Source Serif 4");
+    expect(json).not.toContain("Instrument Serif");
   });
 });

@@ -19,9 +19,9 @@ const fontData = (specifier: string) => readFileSync(resolveFrom.resolve(specifi
 // Loaded once per build, not once per post.
 const FONTS = [
   {
-    name: "Instrument Serif",
+    name: "Source Serif 4",
     data: fontData(
-      "@fontsource/instrument-serif/files/instrument-serif-latin-400-normal.woff",
+      "@fontsource/source-serif-4/files/source-serif-4-latin-400-normal.woff",
     ),
     weight: 400 as const,
     style: "normal" as const,
