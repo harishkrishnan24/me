@@ -2,17 +2,17 @@ import { describe, it, expect } from "vitest";
 import { THEMES, nextTheme } from "./theme";
 
 describe("nextTheme", () => {
-  it("cycles dark → light → crt → dark", () => {
+  it("cycles light → dark → light", () => {
+    expect(nextTheme("light")).toBe("dark");
     expect(nextTheme("dark")).toBe("light");
-    expect(nextTheme("light")).toBe("crt");
-    expect(nextTheme("crt")).toBe("dark");
   });
 
-  it("falls back to the first theme for an unknown value", () => {
-    expect(nextTheme("solarized")).toBe("dark");
+  it("falls back to light for an unknown value, including the retired crt theme", () => {
+    expect(nextTheme("crt")).toBe("light");
+    expect(nextTheme("solarized")).toBe("light");
   });
 
-  it("exposes exactly the three supported themes", () => {
-    expect(THEMES).toEqual(["dark", "light", "crt"]);
+  it("exposes exactly the two supported themes, light first", () => {
+    expect(THEMES).toEqual(["light", "dark"]);
   });
 });
