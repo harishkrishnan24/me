@@ -2,15 +2,14 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Eyebrow from "../components/Eyebrow.astro";
-import GlyphField from "../components/GlyphField.astro";
 import PostCard from "../components/PostCard.astro";
+import { projects } from "../data/projects";
 import { href } from "../lib/links";
 import { sortByDateDesc, visiblePosts } from "../lib/posts";
 
 const all = await getCollection("blog");
-const latest = sortByDateDesc(visiblePosts(all, import.meta.env.DEV)).slice(0, 3);
+const latest = sortByDateDesc(visiblePosts(all, import.meta.env.DEV)).slice(0, 5);
 
-// Current status items — shown as a hairline grid in the "01 — Now" section.
 const nowItems = [
   "Building Usage Data solutions at DigitalRoute",
   "Going deep on Generative AI, ML & distributed systems",
@@ -20,531 +19,132 @@ const nowItems = [
 ---
 
 <BaseLayout title="Harish Krishnan">
-
-  <!-- ────────────────────────────────────────────────────────────────────────
-       HERO — full-viewport, interactive GlyphField behind, copy at bottom.
-       The canvas is decorative; all text is in static HTML so it remains
-       readable with JavaScript disabled and the canvas blank.
-       ──────────────────────────────────────────────────────────────────────── -->
-  <section class="hero" aria-label="Introduction">
-
-    <!-- Background canvas — fills the hero via absolute positioning -->
-    <div class="hero-bg" aria-hidden="true">
-      <GlyphField density={20} interactive={true} height="100%" />
-    </div>
-
-    <!-- Content overlay — pointer-events:none so the canvas receives pointermove;
-         interactive children (links, table) restore pointer-events:auto. -->
-    <div class="hero-content wrap">
-
-      <!-- Status line: accent dot · role · location · employer -->
-      <p class="hero-status">
-        <span class="status-dot" aria-hidden="true">●</span>
-        <span>Software Engineer · Stockholm · DigitalRoute</span>
-      </p>
-
-      <!-- Display name — surname in accent italic per the design spec -->
-      <h1 class="hero-name">
-        Harish <span class="accent-em">Krishnan</span>
+  <div class="column">
+    <header class="intro">
+      <Eyebrow>Software Engineer · Stockholm · DigitalRoute</Eyebrow>
+      <h1>
+        Engineering software, and rethinking how it's built
+        <span class="accent-em">in the age of AI.</span>
       </h1>
+      <p class="intro-deck">
+        I care about systems that are fast, correct, and a pleasure to use — and
+        about what changes when AI becomes part of how we build them.
+      </p>
+    </header>
 
-      <!-- Two-column block: intro paragraph + spec table -->
-      <div class="hero-body">
-        <div class="hero-intro">
-          <p class="hero-deck">
-            Engineering software, and rethinking how it's built in the age of
-            AI. I care about systems that are fast, correct, and a pleasure to
-            use — and about what changes when AI becomes part of how we build
-            them.
-          </p>
-          <div class="cta-row">
-            <a class="btn" href={href("blog")}>Read the writing →</a>
-            <a class="btn btn-ghost" href={href("about")}>About me</a>
+    <section class="page-section" aria-labelledby="writing-h">
+      <div class="section-head">
+        <h2 id="writing-h">Writing</h2>
+        <a href={href("blog")}>All essays →</a>
+      </div>
+      {
+        latest.length > 0 ? (
+          <div>
+            {latest.map((p) => (
+              <PostCard
+                id={p.id}
+                title={p.data.title}
+                description={p.data.description}
+                date={p.data.date}
+                tags={p.data.tags}
+                draft={p.data.draft}
+              />
+            ))}
           </div>
-          <nav class="hero-socials" aria-label="Social links">
-            <a
-              href="https://github.com/harishkrishnan24"
-              target="_blank"
-              rel="noopener noreferrer">GitHub</a
-            >
-            <a
-              href="https://www.linkedin.com/in/harishkrishnan1993/"
-              target="_blank"
-              rel="noopener noreferrer">LinkedIn</a
-            >
-            <a
-              href="https://x.com/harishkforu"
-              target="_blank"
-              rel="noopener noreferrer">X</a
-            >
-          </nav>
-        </div>
+        ) : (
+          <p class="empty-state">First post coming soon.</p>
+        )
+      }
+    </section>
 
-        <!-- Spec table — the hero's skim layer, next to the deck's read layer.
-             Only rows that say something the status line and deck do NOT.
-             ROLE was cut: it repeated the status line above verbatim.
-             LEARNING was cut: "01 — Now" states it below, About states it
-             twice, and Projects actually demonstrates it — which is stronger
-             than claiming it in the hero.
-             pointer-events:auto so the text stays selectable. -->
-        <table class="spec-table" aria-label="At a glance">
-          <tbody>
-            <tr>
-              <th scope="row">ALSO</th>
-              <td>Content creator · writer</td>
-            </tr>
-            <tr>
-              <th scope="row">FOCUS</th>
-              <td>AI systems · distributed systems</td>
-            </tr>
-          </tbody>
-        </table>
+    <section class="page-section" aria-labelledby="projects-h">
+      <div class="section-head">
+        <h2 id="projects-h">Selected projects</h2>
+        <a href={href("projects")}>All projects →</a>
       </div>
-    </div>
+      <ul class="entry-list">
+        {
+          projects.map((project) => (
+            <li class="entry">
+              <h3 class="entry-title">
+                <a href={href("projects")}>{project.title}</a>{" "}
+                <span class="entry-meta">{project.tech.join(" · ")}</span>
+              </h3>
+              <p>{project.summary}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
 
-    <!-- Vertical label — hidden on touch devices where cursor doesn't apply -->
-    <span class="cursor-hint" aria-hidden="true">move the cursor</span>
-
-  </section>
-
-  <!-- ────────────────────────────────────────────────────────────────────────
-       01 — NOW  · hairline 3-cell grid
-       ──────────────────────────────────────────────────────────────────────── -->
-  <section class="wrap section-now">
-    <header class="section-header reveal">
-      <Eyebrow num="01">Now</Eyebrow>
-      <h2>What I'm working on</h2>
-    </header>
-    <div class="now-grid">
-      {nowItems.map((item) => (
-        <div class="now-cell reveal">
-          <p>{item}</p>
-        </div>
-      ))}
-    </div>
-  </section>
-
-  <!-- ────────────────────────────────────────────────────────────────────────
-       02 — LATEST WRITING  · PostCard link rows (hairline borders built-in)
-       ──────────────────────────────────────────────────────────────────────── -->
-  <section class="wrap section-writing">
-    <header class="section-header section-header--row reveal">
-      <div>
-        <Eyebrow num="02">Latest writing</Eyebrow>
-        <h2>From the blog</h2>
+    <section class="page-section" aria-labelledby="now-h">
+      <div class="section-head">
+        <h2 id="now-h">Now</h2>
       </div>
-      <a class="see-all" href={href("blog")}>All posts →</a>
-    </header>
-    {
-      latest.length > 0 ? (
-        <div class="posts">
-          {latest.map((p) => (
-            <PostCard
-              id={p.id}
-              title={p.data.title}
-              description={p.data.description}
-              date={p.data.date}
-              tags={p.data.tags}
-              draft={p.data.draft}
-            />
-          ))}
-        </div>
-      ) : (
-        <p class="empty-state">First post coming soon.</p>
-      )
-    }
-  </section>
+      <ul class="dash-list now-list">
+        {nowItems.map((item) => <li>{item}</li>)}
+      </ul>
+    </section>
 
-  <!-- ────────────────────────────────────────────────────────────────────────
-       03 — GET IN TOUCH  · hairline link list
-       ──────────────────────────────────────────────────────────────────────── -->
-  <section class="wrap section-contact">
-    <div class="contact-grid">
-      <div class="contact-sidebar">
-        <Eyebrow num="03">Get in touch</Eyebrow>
+    <section class="page-section" aria-labelledby="contact-h">
+      <div class="section-head">
+        <h2 id="contact-h">Contact</h2>
       </div>
-      <div class="contact-main">
-        <h2>Let's talk.</h2>
-        <p class="contact-blurb">
-          Open to conversations about engineering, AI systems, collaboration — or
-          just connecting with fellow developers.
-        </p>
-        <ul class="contact-links">
-          <li>
-            <span class="contact-label">email</span>
-            <a class="contact-value" href="mailto:harishkrishnan1993@gmail.com"
-              >harishkrishnan1993@gmail.com</a
-            >
-          </li>
-          <li>
-            <span class="contact-label">github</span>
-            <a
-              class="contact-value"
-              href="https://github.com/harishkrishnan24"
-              target="_blank"
-              rel="noopener noreferrer">@harishkrishnan24</a
-            >
-          </li>
-          <li>
-            <span class="contact-label">linkedin</span>
-            <a
-              class="contact-value"
-              href="https://www.linkedin.com/in/harishkrishnan1993/"
-              target="_blank"
-              rel="noopener noreferrer">in/harishkrishnan1993</a
-            >
-          </li>
-          <li>
-            <span class="contact-label">x</span>
-            <a
-              class="contact-value"
-              href="https://x.com/harishkforu"
-              target="_blank"
-              rel="noopener noreferrer">@harishkforu</a
-            >
-          </li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
+      <p class="contact-blurb">
+        Open to conversations about engineering, AI systems, collaboration — or
+        just connecting with fellow developers.
+      </p>
+      <ul class="contact-links">
+        <li>
+          <a href="mailto:harishkrishnan1993@gmail.com">harishkrishnan1993@gmail.com</a>
+        </li>
+        <li>
+          <a href="https://github.com/harishkrishnan24" target="_blank" rel="noopener noreferrer">github.com/harishkrishnan24</a>
+        </li>
+        <li>
+          <a href="https://www.linkedin.com/in/harishkrishnan1993/" target="_blank" rel="noopener noreferrer">linkedin.com/in/harishkrishnan1993</a>
+        </li>
+        <li>
+          <a href="https://x.com/harishkforu" target="_blank" rel="noopener noreferrer">x.com/harishkforu</a>
+        </li>
+      </ul>
+    </section>
+  </div>
 </BaseLayout>
 
 <style>
-  /* ── HERO ────────────────────────────────────────────────────────────────── */
-  .hero {
-    position: relative;
-    min-height: calc(100vh - var(--nav-h));
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    overflow: hidden;
-  }
-
-  /* Absolutely-positioned canvas wrapper — fills the full hero section. */
-  .hero-bg {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-  }
-
-  /* Content sits on top of the canvas; pointer-events:none passes mousemove
-     through to the canvas for cursor reactivity. Interactive children
-     restore pointer-events via the selectors below.
-     The gradient scrim ensures the deck text clears WCAG AA contrast
-     (measured ~2.4:1 without it) against the densest glyph cells. */
-  .hero-content {
-    position: relative;
-    z-index: 2;
-    pointer-events: none;
-    padding-block: clamp(40px, 7vw, 80px);
-    background: linear-gradient(
-      to right,
-      color-mix(in srgb, var(--bg) 82%, transparent) 0%,
-      color-mix(in srgb, var(--bg) 82%, transparent) 55%,
-      transparent 100%
-    );
-  }
-
-  /* Below the two-column breakpoint the copy spans the full width, so a
-     horizontal scrim that fades out at 55% leaves the right half of every
-     line sitting on raw glyphs. Go flat instead — the field still reads
-     around the copy block, above and below it. */
-  @media (max-width: 860px) {
-    .hero-content {
-      background: color-mix(in srgb, var(--bg) 88%, transparent);
-    }
-  }
-
-  /* Restore interactivity for all links, buttons, and the spec table. */
-  .hero-content a,
-  .hero-content button,
-  .hero-content .spec-table {
-    pointer-events: auto;
-  }
-
-  /* Status line */
-  .hero-status {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--dim);
-    margin-bottom: 20px;
-  }
-  .status-dot {
-    color: var(--accent);
-    font-size: 8px;
-    line-height: 1;
-  }
-
-  /* Display name */
-  .hero-name {
-    font-family: var(--font-display);
-    font-size: clamp(3rem, 6vw + 1rem, 7rem);
-    font-weight: 400;
-    line-height: 1;
-    letter-spacing: -0.03em;
-    color: var(--fg);
-    margin-bottom: clamp(24px, 4vw, 40px);
-  }
-
-  /* Two-column: deck + spec table */
-  .hero-body {
+  .intro {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: clamp(24px, 5vw, 64px);
-    align-items: start;
+    gap: 1.25rem;
+    padding-block: clamp(56px, 10vw, 96px) clamp(40px, 7vw, 72px);
   }
-
-  .hero-deck {
-    font-family: var(--font-mono);
-    font-size: var(--step--1);
-    line-height: 1.7;
-    color: var(--dim);
-    max-width: 40ch;
-    margin-bottom: 24px;
-  }
-
-  .cta-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-
-
-  .hero-socials {
-    display: flex;
-    gap: 16px;
-  }
-  .hero-socials a {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--dim);
-    transition: color 0.15s var(--ease);
-  }
-  .hero-socials a:hover {
-    color: var(--accent);
-  }
-
-  /* Spec table — overrides global table styles within this component. */
-  .spec-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: var(--step--1);
-  }
-  .spec-table tr {
-    border-bottom: 1px solid var(--line);
-  }
-  .spec-table tr:last-child {
-    border-bottom: none;
-  }
-  .spec-table th {
-    font-family: var(--font-mono);
-    font-size: 9px;
+  .intro h1 {
+    font-size: var(--step-4);
     font-weight: 400;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--accent);
-    text-align: left;
-    padding: 10px 16px 10px 0;
-    width: 96px;
-    vertical-align: top;
-    white-space: nowrap;
-    border-bottom: none;
+    line-height: 1.08;
+    letter-spacing: -0.015em;
   }
-  .spec-table td {
-    font-family: var(--font-mono);
-    font-size: var(--step--1);
-    color: var(--fg);
-    padding: 10px 0;
-    line-height: 1.5;
-    vertical-align: top;
-    border-bottom: none;
-  }
-
-  /* Vertical cursor hint — right edge of hero, hidden on touch screens. */
-  .cursor-hint {
-    position: absolute;
-    right: clamp(18px, 4vw, 40px);
-    bottom: clamp(40px, 7vw, 80px);
-    z-index: 2;
-    font-family: var(--font-mono);
-    font-size: 9px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--dim);
-    writing-mode: vertical-rl;
-    transform: rotate(180deg);
-    pointer-events: none;
-    opacity: 0.5;
-  }
-  @media (hover: none) {
-    .cursor-hint {
-      display: none;
-    }
-  }
-
-  /* Collapse hero two-column on mobile */
-  @media (max-width: 640px) {
-    .hero-body {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  /* ── SECTION SHARED ──────────────────────────────────────────────────────── */
-  .section-now,
-  .section-writing {
-    padding-block: clamp(56px, 8vw, 80px);
-    border-top: 1px solid var(--line);
-  }
-
-  .section-header {
-    margin-bottom: clamp(24px, 4vw, 40px);
-  }
-  .section-header h2 {
-    font-family: var(--font-display);
-    font-size: var(--step-2);
-    font-weight: 400;
-    margin-top: 10px;
-  }
-
-  /* Row variant: heading left, "All posts →" right */
-  .section-header--row {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
-
-  .see-all {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--accent);
-    white-space: nowrap;
-    transition: opacity 0.15s var(--ease);
-  }
-  .see-all:hover {
-    opacity: 0.7;
-  }
-
-  /* ── NOW GRID ────────────────────────────────────────────────────────────── */
-  /* Hairline grid: cells share a single-pixel border without doubling.
-     Technique: 1px gap on a var(--line) background creates hairlines. */
-  .now-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    border: 1px solid var(--line);
-    gap: 1px;
-    background: var(--line);
-  }
-  .now-cell {
-    background: var(--bg);
-    padding: clamp(20px, 3vw, 28px);
-  }
-  .now-cell p {
-    font-family: var(--font-mono);
-    font-size: var(--step--1);
-    color: var(--fg);
-    line-height: 1.6;
-  }
-
-  @media (max-width: 720px) {
-    .now-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  /* ── WRITING ─────────────────────────────────────────────────────────────── */
-  .posts {
-    /* PostCard already provides its own hairline border-top per row. */
-  }
-
-  .empty-state {
-    font-family: var(--font-mono);
-    font-size: var(--step--1);
-    color: var(--dim);
-    padding-block: 24px;
-  }
-
-  /* ── CONTACT ─────────────────────────────────────────────────────────────── */
-  .section-contact {
-    padding-block: clamp(56px, 8vw, 80px);
-    border-top: 1px solid var(--line);
-  }
-
-  /* Two-column layout: 200px label column left, content right. */
-  .contact-grid {
-    display: grid;
-    grid-template-columns: 200px minmax(0, 1fr);
-    gap: 56px;
-    align-items: start;
-  }
-
-  .section-contact h2 {
-    font-family: var(--font-display);
-    font-size: var(--step-2);
-    font-weight: 400;
-    margin-top: 10px;
-    margin-bottom: 16px;
-  }
-
+  .now-list,
   .contact-blurb {
-    font-family: var(--font-mono);
-    font-size: var(--step--1);
-    color: var(--dim);
-    line-height: 1.6;
-    max-width: 40ch;
-    margin-bottom: 24px;
+    padding-top: 1rem;
   }
-
-  /* Hairline list: each row separated by 1px var(--line). */
+  .contact-blurb {
+    color: var(--fg-soft);
+  }
   .contact-links {
     list-style: none;
-    border-top: 1px solid var(--line);
-  }
-
-  .contact-links li {
     display: flex;
-    gap: 16px;
-    align-items: baseline;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .contact-label {
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
+    padding-top: 0.75rem;
     font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    font-size: 13px;
+  }
+  .contact-links a {
+    overflow-wrap: anywhere;
+  }
+  .empty-state {
     color: var(--dim);
-    min-width: 72px;
-  }
-
-  .contact-value {
-    font-family: var(--font-mono);
-    font-size: var(--step--1);
-    color: var(--fg);
-    transition: color 0.15s var(--ease);
-  }
-
-  .contact-value:hover {
-    color: var(--accent);
-  }
-
-  @media (max-width: 720px) {
-    .contact-grid {
-      grid-template-columns: 1fr;
-      gap: 24px;
-    }
+    padding-top: 1rem;
   }
 </style>

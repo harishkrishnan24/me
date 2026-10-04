@@ -1,11 +1,5 @@
 ---
-// A small mono uppercase label — the terminal-editorial design's section
-// marker. All eyebrows use the single accent color. The optional `num` prop
-// renders a numbered prefix: num="01" → "01 — Label".
-interface Props {
-  num?: string;
-}
-const { num } = Astro.props;
+// A small mono uppercase label for page and entry metadata.
 ---
 
-<span class="eyebrow">{num ? `${num} — ` : ""}<slot /></span>
+<span class="eyebrow"><slot /></span>
