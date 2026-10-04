@@ -1,6 +1,5 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import Eyebrow from "../components/Eyebrow.astro";
 import PageHead from "../components/PageHead.astro";
 import { href } from "../lib/links";
 
@@ -33,177 +32,96 @@ const read: Book[] = [
   title="Bookshelf"
   description="A curated library of books and papers that have shaped how I think about software, systems, and the craft."
 >
-
-  <!-- ── PAGE HEAD — GlyphField band behind Eyebrow + display h2 ────────── -->
   <PageHead eyebrow="Bookshelf · Papers">My digital library.</PageHead>
 
-  <!-- ── INTRO ─────────────────────────────────────────────────────────────── -->
-  <section class="wrap section-intro">
-    <p class="intro-deck reveal">
-      Knowledge is the foundation of innovation. A curated collection of books
-      and papers that have shaped my understanding of technology and software —
-      and continue to guide the work.
-    </p>
-  </section>
+  <div class="column">
+    <section class="page-section">
+      <p class="intro-deck">
+        Knowledge is the foundation of innovation. A curated collection of books
+        and papers that have shaped my understanding of technology and software —
+        and continue to guide the work.
+      </p>
+    </section>
 
-  <!-- ── CURRENTLY READING ─────────────────────────────────────────────────── -->
-  <section class="wrap section-shelf">
-    <header class="section-header reveal">
-      <Eyebrow>Currently reading</Eyebrow>
-      <h2>On the nightstand</h2>
-    </header>
-    <ul class="book-grid reveal">
-      {
-        reading.map((book) => (
-          <li class="book">
-            <img
-              class="book-cover"
-              src={href(`images/books/${book.cover}`)}
-              alt={`Cover of ${book.title}`}
-              loading="lazy"
-              decoding="async"
-            />
-            <h3 class="book-title">{book.title}</h3>
-            <p class="book-author">{book.author}</p>
-          </li>
-        ))
-      }
-    </ul>
-  </section>
+    <section class="page-section" aria-labelledby="reading-h">
+      <div class="section-head"><h2 id="reading-h">Currently reading</h2></div>
+      <ul class="entry-list">
+        {
+          reading.map((book) => (
+            <li class="entry book">
+              <img
+                class="book-cover"
+                src={href(`images/books/${book.cover}`)}
+                alt={`Cover of ${book.title}`}
+                loading="lazy"
+                decoding="async"
+              />
+              <div class="book-text">
+                <h3 class="entry-title">{book.title}</h3>
+                <p>{book.author}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
 
-  <!-- ── READ ──────────────────────────────────────────────────────────────── -->
-  <section class="wrap section-shelf">
-    <header class="section-header reveal">
-      <Eyebrow>Read</Eyebrow>
-      <h2>Finished, and worth it</h2>
-    </header>
-    <ul class="book-grid reveal">
-      {
-        read.map((book) => (
-          <li class="book">
-            <img
-              class="book-cover"
-              src={href(`images/books/${book.cover}`)}
-              alt={`Cover of ${book.title}`}
-              loading="lazy"
-              decoding="async"
-            />
-            <h3 class="book-title">{book.title}</h3>
-            <p class="book-author">{book.author}</p>
-          </li>
-        ))
-      }
-    </ul>
-  </section>
+    <section class="page-section" aria-labelledby="read-h">
+      <div class="section-head"><h2 id="read-h">Read</h2></div>
+      <ul class="entry-list">
+        {
+          read.map((book) => (
+            <li class="entry book">
+              <img
+                class="book-cover"
+                src={href(`images/books/${book.cover}`)}
+                alt={`Cover of ${book.title}`}
+                loading="lazy"
+                decoding="async"
+              />
+              <div class="book-text">
+                <h3 class="entry-title">{book.title}</h3>
+                <p>{book.author}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
 
-  <!-- ── PAPERS ────────────────────────────────────────────────────────────── -->
-  <section class="wrap section-shelf">
-    <header class="section-header reveal">
-      <Eyebrow>Papers</Eyebrow>
-      <h2>Research &amp; whitepapers</h2>
-    </header>
-    <ul class="paper-list reveal">
-      <li>
-        <a
-          href="https://web.stanford.edu/class/cs114/reading-keshav.pdf"
-          target="_blank"
-          rel="noopener noreferrer">How to Read a Paper</a
-        >
-        <span class="paper-author">S. Keshav</span>
-      </li>
-    </ul>
-  </section>
-
+    <section class="page-section" aria-labelledby="papers-h">
+      <div class="section-head"><h2 id="papers-h">Papers</h2></div>
+      <ul class="entry-list">
+        <li class="entry">
+          <h3 class="entry-title">
+            <a
+              href="https://web.stanford.edu/class/cs114/reading-keshav.pdf"
+              target="_blank"
+              rel="noopener noreferrer">How to Read a Paper</a
+            >
+          </h3>
+          <p>S. Keshav</p>
+        </li>
+      </ul>
+    </section>
+  </div>
 </BaseLayout>
 
 <style>
-  /* ── SHARED SECTION ─────────────────────────────────────────────────────── */
-  .section-intro,
-  .section-shelf {
-    padding-block: clamp(48px, 7vw, 72px);
-    border-top: 1px solid var(--line);
-  }
-
-  /* ── INTRO ────────────────────────────────────────────────────────────── */
-  /* max-width override over the global .intro-deck base */
-  .intro-deck {
-    max-width: 58ch;
-  }
-
-  /* ── BOOK GRID — hairline grid, no radius ────────────────────────────── */
-  .book-grid {
-    list-style: none;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    border: 1px solid var(--line);
-    gap: 1px;
-    background: var(--line);
-  }
   .book {
-    background: var(--bg);
-    padding: clamp(14px, 2vw, 20px);
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    grid-template-columns: 56px 1fr;
+    align-items: center;
+    column-gap: 1.25rem;
   }
   .book-cover {
-    width: 100%;
-    aspect-ratio: 2 / 3;
-    object-fit: cover;
-    border-radius: 0;
+    width: 56px;
+    height: auto;
+    max-width: 100%;
     border: 1px solid var(--line);
-    background: var(--panel);
-    transition: border-color 0.25s var(--ease);
   }
-  .book:hover .book-cover {
-    border-color: var(--accent);
-  }
-  .book-title {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.04em;
-    font-weight: 400;
-    line-height: 1.4;
-    color: var(--fg);
-  }
-  .book-author {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    letter-spacing: 0.04em;
-    color: var(--dim);
-    line-height: 1.4;
-  }
-  @media (max-width: 480px) {
-    .book-grid {
-      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-    }
-  }
-
-  /* ── PAPERS ──────────────────────────────────────────────────────────── */
-  .paper-list {
-    list-style: none;
-    border-top: 1px solid var(--line);
-  }
-  .paper-list li {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 6px 12px;
-    padding-block: 14px;
-    border-bottom: 1px solid var(--line);
-  }
-  .paper-list a {
-    color: var(--fg);
-    border-bottom: 1px solid var(--line-strong);
-    transition: border-color 0.15s var(--ease), color 0.15s var(--ease);
-  }
-  .paper-list a:hover {
-    border-bottom-color: var(--accent);
-    color: var(--accent);
-  }
-  .paper-author {
-    font-family: var(--font-mono);
-    font-size: var(--step--1);
-    color: var(--dim);
+  .book-text {
+    min-width: 0;
+    display: grid;
+    gap: 0.25rem;
   }
 </style>
