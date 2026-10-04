@@ -82,18 +82,6 @@ main {
   font-variant-numeric: tabular-nums;
 }
 
-/* ── Divider + hairline rule ── */
-.divider {
-  height: 1px;
-  background: var(--line);
-  margin-block: clamp(40px, 7vw, 64px);
-}
-.rule {
-  width: 44px;
-  height: 2px;
-  background: linear-gradient(90deg, var(--accent), var(--accent2));
-}
-
 /* ── Prose typography ── */
 .prose p {
   margin-bottom: 1.35em;
@@ -243,12 +231,6 @@ main {
   font-size: inherit;
 }
 
-/* ── Hairline grid cards ── */
-.card {
-  border: 1px solid var(--line);
-  padding: clamp(20px, 3vw, 30px);
-}
-
 /* ── Tags — mono #tag text, no chips ── */
 .tag-row {
   display: flex;
@@ -267,53 +249,12 @@ main {
   opacity: 0.6;
 }
 
-/* ── Section header (content pages) ── */
-.section-header {
-  margin-bottom: clamp(24px, 4vw, 40px);
-}
-.section-header h2 {
-  font-size: var(--step-2);
-  margin-top: 10px;
-}
-
 .intro-deck {
   font-family: var(--font-serif);
   font-size: var(--step-1);
   line-height: 1.55;
   color: var(--fg-soft);
   max-width: 34em;
-}
-
-/* ── Buttons / CTAs ── */
-.btn {
-  font-family: var(--font-mono);
-  font-size: var(--step--1);
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 22px;
-  border: 1px solid var(--line-strong);
-  background: transparent;
-  color: var(--fg);
-  cursor: pointer;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  transition:
-    color 0.18s var(--ease),
-    border-color 0.18s var(--ease);
-}
-.btn:hover {
-  color: var(--accent);
-  border-color: var(--accent);
-}
-.btn-ghost {
-  background: transparent;
-  color: var(--dim);
-  border-color: var(--line-strong);
-}
-.btn-ghost:hover {
-  color: var(--fg);
-  border-color: var(--dim);
 }
 
 /* ── Tables ── */
@@ -451,29 +392,6 @@ tr:last-child td {
   text-transform: uppercase;
   color: var(--dim);
   margin-block: 1.5rem 0.5rem;
-}
-
-/* ── Scroll-reveal (scroll-driven CSS animations; no JS) ──
-   Progressive enhancement: where animation-timeline is
-   unsupported, content is simply visible. */
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .reveal {
-      animation: reveal-in linear both;
-      animation-timeline: view();
-      animation-range: entry 0% cover 22%;
-    }
-  }
-}
-@keyframes reveal-in {
-  from {
-    opacity: 0;
-    transform: translateY(26px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
