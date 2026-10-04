@@ -83,12 +83,12 @@ const shareLinkedIn = `https://www.linkedin.com/sharing/share-offsite/?url=${enc
         <span class="post-meta-item">Harish Krishnan</span>
         {
           tags.length > 0 && (
-            <div class="tag-row header-tags">
-              <span class="meta-sep" aria-hidden="true">·</span>
+            <ul class="tag-row header-tags">
+              <li class="meta-sep" aria-hidden="true">·</li>
               {tags.map((t) => (
-                <span class="tag">{t}</span>
+                <li class="tag">{t}</li>
               ))}
-            </div>
+            </ul>
           )
         }
         {draft && <span class="draft-flag">· draft</span>}
@@ -136,11 +136,11 @@ const shareLinkedIn = `https://www.linkedin.com/sharing/share-offsite/?url=${enc
 
       {
         tags.length > 0 && (
-          <div class="tag-row footer-tags">
+          <ul class="tag-row footer-tags">
             {tags.map((t) => (
-              <span class="tag">{t}</span>
+              <li class="tag">{t}</li>
             ))}
-          </div>
+          </ul>
         )
       }
 

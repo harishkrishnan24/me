@@ -14,21 +14,16 @@ const posts = sortByDateDesc(visiblePosts(all, import.meta.env.DEV));
   title="Writing"
   description="Essays on software engineering, AI systems, and the craft — by Harish Krishnan."
 >
-
-  <!-- ── PAGE HEAD — GlyphField band behind Eyebrow + display h2 ────────── -->
   <PageHead eyebrow="The Writing">Notes on building software.</PageHead>
 
-  <!-- ── BLOG BODY ─────────────────────────────────────────────────────────── -->
-  <div class="wrap blog-body">
-    <p class="lede reveal">
+  <div class="column page-section">
+    <p class="intro-deck">
       Essays on architecture, AI systems, and the craft. Self-hosted, no
       tracking, no paywall.
     </p>
-    <div class="rule"></div>
-
     {
       posts.length === 0 ? (
-        <p class="empty reveal">No posts yet — first one is coming.</p>
+        <p class="empty">No posts yet — first one is coming.</p>
       ) : (
         <div class="post-list">
           {posts.map((p) => (
@@ -45,31 +40,14 @@ const posts = sortByDateDesc(visiblePosts(all, import.meta.env.DEV));
       )
     }
   </div>
-
 </BaseLayout>
 
 <style>
-  /* ── BLOG BODY ────────────────────────────────────────────────────────── */
-  .blog-body {
-    padding-block: clamp(48px, 7vw, 72px);
-    border-top: 1px solid var(--line);
-    max-width: var(--measure-wide);
-  }
-  .lede {
-    font-family: var(--font-mono);
-    font-size: var(--step--1);
-    color: var(--dim);
-    line-height: 1.7;
-    max-width: 52ch;
-    margin-bottom: 24px;
-  }
-  /* .rule is defined globally; provides the gradient accent line. */
   .post-list {
     margin-top: clamp(24px, 4vw, 40px);
+    border-top: 1px solid var(--fg);
   }
   .empty {
-    font-family: var(--font-mono);
-    font-size: var(--step--1);
     color: var(--dim);
     margin-top: clamp(24px, 4vw, 40px);
   }
