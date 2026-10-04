@@ -343,6 +343,116 @@ tr:last-child td {
   border-bottom: none;
 }
 
+/* ── Reading column — the one layout every content page uses ── */
+.column {
+  width: 100%;
+  max-width: calc(var(--measure) + 80px);
+  margin-inline: auto;
+  padding-inline: clamp(18px, 4vw, 40px);
+}
+.page-section {
+  padding-block-end: clamp(48px, 8vw, 72px);
+}
+
+/* ── Section label row: mono label, optional "all →" link, ink rule ── */
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--fg);
+}
+.section-head h2 {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+.section-head a {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--dim);
+}
+.section-head a:hover {
+  color: var(--accent);
+}
+
+/* ── Hairline entry list (projects, jobs, repos, books) ── */
+.entry-list {
+  list-style: none;
+}
+.entry {
+  padding-block: 1.5rem;
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  gap: 0.5rem;
+}
+.entry:last-child {
+  border-bottom: 0;
+}
+.entry-title {
+  font-size: var(--step-1);
+  font-weight: 500;
+  line-height: 1.3;
+}
+.entry-title a {
+  color: var(--fg);
+}
+.entry-title a:hover {
+  color: var(--accent);
+}
+.entry-meta {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--dim);
+  font-weight: 400;
+}
+.entry p {
+  color: var(--fg-soft);
+}
+
+/* ── Lists ── */
+.dash-list {
+  list-style: none;
+}
+.dash-list li {
+  position: relative;
+  padding: 0.3rem 0 0.3rem 1.5rem;
+}
+.dash-list li::before {
+  content: "";
+  position: absolute;
+  left: 0.15rem;
+  top: 1.05em;
+  width: 0.6rem;
+  height: 1px;
+  background: var(--accent);
+}
+.tech-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--dim);
+}
+.group-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-block: 1.5rem 0.5rem;
+}
+
 /* ── Scroll-reveal (scroll-driven CSS animations; no JS) ──
    Progressive enhancement: where animation-timeline is
    unsupported, content is simply visible. */

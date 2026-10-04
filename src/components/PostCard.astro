@@ -10,111 +10,87 @@ interface Props {
   draft?: boolean;
 }
 const { id, title, description, date, tags, draft } = Astro.props;
-const dateLabel = date.toLocaleDateString("en-US", {
-  year: "numeric",
-  month: "short",
+const dateLabel = date.toLocaleDateString("en-GB", {
   day: "numeric",
+  month: "short",
+  year: "numeric",
 });
 const isoDate = date.toISOString().slice(0, 10);
 ---
 
-<a class="post-row reveal" href={href(`blog/${id}`)}>
-  <div class="post-row-inner">
-    <div class="post-meta">
-      <time datetime={isoDate}>{dateLabel}</time>
+<article class="post-row">
+  <time class="post-date" datetime={isoDate}>{dateLabel}</time>
+  <div class="post-body">
+    <h3 class="post-title">
+      <a href={href(`blog/${id}`)}>{title}</a>
       {draft && <span class="post-draft">draft</span>}
-    </div>
-    <div class="post-body">
-      <h3 class="post-title">{title}</h3>
-      <p class="post-desc">{description}</p>
-      {
-        tags.length > 0 && (
-          <div class="post-tags">
-            {tags.slice(0, 3).map((t) => (
-              <span class="tag">{t}</span>
-            ))}
-          </div>
-        )
-      }
-    </div>
-    <span class="post-arrow" aria-hidden="true">→</span>
+    </h3>
+    <p class="post-desc">{description}</p>
+    {
+      tags.length > 0 && (
+        <ul class="tag-row">
+          {tags.slice(0, 3).map((t) => (
+            <li class="tag">{t}</li>
+          ))}
+        </ul>
+      )
+    }
   </div>
-</a>
+</article>
 
 <style>
   .post-row {
-    display: block;
-    border-top: 1px solid var(--line);
-    transition: border-color 0.2s var(--ease);
-  }
-  .post-row:hover {
-    border-top-color: var(--accent);
-  }
-  .post-row-inner {
     display: grid;
-    grid-template-columns: 100px 1fr auto;
-    gap: 24px;
-    align-items: start;
-    padding: clamp(20px, 3vw, 28px) 0;
+    grid-template-columns: 6.5rem 1fr;
+    column-gap: 1.75rem;
+    padding-block: 1.75rem;
+    border-bottom: 1px solid var(--line);
   }
-  .post-meta {
+  .post-row:last-child {
+    border-bottom: 0;
+  }
+  .post-date {
     font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.04em;
     color: var(--dim);
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    padding-top: 4px;
+    padding-top: 0.45rem;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
   }
-  .post-draft {
-    color: var(--accent2);
+  .post-body {
+    min-width: 0;
   }
   .post-title {
-    font-family: var(--font-display);
-    font-size: clamp(24px, 3vw, 40px);
-    font-weight: 400;
-    line-height: 1.1;
-    color: var(--fg);
-    margin-bottom: 8px;
-    transition: color 0.18s var(--ease);
+    font-size: var(--step-2);
+    font-weight: 500;
+    line-height: 1.2;
+    margin-bottom: 0.4rem;
   }
-  .post-row:hover .post-title {
+  .post-title a {
+    color: var(--fg);
+  }
+  .post-title a:hover {
     color: var(--accent);
+  }
+  .post-draft {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--accent2);
+    margin-left: 0.5rem;
   }
   .post-desc {
-    font-size: 13px;
-    color: var(--dim);
-    line-height: 1.6;
-    max-width: 62ch;
-  }
-  .post-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 12px;
-  }
-  .post-arrow {
-    font-family: var(--font-mono);
-    font-size: 18px;
-    color: var(--dim);
-    padding-top: 4px;
-    transition: color 0.18s var(--ease), transform 0.18s var(--ease);
-    display: inline-block;
-  }
-  .post-row:hover .post-arrow {
-    color: var(--accent);
-    transform: translateX(4px);
+    color: var(--fg-soft);
+    line-height: 1.55;
+    margin-bottom: 0.75rem;
   }
   @media (max-width: 600px) {
-    .post-row-inner {
-      grid-template-columns: 1fr auto;
+    .post-row {
+      grid-template-columns: 1fr;
+      padding-block: 1.5rem;
     }
-    .post-meta {
-      grid-column: 1 / -1;
-      flex-direction: row;
-      gap: 10px;
+    .post-date {
+      padding: 0 0 0.45rem;
     }
   }
 </style>
