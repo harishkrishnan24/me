@@ -1,6 +1,5 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import Eyebrow from "../components/Eyebrow.astro";
 import PageHead from "../components/PageHead.astro";
 import { projects } from "../data/projects";
 ---
@@ -9,245 +8,61 @@ import { projects } from "../data/projects";
   title="Projects"
   description="Projects by Harish Krishnan — building interpreters, reverse-engineering libraries, and exploring how systems work under the hood."
 >
-
-  <!-- ── PAGE HEAD — GlyphField band behind Eyebrow + display h2 ────────── -->
   <PageHead eyebrow="Projects · Things I've built">Things I build to <span class="accent-em">understand them</span>.</PageHead>
 
-  <!-- ── CASE NOTE — deck + hairline stat cells ────────────────────────── -->
-  <section class="wrap section-case">
-    <div class="case-grid reveal">
-      <div class="case-note">
-        <Eyebrow>Selected work</Eyebrow>
-        <p class="case-deck">
-          A small collection of projects where I reverse-engineer the tools I rely
-          on — interpreters, state libraries, the machinery underneath. Building
-          them is how I learn how they really work.
-        </p>
-      </div>
-      <div class="stat-cells">
-        <div class="stat-cell">
-          <span class="stat-num">2</span>
-          <span class="stat-label">Projects</span>
-        </div>
-        <div class="stat-cell">
-          <span class="stat-num">3</span>
-          <span class="stat-label">Languages</span>
-        </div>
-        <div class="stat-cell">
-          <span class="stat-num">∞</span>
-          <span class="stat-label">Things learned</span>
-        </div>
-      </div>
-    </div>
-  </section>
+  <div class="column">
+    <section class="page-section">
+      <p class="intro-deck">
+        A small collection of projects where I reverse-engineer the tools I rely
+        on — interpreters, state libraries, the machinery underneath. Building
+        them is how I learn how they really work.
+      </p>
+    </section>
 
-  <!-- ── PROJECTS — hairline grid of project cells ─────────────────────── -->
-  <section class="wrap section-projects">
-    <div class="projects-grid">
-      {
-        projects.map((project) => (
-          <article class="project-cell reveal">
-            <header class="project-cell-head">
-              <span class="project-cell-label">
-                {project.tech.join(" · ")}
-              </span>
-              <h3 class="project-cell-title">{project.title}</h3>
-              <p class="project-cell-summary">{project.summary}</p>
-            </header>
-            <p class="project-cell-desc">{project.description}</p>
-            <ul class="project-highlights">
-              {project.highlights.map((h) => (
-                <li>{h}</li>
-              ))}
-            </ul>
-            <footer class="project-cell-footer">
-              <div class="tag-row project-tags">
-                {project.tech.map((t) => (
-                  <span class="tag">{t}</span>
+    <section class="page-section" aria-labelledby="projects-h">
+      <div class="section-head"><h2 id="projects-h">Selected work</h2></div>
+      <ul class="entry-list">
+        {
+          projects.map((project) => (
+            <li class="entry">
+              <h3 class="entry-title">
+                {project.title}{" "}
+                <span class="entry-meta">{project.tech.join(" · ")}</span>
+              </h3>
+              <p class="project-summary">{project.summary}</p>
+              <p>{project.description}</p>
+              <ul class="dash-list">
+                {project.highlights.map((h) => (
+                  <li>{h}</li>
                 ))}
-              </div>
-              <div class="project-links">
+              </ul>
+              <p class="project-links">
                 {project.links.map((link) => (
-                  <a
-                    class="project-link"
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
+                  <a href={link.url} target="_blank" rel="noopener noreferrer">
                     {link.label} →
                   </a>
                 ))}
-              </div>
-            </footer>
-          </article>
-        ))
-      }
-    </div>
-  </section>
-
+              </p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </div>
 </BaseLayout>
 
 <style>
-  /* ── CASE NOTE ──────────────────────────────────────────────────────────── */
-  .section-case {
-    padding-block: clamp(48px, 7vw, 72px);
-    border-top: 1px solid var(--line);
-  }
-  .case-grid {
-    display: grid;
-    grid-template-columns: 1fr minmax(240px, 340px);
-    gap: clamp(32px, 5vw, 64px);
-    align-items: start;
-  }
-  .case-note .eyebrow {
-    display: inline-block;
-    margin-bottom: 16px;
-  }
-  .case-deck {
-    font-family: var(--font-mono);
-    font-size: var(--step--1);
-    color: var(--dim);
-    line-height: 1.7;
-    max-width: 50ch;
-    margin-top: 0;
-  }
-  /* Hairline stat cells */
-  .stat-cells {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    border: 1px solid var(--line);
-    gap: 1px;
-    background: var(--line);
-  }
-  .stat-cell {
-    background: var(--bg);
-    padding: clamp(16px, 2.5vw, 24px) clamp(14px, 2vw, 20px);
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  .stat-num {
-    font-family: var(--font-display);
-    font-size: var(--step-2);
-    font-weight: 400;
-    color: var(--accent);
-    line-height: 1;
-  }
-  .stat-label {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--dim);
-  }
-  @media (max-width: 720px) {
-    .case-grid {
-      grid-template-columns: 1fr;
-    }
-    .stat-cells {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  /* ── PROJECTS GRID ──────────────────────────────────────────────────────── */
-  .section-projects {
-    padding-block: clamp(48px, 7vw, 72px);
-    border-top: 1px solid var(--line);
-  }
-  .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-    border: 1px solid var(--line);
-    gap: 1px;
-    background: var(--line);
-  }
-  .project-cell {
-    background: var(--bg);
-    padding: clamp(24px, 4vw, 36px);
-    display: flex;
-    flex-direction: column;
-  }
-  .project-cell-head {
-    margin-bottom: 16px;
-  }
-  .project-cell-label {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--accent);
-    display: block;
-    margin-bottom: 10px;
-  }
-  .project-cell-title {
-    font-family: var(--font-display);
-    font-size: var(--step-2);
-    font-weight: 400;
-    color: var(--fg);
-    line-height: 1.15;
-    margin-bottom: 10px;
-  }
-  .project-cell-summary {
-    font-family: var(--font-mono);
-    font-size: var(--step--1);
-    color: var(--dim);
-    line-height: 1.6;
-  }
-  .project-cell-desc {
-    font-family: var(--font-mono);
-    font-size: var(--step--1);
-    color: var(--dim);
-    line-height: 1.6;
-    margin-bottom: 18px;
-  }
-  .project-highlights {
-    list-style: none;
-    display: grid;
-    gap: 8px;
-    margin-bottom: 20px;
-  }
-  .project-highlights li {
-    font-family: var(--font-mono);
-    font-size: var(--step--1);
-    color: var(--fg);
-    padding-left: 18px;
-    position: relative;
-    line-height: 1.45;
-  }
-  .project-highlights li::before {
-    content: "▹";
-    position: absolute;
-    left: 0;
-    color: var(--accent);
-    font-size: 0.85em;
-  }
-  .project-cell-footer {
-    margin-top: auto;
-    padding-top: 16px;
-    border-top: 1px solid var(--line);
-    display: grid;
-    gap: 12px;
-  }
-  .project-tags {
-    /* tag-row from global.css handles flex wrap gap */
+  .project-summary {
+    font-style: italic;
   }
   .project-links {
-    display: grid;
-    gap: 8px;
-  }
-  .project-link {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
     font-family: var(--font-mono);
-    font-size: 12px;
-    color: var(--accent);
-    width: fit-content;
-    transition: opacity 0.15s var(--ease);
+    font-size: 13px;
   }
-  .project-link:hover {
-    opacity: 0.7;
-  }
-  @media (max-width: 720px) {
-    .projects-grid {
-      grid-template-columns: 1fr;
-    }
+  .project-links a {
+    overflow-wrap: anywhere;
   }
 </style>
