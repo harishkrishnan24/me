@@ -36,12 +36,14 @@ choice, so it needs your explicit yes.
    sites follow). `@fontsource/instrument-serif` is removed from `package.json`.
    Add `@fontsource/source-serif-4/500.css` — the mockup sets titles at weight 500, and the
    site imports only 400 and 600 today.
-6. **Code blocks keep Shiki `github-dark` in both themes.** A dark code block on light
-   paper is a normal, readable look, and it needs no work. Dual Shiki themes are a
-   possible follow-up, not part of this change.
+6. **Code blocks need no change.** `global.css` already overrides Shiki's inline colours
+   with `--panel` / `--fg`, so code blocks follow the theme tokens in both themes.
 7. **OG cards stay dark** (a dark card stands out in social feeds). `og-card.ts` mirrors the
    new *dark* tokens, and the title font changes to Source Serif 4
-   (`source-serif-4-latin-400-normal.woff`, verified present). `public/og-default.png`
+   (`source-serif-4-latin-400-normal.woff`, verified present). Source Serif 4 is ~35% wider
+   than Instrument Serif, so `titleLayout` thresholds are re-measured with Satori
+   (3-line maxima: 82 chars at 72px, 93 at 64px, 110 at 56px, 131 at 48px). New tiers:
+   72px ≤ 56 chars, 64px ≤ 90, 56px ≤ 106, else 48px truncated at 128. `public/og-default.png`
    is **not** regenerated (CLAUDE.md: rendered brand asset); it keeps Instrument Serif
    and the old green until a separate task replaces it.
 8. **Brand text** in the nav changes from `~/harish.dev` to `Harish Krishnan`. The site
@@ -84,8 +86,10 @@ Each of the ~76 `--font-mono` call sites is reviewed against that list.
   set `data-theme="dark"` only when `localStorage["hk-theme"] === "dark"`; anything else
   (including a stored `"crt"`) leaves the attribute unset → light. Key stays `hk-theme`.
 - `<meta name="theme-color">` becomes the light `--bg`, `#F6F5F0`.
-- Nav: the coloured theme dot becomes a text toggle (`Dark` / `Light`, mono, pill border
-  in `--line-strong`, `aria-pressed`). Without JS it does nothing and the page stays light.
+- Nav: the coloured theme dot becomes a text toggle, mono, pill border in `--line-strong`.
+  Its label names the action (`Dark` in light mode, `Light` in dark mode), so it has no
+  `aria-pressed` (a state attribute would contradict a changing label). Without JS it does
+  nothing and the page stays light.
 
 ## Pages
 
@@ -121,7 +125,11 @@ shadows, hairline `--line` rules between list items. The post page is the refere
   stacked entry: serif title + mono languages, summary, highlights list, repo links.
 - **Open source.** Repo groups and the contributions table restyle into the column; the
   table keeps mono headers and gets `overflow-x: auto` at narrow widths.
-- **Bookshelf.** The book grid becomes a single list: serif title, author in `--fg-soft`.
+- **Bookshelf.** The book grid becomes a single list. Each entry keeps its cover as a
+  small thumbnail (56px wide) beside a serif title and the author in `--fg-soft`.
+
+**`CLAUDE.md`** is updated in the same change: two themes (light default), font roles,
+and the removed components (`GlyphField`, `CommandDeck`, `terminal-commands.ts`).
 
 Only Home has an approved picture. The other pages are approved by this text; check them
 during review on the branch preview.
@@ -163,4 +171,4 @@ All work is on `redesign/essayist`. Nothing reaches GitHub Pages until it merges
 
 - "Udemy" copy on the home Now list and the About bio.
 - Regenerating `public/og-default.png` in the new font and palette.
-- Dual Shiki themes for light-mode code blocks.
+- The OG card eyebrow still reads `~/harish.dev` (decision 8 covers the nav only).
