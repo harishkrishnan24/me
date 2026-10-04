@@ -21,9 +21,9 @@ html {
 body {
   background: var(--bg);
   color: var(--fg);
-  font-family: var(--font-mono);
+  font-family: var(--font-serif);
   font-size: var(--step-0);
-  line-height: 1.7;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   min-height: 100vh;
@@ -41,7 +41,7 @@ h4 {
   font-family: var(--font-display);
   font-weight: 400;
   line-height: 1.15;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.012em;
   text-wrap: balance;
   color: var(--fg);
 }
@@ -72,14 +72,14 @@ main {
   padding-block-end: clamp(48px, 8vw, 96px);
 }
 
-/* ── Eyebrow label (mono, uppercase) ── */
 .eyebrow {
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.18em;
+  font-size: 11px;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   display: inline-block;
-  color: var(--accent);
+  color: var(--dim);
+  font-variant-numeric: tabular-nums;
 }
 
 /* ── Divider + hairline rule ── */
@@ -249,20 +249,22 @@ main {
   padding: clamp(20px, 3vw, 30px);
 }
 
-/* ── Tag chips ── */
-.tag {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  padding: 3px 8px;
-  border: 1px solid var(--line);
-  color: var(--dim);
-}
+/* ── Tags — mono #tag text, no chips ── */
 .tag-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 0 0.9rem;
+  list-style: none;
+}
+.tag {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--dim);
+}
+.tag::before {
+  content: "#";
+  opacity: 0.6;
 }
 
 /* ── Section header (content pages) ── */
@@ -274,12 +276,12 @@ main {
   margin-top: 10px;
 }
 
-/* ── Intro deck lede (content page intros) ── */
 .intro-deck {
-  font-family: var(--font-mono);
-  font-size: var(--step--1);
-  color: var(--dim);
-  line-height: 1.7;
+  font-family: var(--font-serif);
+  font-size: var(--step-1);
+  line-height: 1.55;
+  color: var(--fg-soft);
+  max-width: 34em;
 }
 
 /* ── Buttons / CTAs ── */

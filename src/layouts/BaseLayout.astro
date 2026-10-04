@@ -1,9 +1,8 @@
 ---
 // Self-hosted fonts (bundled + fingerprinted by Astro — no CDN calls).
-import "@fontsource/instrument-serif/400.css";
-import "@fontsource/instrument-serif/400-italic.css";
 import "@fontsource/source-serif-4/400.css";
 import "@fontsource/source-serif-4/400-italic.css";
+import "@fontsource/source-serif-4/500.css";
 import "@fontsource/source-serif-4/600.css";
 import "@fontsource/jetbrains-mono/400.css";
 import "@fontsource/jetbrains-mono/500.css";
@@ -75,7 +74,7 @@ const jsonLd =
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <meta name="theme-color" content="#0a0a0c" />
+    <meta name="theme-color" content="#f6f5f0" />
     <meta name="generator" content={Astro.generator} />
 
     <!-- Open Graph -->
@@ -121,13 +120,12 @@ const jsonLd =
     />
 
     <!-- Theme boot: must be inline+blocking before stylesheets to prevent flash.
-         On a multi-page static site, every navigation is a full page load, so
-         this runs on every click — a deferred script means every page shows dark
-         briefly before switching, not just the first load. -->
+         this runs on every click — a deferred script means every page shows light briefly before switching to dark. -->
     <script is:inline>
       try {
-        var t = localStorage.getItem("hk-theme");
-        if (t === "light" || t === "crt") document.documentElement.setAttribute("data-theme", t);
+        if (localStorage.getItem("hk-theme") === "dark") {
+          document.documentElement.setAttribute("data-theme", "dark");
+        }
       } catch (e) {}
     </script>
 

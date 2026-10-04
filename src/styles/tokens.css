@@ -1,34 +1,39 @@
 /* ─────────────────────────────────────────────────────────────
    Design tokens — single source of truth for palette and type.
-   Names are SEMANTIC, not literal: --accent is green in dark and
-   light themes and amber in crt, so a name like --violet would
-   lie. Components reference these vars; they never hardcode hex.
+   Names are SEMANTIC, not literal: --accent is deep green on
+   light paper and soft green on dark. Components reference these
+   vars; they never hardcode hex.
 
-   Mirrored (and translated to sRGB hex) in src/lib/og-card.ts —
-   Satori reads neither CSS vars nor oklch(). Update both.
+   Light is the default (:root). Dark applies only through
+   html[data-theme="dark"], set by the boot script in BaseLayout.
+   There is deliberately no prefers-color-scheme block.
+
+   The DARK values are mirrored as hex in src/lib/og-card.ts —
+   Satori reads no CSS vars. Update both.
    ───────────────────────────────────────────────────────────── */
 :root {
+  color-scheme: light;
+
   /* ── Surfaces ── */
-  --bg: #0a0a0c;
-  --panel: #101014;
-  --line: rgba(237, 234, 227, 0.13);
-  /* --line is a hairline for dividers and structural grids, where WCAG
-     1.4.11 does not apply. Boundaries that IDENTIFY an interactive control
-     (buttons, form fields, the nav toggle, link chips) need 3:1 against
-     --bg, which --line misses at 1.33:1. Use --line-strong for those.
-     Alpha computed per theme: 0.38 here gives 3.08:1. */
-  --line-strong: rgba(237, 234, 227, 0.38);
+  --bg: #f6f5f0;
+  --panel: #edece5;
+  /* --line is a hairline for dividers, where WCAG 1.4.11 does not apply.
+     Boundaries that IDENTIFY an interactive control need 3:1 against --bg:
+     use --line-strong for those (3.04:1 here). */
+  --line: #dad9d1;
+  --line-strong: #8c8e87;
 
   /* ── Text ── */
-  --fg: #edeae3;
-  --dim: #8b8880;
+  --fg: #1b1c1a;
+  --fg-soft: #474a45; /* secondary running text: ledes, descriptions */
+  --dim: #646761; /* metadata labels; 4.85:1 on --panel */
 
   /* ── Accents ── */
-  --accent: oklch(0.8 0.15 145);
-  --accent2: oklch(0.8 0.15 78);
+  --accent: #2e6a50;
+  --accent2: #8a5300;
 
-  /* ── Type families (three roles) ── */
-  --font-display: "Instrument Serif", Georgia, serif;
+  /* ── Type families (three roles; display and serif share a face) ── */
+  --font-display: "Source Serif 4", Georgia, serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", monospace;
   --font-serif: "Source Serif 4", Georgia, serif;
 
@@ -41,6 +46,7 @@
   --step-4: clamp(2.3rem, 1.6rem + 3.4vw, 3.8rem);
 
   /* ── Layout ── */
+  /* 74ch of Source Serif 4 at --step-0 is ~680px: the reading column. */
   --measure: 74ch;
   --measure-wide: 1180px;
   --nav-h: 62px;
@@ -52,29 +58,17 @@
   /* ── Motion ── */
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --dur: 0.45s;
-
 }
 
-html[data-theme="light"] {
-  --bg: #f4f2ec;
-  --panel: #eae7df;
-  --line: rgba(20, 20, 26, 0.15);
-  --line-strong: rgba(20, 20, 26, 0.47); /* 3.05:1 on --bg */
-  --fg: #14141a;
-  --dim: #6b6862;
-  --accent: oklch(0.52 0.15 145);
-  --accent2: oklch(0.52 0.15 60);
-}
-
-html[data-theme="crt"] {
-  --bg: #0b0a06;
-  --panel: #12100a;
-  --line: oklch(0.4 0.08 86);
-  --line-strong: oklch(0.49 0.08 86); /* 3.1:1 on --bg */
-  --fg: oklch(0.86 0.16 86);
-  /* Design specifies 0.60 here; raised to 0.72 so body copy clears
-     WCAG AA against --bg. The theme is a novelty, posts are long. */
-  --dim: oklch(0.72 0.1 86);
-  --accent: oklch(0.86 0.16 86);
-  --accent2: oklch(0.78 0.16 45);
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0f1012;
+  --panel: #16181b;
+  --line: #26282d;
+  --line-strong: #5f6168; /* 3.08:1 on --bg */
+  --fg: #ebe8e2;
+  --fg-soft: #a9a69f;
+  --dim: #8d8a84;
+  --accent: #84b8a0;
+  --accent2: #d9a55b;
 }
