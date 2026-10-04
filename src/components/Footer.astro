@@ -5,98 +5,44 @@ const year = 2026;
 ---
 
 <footer class="site-footer">
-  <div class="footer-grid">
-    <div class="footer-left">
-      <p class="footer-headline">Let's talk.</p>
-      <a class="footer-email" href="mailto:harishkrishnan1993@gmail.com">
-        harishkrishnan1993@gmail.com
-      </a>
-    </div>
-    <nav class="footer-right" aria-label="Footer links">
+  <div class="column footer-inner">
+    <p class="footer-line">
+      <span>© {year} Harish Krishnan</span>
+      <a href="mailto:harishkrishnan1993@gmail.com">harishkrishnan1993@gmail.com</a>
+    </p>
+    <nav class="footer-links" aria-label="Footer links">
       <a href="https://github.com/harishkrishnan24" target="_blank" rel="noopener noreferrer">GitHub</a>
       <a href="https://www.linkedin.com/in/harishkrishnan1993/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
       <a href="https://x.com/harishkforu" target="_blank" rel="noopener noreferrer">X</a>
       <a href={href("bookshelf")}>Bookshelf</a>
     </nav>
   </div>
-  <div class="footer-base">
-    <span>© {year} Harish Krishnan</span>
-    <span class="footer-keys">⌘K palette · ` terminal</span>
-  </div>
 </footer>
 
 <style>
   .site-footer {
     border-top: 1px solid var(--line);
-    padding: 60px 6vw 90px;
+    padding-block: 1.5rem 3rem;
   }
-  .footer-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 40px;
-    align-items: end;
+  .footer-inner,
+  .footer-line,
+  .footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
   }
-  .footer-headline {
-    font-family: var(--font-display);
-    font-size: 40px;
-    font-weight: 400;
-    line-height: 1.1;
-    color: var(--fg);
-    margin-bottom: 12px;
-  }
-  .footer-email {
+  .footer-inner {
+    justify-content: space-between;
     font-family: var(--font-mono);
     font-size: 12px;
-    color: var(--accent);
     letter-spacing: 0.04em;
-    transition: opacity 0.15s var(--ease);
-  }
-  .footer-email:hover {
-    opacity: 0.7;
-  }
-  .footer-right {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: flex-end;
-    align-items: flex-end;
-  }
-  .footer-right a {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
     color: var(--dim);
-    transition: color 0.15s var(--ease);
   }
-  .footer-right a:hover {
+  .site-footer a {
+    color: var(--dim);
+    overflow-wrap: anywhere;
+  }
+  .site-footer a:hover {
     color: var(--accent);
-  }
-  .footer-base {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 60px;
-    padding-top: 20px;
-    border-top: 1px solid var(--line);
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--dim);
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  .footer-keys {
-    /* No opacity dimming: --dim alone is 5.59:1 on --bg, but at 0.6 it drops
-       to 2.69 and fails AA. This line is the only place the command layer is
-       advertised, so it has to be legible. */
-  }
-  @media (max-width: 600px) {
-    .footer-right {
-      justify-content: flex-start;
-    }
-    .footer-base {
-      flex-direction: column;
-      align-items: flex-start;
-    }
   }
 </style>

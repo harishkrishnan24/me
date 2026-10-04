@@ -5,9 +5,7 @@ const pathname = Astro.url.pathname;
 
 <header class="site-header">
   <nav class="nav" aria-label="Primary">
-    <a class="brand" href={href("")}>
-      <span class="brand-slash">~/</span>harish.dev
-    </a>
+    <a class="brand" href={href("")}>Harish Krishnan</a>
     <!-- CSS-only no-JS fallback: <details>/<summary> works without JS.
          On JS-enabled visitors the toggle button (.nav-toggle) is shown instead
          and the details element is kept in sync. On mobile with JS disabled,
@@ -39,7 +37,7 @@ const pathname = Astro.url.pathname;
         }
       </ul>
     </details>
-    <button class="theme-dot" aria-label="Cycle theme"></button>
+    <button class="theme-toggle" type="button" aria-label="Switch to dark theme">Dark</button>
   </nav>
 </header>
 
@@ -61,14 +59,11 @@ const pathname = Astro.url.pathname;
     padding: 0 6vw;
   }
   .brand {
-    font-family: var(--font-mono);
-    font-size: 14px;
+    font-family: var(--font-serif);
+    font-size: 18px;
+    font-weight: 500;
     color: var(--fg);
-    letter-spacing: -0.01em;
     white-space: nowrap;
-  }
-  .brand-slash {
-    color: var(--accent);
   }
   .nav-links {
     list-style: none;
@@ -78,42 +73,38 @@ const pathname = Astro.url.pathname;
     align-items: center;
   }
   .nav-links a {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 400;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--fg);
-    opacity: 0.7;
+    font-family: var(--font-serif);
+    font-size: 16px;
+    color: var(--fg-soft);
     padding: 6px 10px;
-    transition:
-      color 0.15s var(--ease),
-      opacity 0.15s var(--ease);
+    transition: color 0.15s var(--ease);
   }
   .nav-links a:hover,
   .nav-links a:focus-visible {
-    opacity: 1;
     color: var(--accent);
   }
   .nav-links a[aria-current="page"] {
-    opacity: 1;
-    color: var(--accent);
+    color: var(--fg);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.25em;
   }
 
-  /* Theme dot — wired in Task 6 */
-  .theme-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    border: 1px solid var(--fg);
-    background: var(--accent);
+  .theme-toggle {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--fg-soft);
+    background: transparent;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    padding: 3px 12px;
     cursor: pointer;
-    padding: 0;
     flex-shrink: 0;
-    transition: opacity 0.15s var(--ease);
   }
-  .theme-dot:hover {
-    opacity: 0.8;
+  .theme-toggle:hover {
+    color: var(--accent);
+    border-color: var(--accent);
   }
 
   /* details/summary reset — on desktop it's always open; on mobile
@@ -160,7 +151,7 @@ const pathname = Astro.url.pathname;
     }
     .nav-details {
       display: block; /* becomes a real positioned element on mobile */
-      order: 3; /* after brand and theme-dot in the row — actually we want it after brand */
+      order: 3; /* after brand and toggle */
       margin-left: auto;
     }
     .nav-toggle {
@@ -181,9 +172,8 @@ const pathname = Astro.url.pathname;
       margin-inline: auto;
       background: var(--dim);
     }
-    /* theme-dot visible on mobile — it is the only way to change theme
-       on touch devices (palette and terminal are keyboard-only). */
-    .theme-dot {
+    /* the toggle stays visible on mobile — it is the only way to change theme. */
+    .theme-toggle {
       order: 2;
     }
     /* Default: links hidden; shown when details is open */
@@ -213,6 +203,8 @@ const pathname = Astro.url.pathname;
 </style>
 
 <script>
+  import { applyTheme, nextTheme } from "../lib/theme";
+
   // Progressive enhancement: with JS, we keep the details element in sync with
   // aria-expanded for screen readers and for legacy JS that may query it.
   // Without JS, the native <details>/<summary> behaviour handles the toggle —
@@ -224,5 +216,20 @@ const pathname = Astro.url.pathname;
     details.addEventListener("toggle", () => {
       toggle.setAttribute("aria-expanded", String(details.open));
     });
+  }
+
+  const themeToggle = document.querySelector<HTMLButtonElement>(".theme-toggle");
+  if (themeToggle) {
+    // The label names the action, so it flips with the theme.
+    const syncLabel = () => {
+      const dark = document.documentElement.getAttribute("data-theme") === "dark";
+      themeToggle.textContent = dark ? "Light" : "Dark";
+      themeToggle.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
+    };
+    themeToggle.addEventListener("click", () => {
+      applyTheme(nextTheme(document.documentElement.getAttribute("data-theme") ?? "light"));
+      syncLabel();
+    });
+    syncLabel();
   }
 </script>

@@ -24,13 +24,12 @@ export interface NavLink {
 }
 
 // Bookshelf is intentionally not in the primary nav — it's reachable from
-// the footer. The primary nav foregrounds Projects, Writing, and Open Source.
+// the footer. The brand link goes home, so there is no "Home" item.
 export const navLinks: NavLink[] = [
-  { label: "Home", path: "" },
-  { label: "About", path: "about" },
-  { label: "Projects", path: "projects" },
   { label: "Writing", path: "blog" },
+  { label: "Projects", path: "projects" },
   { label: "Open Source", path: "opensource" },
+  { label: "About", path: "about" },
   {
     label: "LinkedIn",
     path: "https://www.linkedin.com/in/harishkrishnan1993/",
