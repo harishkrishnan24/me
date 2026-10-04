@@ -1,6 +1,5 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import Eyebrow from "../components/Eyebrow.astro";
 import PageHead from "../components/PageHead.astro";
 import { href } from "../lib/links";
 
@@ -244,492 +243,170 @@ const interests = [
   title="About"
   description="Harish Krishnan — software engineer based in Stockholm. Background, skills, work experience, and the craft."
 >
-
-  <!-- ── PAGE HEAD — GlyphField band behind Eyebrow + display h2 ────────── -->
   <PageHead eyebrow="About · Software Engineer · Stockholm">A perpetual student of the craft.</PageHead>
 
-  <!-- ── BACKGROUND — two-column: prose + spec table ───────────────────── -->
-  <section class="wrap section-intro">
-    <div class="intro-grid reveal">
-      <div class="intro-prose">
-        <Eyebrow>Background</Eyebrow>
-        <p class="intro-deck">
-          Software engineer based in Stockholm with experience across startups and
-          enterprise. I build applications, teach, and write — and I'm always
-          learning what comes next.
+  <div class="column">
+    <section class="page-section">
+      <p class="intro-deck">
+        Software engineer based in Stockholm with experience across startups and
+        enterprise. I build applications, teach, and write — and I'm always
+        learning what comes next.
+      </p>
+      <div class="prose about-body">
+        <p>
+          I'm Harish Krishnan, a software engineer based in Stockholm with
+          experience in both startups and enterprise environments. I've built
+          software applications using a wide range of technologies, and I actively
+          share my knowledge through Udemy courses and technical writing.
+          Previously, I've worked with companies like SAP, Boeing, and Siemens, and
+          also as a contractor at companies like FoodDocs in Tallinn.
         </p>
-        <div class="about-body">
-          <p>
-            I'm Harish Krishnan, a software engineer based in Stockholm with
-            experience in both startups and enterprise environments. I've built
-            software applications using a wide range of technologies, and I actively
-            share my knowledge through Udemy courses and technical writing.
-            Previously, I've worked with companies like SAP, Boeing, and Siemens, and
-            also as a contractor at companies like FoodDocs in Tallinn.
-          </p>
-          <p>
-            Currently, I'm focused on deepening my expertise in Generative AI,
-            Machine Learning, and distributed systems, while strengthening my
-            fundamentals in software engineering. I'm also actively learning Go and
-            Rust to build efficient, scalable systems. I'm passionate about
-            continuous learning, with a strong interest in applying emerging
-            technologies to solve real-world problems.
-          </p>
-        </div>
+        <p>
+          Currently, I'm focused on deepening my expertise in Generative AI,
+          Machine Learning, and distributed systems, while strengthening my
+          fundamentals in software engineering. I'm also actively learning Go and
+          Rust to build efficient, scalable systems. I'm passionate about
+          continuous learning, with a strong interest in applying emerging
+          technologies to solve real-world problems.
+        </p>
       </div>
-      <table class="spec-table" aria-label="At a glance">
-        <tbody>
-          <tr>
-            <th scope="row">ROLE</th>
-            <td>Software Engineer</td>
-          </tr>
-          <tr>
-            <th scope="row">ALSO</th>
-            <td>Content creator · writer</td>
-          </tr>
-          <tr>
-            <th scope="row">FOCUS</th>
-            <td>AI systems · distributed systems</td>
-          </tr>
-          <tr>
-            <th scope="row">LEARNING</th>
-            <td>Go · Rust</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+    </section>
 
-  <!-- ── TOOLBOX — chips ───────────────────────────────────────────────── -->
-  <section class="wrap section-toolbox">
-    <header class="section-header reveal">
-      <Eyebrow>Technical skills</Eyebrow>
-      <h2>What I work with</h2>
-    </header>
-    <div class="toolbox-group reveal">
-      <h3 class="toolbox-label">Languages</h3>
-      <div class="tag-row">
-        {languages.map((l) => <span class="tag">{l}</span>)}
-      </div>
-    </div>
-    <div class="toolbox-group reveal">
-      <div class="toolbox-group-head">
-        <h3 class="toolbox-label">Technologies & frameworks</h3>
-        <span class="learning-legend">
-          <span class="learning-dot" aria-hidden="true"></span> currently learning
-        </span>
-      </div>
-      <div class="tag-row">
+    <section class="page-section" aria-labelledby="skills-h">
+      <div class="section-head"><h2 id="skills-h">Technical skills</h2></div>
+      <h3 class="group-label">Languages</h3>
+      <ul class="tech-list">
+        {languages.map((l) => <li>{l}</li>)}
+      </ul>
+      <h3 class="group-label">Technologies &amp; frameworks</h3>
+      <ul class="tech-list">
         {
           tech.map((t) => (
-            <span class:list={["tag", { "tag-learning": t.learning }]}>
+            <li>
               {t.label}
-            </span>
+              {t.learning && <span class="learning"> (learning)</span>}
+            </li>
           ))
         }
-      </div>
-    </div>
-  </section>
+      </ul>
+    </section>
 
-  <!-- ── CERTIFICATIONS ───────────────────────────────────────────────── -->
-  <section class="wrap section-certs">
-    <header class="section-header reveal">
-      <Eyebrow>Certifications</Eyebrow>
-      <h2>Verified credentials</h2>
-    </header>
-    <div class="cert-cell reveal">
-      <p class="cert-note">
-        My professional certifications are issued and verified on Credly.
+    <section class="page-section" aria-labelledby="certs-h">
+      <div class="section-head"><h2 id="certs-h">Certifications</h2></div>
+      <p class="section-text">
+        My professional certifications are issued and verified on Credly.{" "}
+        <a
+          href="https://www.credly.com/users/harish-krishnan.623b2d03"
+          target="_blank"
+          rel="noopener noreferrer">View my badges on Credly →</a
+        >
       </p>
-      <a
-        class="btn"
-        href="https://www.credly.com/users/harish-krishnan.623b2d03"
-        target="_blank"
-        rel="noopener noreferrer">View my badges on Credly →</a
-      >
-    </div>
-  </section>
+    </section>
 
-  <!-- ── TRACK RECORD — hairline link rows ────────────────────────────── -->
-  <section class="wrap section-track">
-    <header class="section-header reveal">
-      <Eyebrow>Work experience</Eyebrow>
-      <h2>Where I've worked</h2>
-    </header>
-    <div class="track-list">
-      {
-        jobs.map((job) => (
-          <article class="job-row reveal">
-            <header class="job-row-head">
-              <h3 class="job-title">{job.title}</h3>
-              <p class="job-meta">
+    <section class="page-section" aria-labelledby="work-h">
+      <div class="section-head"><h2 id="work-h">Work experience</h2></div>
+      <ul class="entry-list">
+        {
+          jobs.map((job) => (
+            <li class="entry">
+              <h3 class="entry-title">{job.title}</h3>
+              <p class="entry-meta">
                 {job.company} · {job.duration} · {job.location}
               </p>
-            </header>
-            <p class="job-desc">{job.description}</p>
-            <ul class="job-bullets">
-              {job.bullets.map((b) => (
-                <li>{b}</li>
-              ))}
-            </ul>
-            <div class="tag-row job-tags">
-              {job.technologies.map((t) => (
-                <span class="tag">{t}</span>
-              ))}
-            </div>
-          </article>
-        ))
-      }
-    </div>
-  </section>
+              <p>{job.description}</p>
+              <ul class="dash-list">
+                {job.bullets.map((b) => (
+                  <li>{b}</li>
+                ))}
+              </ul>
+              <ul class="tech-list">
+                {job.technologies.map((t) => (
+                  <li>{t}</li>
+                ))}
+              </ul>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
 
-  <!-- ── HOW I WORK — hairline grid of interests ───────────────────────── -->
-  <section class="wrap section-interests">
-    <header class="section-header reveal">
-      <Eyebrow>Interests & hobbies</Eyebrow>
-      <h2>Away from the keyboard (mostly)</h2>
-    </header>
-    <div class="interests-grid reveal">
-      {
-        interests.map((i) => (
-          <div class="interest-cell">
-            <p>{i}</p>
-          </div>
-        ))
-      }
-    </div>
-  </section>
+    <section class="page-section" aria-labelledby="interests-h">
+      <div class="section-head"><h2 id="interests-h">Interests &amp; hobbies</h2></div>
+      <ul class="dash-list section-text">
+        {interests.map((i) => <li>{i}</li>)}
+      </ul>
+    </section>
 
-  <!-- ── EDUCATION ─────────────────────────────────────────────────────── -->
-  <section class="wrap section-edu">
-    <header class="section-header reveal">
-      <Eyebrow>Education & learning</Eyebrow>
-      <h2>A learning-first mindset</h2>
-    </header>
-    <div class="about-body reveal">
-      <p>
-        I believe in continuous learning and staying current with the latest
-        trends in technology. My educational journey includes a formal Bachelor
-        of Engineering in Automobile Engineering, complemented by self-directed
-        learning through online platforms, books, and hands-on projects in
-        software development and engineering principles.
-      </p>
-      <p>
-        I'm also passionate about sharing knowledge, which is why I create
-        content on
-        <a
-          href="https://harishkrishnan1993.medium.com/"
-          target="_blank"
-          rel="noopener noreferrer">Medium</a
-        >
-        and develop courses on
-        <a
-          href="https://www.udemy.com/user/harish-krishnan-5/"
-          target="_blank"
-          rel="noopener noreferrer">Udemy</a
-        >.
-      </p>
-    </div>
-  </section>
+    <section class="page-section" aria-labelledby="edu-h">
+      <div class="section-head"><h2 id="edu-h">Education &amp; learning</h2></div>
+      <div class="prose section-text">
+        <p>
+          I believe in continuous learning and staying current with the latest
+          trends in technology. My educational journey includes a formal Bachelor
+          of Engineering in Automobile Engineering, complemented by self-directed
+          learning through online platforms, books, and hands-on projects in
+          software development and engineering principles.
+        </p>
+        <p>
+          I'm also passionate about sharing knowledge, which is why I create
+          content on{" "}
+          <a
+            href="https://harishkrishnan1993.medium.com/"
+            target="_blank"
+            rel="noopener noreferrer">Medium</a
+          >
+          and develop courses on{" "}
+          <a
+            href="https://www.udemy.com/user/harish-krishnan-5/"
+            target="_blank"
+            rel="noopener noreferrer">Udemy</a
+          >.
+        </p>
+      </div>
+    </section>
 
-  <!-- ── PHILOSOPHY ────────────────────────────────────────────────────── -->
-  <section class="wrap section-philosophy reveal">
-    <Eyebrow>Philosophy</Eyebrow>
-    <blockquote class="philosophy-quote">
-      With enough time, effort, and curiosity, any skill can be mastered and
-      applied effectively.
-    </blockquote>
-  </section>
+    <section class="page-section" aria-labelledby="philosophy-h">
+      <div class="section-head"><h2 id="philosophy-h">Philosophy</h2></div>
+      <div class="prose section-text">
+        <blockquote>
+          With enough time, effort, and curiosity, any skill can be mastered and
+          applied effectively.
+        </blockquote>
+      </div>
+    </section>
 
-  <!-- ── CONNECT ───────────────────────────────────────────────────────── -->
-  <section class="wrap section-connect">
-    <header class="section-header reveal">
-      <Eyebrow>Let's connect</Eyebrow>
-      <h2>Always up for a good conversation</h2>
-    </header>
-    <div class="about-body reveal">
-      <p>
-        I'm always open to interesting conversations about technology,
-        collaboration opportunities, or simply connecting with fellow
-        developers. Feel free to reach out through any of the platforms linked on
-        the home page.
-      </p>
-      <p>
-        Whether you're looking for technical insights, want to discuss a project,
-        or just want to chat about the latest in software development, I'd love
-        to hear from you.
-      </p>
-    </div>
-    <div class="cta-row reveal">
-      <a class="btn" href={href("")}>Get in touch →</a>
-    </div>
-  </section>
-
+    <section class="page-section" aria-labelledby="connect-h">
+      <div class="section-head"><h2 id="connect-h">Let's connect</h2></div>
+      <div class="prose section-text">
+        <p>
+          I'm always open to interesting conversations about technology,
+          collaboration opportunities, or simply connecting with fellow
+          developers. Feel free to reach out through any of the platforms linked on
+          the home page.
+        </p>
+        <p>
+          Whether you're looking for technical insights, want to discuss a project,
+          or just want to chat about the latest in software development, I'd love
+          to hear from you.
+        </p>
+        <p><a href={href("")}>Get in touch →</a></p>
+      </div>
+    </section>
+  </div>
 </BaseLayout>
 
 <style>
-  /* ── SECTION SHARED ─────────────────────────────────────────────────────── */
-  .section-intro,
-  .section-toolbox,
-  .section-certs,
-  .section-track,
-  .section-interests,
-  .section-edu,
-  .section-philosophy,
-  .section-connect {
-    padding-block: clamp(48px, 7vw, 72px);
-    border-top: 1px solid var(--line);
+  .about-body,
+  .section-text {
+    padding-top: 1rem;
   }
-
-  /* ── BACKGROUND / INTRO ─────────────────────────────────────────────────── */
-  .intro-grid {
-    display: grid;
-    grid-template-columns: 1fr minmax(200px, 280px);
-    gap: clamp(32px, 5vw, 64px);
-    align-items: start;
-  }
-  .intro-prose .eyebrow {
-    display: inline-block;
-    margin-bottom: 16px;
-  }
-  /* max-width and margin-bottom override the global .intro-deck base */
-  .intro-deck {
-    max-width: 44ch;
-    margin-bottom: 20px;
-  }
-
-  /* ── ABOUT BODY ─────────────────────────────────────────────────────────── */
-  /* Page-scoped replacement for .prose on the About surface.
-     Uses --font-mono (not --font-serif) to stay consistent with the
-     mono lede above it. Task 5 will style .prose for blog articles. */
   .about-body {
-    font-family: var(--font-mono);
-    font-size: var(--step--1);
-    line-height: 1.75;
-    max-width: var(--measure);
+    margin-top: 1.5rem;
   }
-  .about-body p {
-    margin-bottom: 1.35em;
-  }
-  .about-body a {
-    border-bottom: 1px solid var(--line);
-    transition: border-color 0.15s var(--ease);
-  }
-  .about-body a:hover {
-    border-color: var(--accent);
-  }
-  @media (max-width: 720px) {
-    .intro-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  /* Spec table — overrides global table defaults within this page. */
-  .spec-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: var(--step--1);
-    margin-block: 0;
-  }
-  .spec-table tr {
-    border-bottom: 1px solid var(--line);
-  }
-  .spec-table tr:last-child {
-    border-bottom: none;
-  }
-  .spec-table th {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    font-weight: 400;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--accent);
-    text-align: left;
-    padding: 10px 16px 10px 0;
-    width: 88px;
-    vertical-align: top;
-    white-space: nowrap;
-    border-bottom: none;
-  }
-  .spec-table td {
-    font-family: var(--font-mono);
-    font-size: var(--step--1);
-    color: var(--fg);
-    padding: 10px 0;
-    line-height: 1.5;
-    vertical-align: top;
-    border-bottom: none;
-  }
-
-  /* ── TOOLBOX ────────────────────────────────────────────────────────────── */
-  .toolbox-group {
-    margin-bottom: clamp(20px, 3vw, 28px);
-  }
-  .toolbox-group:last-child {
-    margin-bottom: 0;
-  }
-  .toolbox-group-head {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 10px;
-    margin-bottom: 14px;
-  }
-  .toolbox-label {
-    font-family: var(--font-mono);
-    font-size: var(--step--1);
-    font-weight: 400;
-    color: var(--fg);
-    margin-bottom: 14px;
-  }
-  .toolbox-group-head .toolbox-label {
-    margin-bottom: 0;
-  }
-  .learning-legend {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--dim);
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-  }
-  .learning-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--accent);
-    flex-shrink: 0;
-  }
-  /* "currently learning" chips */
-  .tag-learning {
-    border-color: var(--accent);
+  .learning {
     color: var(--accent);
   }
-  .tag-learning::before {
-    content: "";
-    display: inline-block;
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: currentColor;
-    margin-right: 6px;
-    vertical-align: middle;
-  }
-
-  /* ── CERTIFICATIONS ─────────────────────────────────────────────────────── */
-  .cert-cell {
-    border: 1px solid var(--line);
-    padding: clamp(20px, 3vw, 30px);
-    display: grid;
-    gap: 18px;
-    justify-items: start;
-    max-width: 520px;
-  }
-  .cert-note {
-    font-family: var(--font-mono);
-    font-size: var(--step--1);
-    color: var(--dim);
-    line-height: 1.6;
-  }
-
-  /* ── TRACK RECORD — hairline rows ───────────────────────────────────────── */
-  .track-list {
-    border-top: 1px solid var(--line);
-  }
-  .job-row {
-    border-bottom: 1px solid var(--line);
-    padding-block: clamp(20px, 3vw, 32px);
-  }
-  .job-row-head {
-    margin-bottom: 12px;
-  }
-  .job-title {
-    font-family: var(--font-display);
-    font-size: var(--step-1);
-    font-weight: 400;
-    color: var(--fg);
-  }
-  .job-meta {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    color: var(--dim);
-    margin-top: 4px;
-  }
-  .job-desc {
-    font-family: var(--font-mono);
-    font-size: var(--step--1);
-    color: var(--dim);
-    line-height: 1.6;
-    margin-bottom: 12px;
-    max-width: 60ch;
-  }
-  .job-bullets {
-    list-style: none;
-    display: grid;
-    gap: 8px;
-    margin-bottom: 16px;
-  }
-  .job-bullets li {
-    font-family: var(--font-mono);
-    font-size: var(--step--1);
-    color: var(--fg);
-    padding-left: 18px;
-    position: relative;
-    line-height: 1.55;
-  }
-  .job-bullets li::before {
-    content: "▹";
-    position: absolute;
-    left: 0;
-    color: var(--accent);
-    font-size: 0.85em;
-  }
-  .job-tags {
-    margin-top: 4px;
-  }
-
-  /* ── HOW I WORK — interests hairline grid ───────────────────────────────── */
-  .interests-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    border: 1px solid var(--line);
-    gap: 1px;
-    background: var(--line);
-  }
-  .interest-cell {
-    background: var(--bg);
-    padding: clamp(20px, 3vw, 28px);
-  }
-  .interest-cell p {
-    font-family: var(--font-mono);
-    font-size: var(--step--1);
-    color: var(--fg);
-    line-height: 1.6;
-  }
-
-  /* ── PHILOSOPHY ──────────────────────────────────────────────────────────── */
-  .philosophy-quote {
-    font-family: var(--font-display);
-    font-size: var(--step-2);
-    font-weight: 400;
-    line-height: 1.35;
-    color: var(--fg);
-    border-left: 3px solid var(--accent);
-    padding: 8px 0 8px 26px;
-    margin-top: 18px;
-    max-width: 24em;
-    text-wrap: balance;
-  }
-
-  /* ── CONNECT ─────────────────────────────────────────────────────────────── */
-  .cta-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 24px;
+  .entry .tech-list {
+    padding-top: 0.25rem;
   }
 </style>
