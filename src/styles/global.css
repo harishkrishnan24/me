@@ -412,7 +412,7 @@ tr:last-child td {
   color: var(--dim);
   font-weight: 400;
 }
-.entry p {
+.entry p:not(.entry-meta) {
   color: var(--fg-soft);
 }
 
