@@ -9,10 +9,8 @@ export const CARD_HEIGHT = 630;
 
 const PADDING = 80;
 
-// Satori reads neither CSS custom properties nor oklch(), so the palette
-// is translated to sRGB hex here. These are the computed equivalents of
-// the dark-theme tokens in src/styles/tokens.css — update both.
-// An oklch() string passed to Satori renders BLACK, silently.
+// These mirror the dark-theme tokens in src/styles/tokens.css as hex —
+// update both. Satori reads no CSS vars and renders oklch() as black.
 const COLOR = {
   bg: "#0f1012", // --bg (dark)
   fg: "#ebe8e2", // --fg

@@ -187,7 +187,7 @@ main {
    full-bleed dark "breakout" box — this site's redesign already gives
    .prose exactly one such treatment (code blocks), so reusing --panel/
    --line keeps the post visually consistent instead of inventing a
-   one-off hardcoded dark surface that ignores the light and crt themes. */
+   one-off hardcoded dark surface that ignores the light theme. */
 .prose .diagram-panel {
   background: var(--panel);
   border: 1px solid var(--line);
@@ -202,8 +202,8 @@ main {
    the palette. Shiki bakes every token's color as an inline `style` on its
    own <span> — e.g. an array index like `[i]` comes out as
    `color:#E1E4E8`, a near-white meant to sit on github-dark's near-black.
-   That's fixed and theme-blind: it doesn't know this site has a light and
-   a crt theme too, and #E1E4E8 on the light theme's cream panel is close
+   That's fixed and theme-blind: it doesn't know this site has a light
+   theme too, and #E1E4E8 on the light theme's cream panel is close
    to invisible — exactly the punctuation/index tokens, since identifiers
    and operators happen to land on mid-tone hues that stay legible by
    accident. Force one color, in one place, for every token: it costs

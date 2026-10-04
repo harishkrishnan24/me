@@ -118,8 +118,8 @@ const jsonLd =
       set:html={JSON.stringify(jsonLd)}
     />
 
-    <!-- Theme boot: must be inline+blocking before stylesheets to prevent flash.
-         this runs on every click — a deferred script means every page shows light briefly before switching to dark. -->
+    <!-- Theme boot: must stay inline and before the stylesheets.
+         It runs on every page load (multi-page static site), so a deferred script would show light briefly before switching to dark. -->
     <script is:inline>
       try {
         if (localStorage.getItem("hk-theme") === "dark") {
